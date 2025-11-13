@@ -441,17 +441,17 @@ def get_moshi_lm(
                 if hasattr(mlp, 'w_down') and mlp.w_down.is_meta:
                     # Initialize w_down from linear_out weights (they share the same shape)
                     with torch.no_grad():
-                        # Create w_down on the correct device with correct dtype
-                        new_w_down = torch.empty_like(mlp.linear_out.weight, device=device, dtype=dtype)
-                        # Copy from linear_out as initial value
-                        new_w_down.copy_(mlp.linear_out.weight)
+                        # CRITICAL: Always use float32 for TTT fast weight precision (not model dtype)
+                        new_w_down = torch.empty_like(mlp.linear_out.weight, device=device, dtype=torch.float32)
+                        # Copy from linear_out as initial value, converting to float32
+                        new_w_down.copy_(mlp.linear_out.weight.to(torch.float32))
                         mlp.w_down = nn.Parameter(new_w_down)
-                        print(f"[TTT] Initialized w_down at layer {idx} from linear_out")
+                        print(f"[TTT] Initialized w_down at layer {idx} from linear_out (float32)")
                 
                 # Initialize w_down_pretrained buffer if needed
                 if hasattr(mlp, 'w_down_pretrained'):
-                    # Create new buffer on correct device instead of trying to move meta tensor
-                    mlp.w_down_pretrained = torch.empty_like(mlp.w_down.data, device=device, dtype=dtype)
+                    # Create new buffer on correct device - must match w_down dtype (float32)
+                    mlp.w_down_pretrained = torch.empty_like(mlp.w_down.data, device=device, dtype=torch.float32)
                     mlp.w_down_pretrained.copy_(mlp.w_down.data)
                     ttt_layers_found.append(idx)
                 
