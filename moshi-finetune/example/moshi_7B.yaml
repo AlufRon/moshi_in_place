@@ -10,7 +10,7 @@ moshi_paths:
 
 full_finetuning: false # Use LoRA for memory efficiency
 lora:
-  enable: true # LoRA for base model + TTT for adaptive updates
+  enable: false # LoRA for base model + TTT for adaptive updates
   rank: 64  # Reduced from 128 for memory
   scaling: 2.
   ft_embed: false # Optional, set to True if you want to finetune the embedding layer
@@ -52,8 +52,8 @@ ttt:
   conv_kernel_size: 2
 
 # This part is optional and can be kept commented out
-# wandb:
-#   project: "" # your wandb project name
-#   run_name: "" # your wandb run name
-#   key: "" # your wandb api key
-#   offline: False
+wandb:
+  project: "moshi_in_place" # your wandb project name
+  run_name: "run1" # your wandb run name
+  key: "" # your wandb api key
+  offline: False

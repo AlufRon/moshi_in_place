@@ -135,6 +135,8 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
                             torch.empty_like(param, device="cpu", dtype=torch.float32)
                         )
                         torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
+                        # Assign to the nested module
+                        nested_module._parameters[param_name] = new_param
                     else:
                         # For all other parameters (linear_in, conv, target_generator)
                         new_param = torch.nn.Parameter(
@@ -154,9 +156,13 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
                         elif "conv" in p_name:
                             # Small random init for conv layers
                             torch.nn.init.normal_(new_param, mean=0.0, std=1e-4)
+                            logger.info(f"  ✓ Initialized {m_name}.{p_name} with small random values (std=1e-4)")
                         else:
                             # Default initialization for other TTT params
                             torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
+                        
+                        # Assign to the nested module
+                        nested_module._parameters[param_name] = new_param
             
             # Initialize buffers (e.g., w_down_pretrained)
             for b_name, buffer in module.named_buffers():
