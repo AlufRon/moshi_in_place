@@ -462,21 +462,22 @@ def get_moshi_lm(
                     if hasattr(tg, 'conv1d') and hasattr(tg.conv1d, 'conv'):
                         conv_weight = tg.conv1d.conv.weight
                         if conv_weight.is_meta:
-                            # Initialize conv weight properly
+                            # Initialize conv weight properly (small random for symmetry breaking)
                             tg.conv1d.conv.weight = nn.Parameter(
                                 torch.empty_like(conv_weight, device=device, dtype=dtype)
                             )
-                            nn.init.kaiming_uniform_(tg.conv1d.conv.weight, a=5**0.5)
+                            nn.init.normal_(tg.conv1d.conv.weight, mean=0.0, std=0.02)
                             print(f"[TTT] Initialized target_generator conv1d at layer {idx}")
-                    
+
                     # Check W_target
                     if hasattr(tg, 'W_target') and tg.W_target.weight.is_meta:
-                        # Initialize W_target weight properly
+                        # CRITICAL: Zero init for warm-start - ensures TTT has zero effect initially
+                        # This prevents random target_generator from corrupting pretrained outputs
                         tg.W_target.weight = nn.Parameter(
                             torch.empty_like(tg.W_target.weight, device=device, dtype=dtype)
                         )
-                        nn.init.kaiming_uniform_(tg.W_target.weight, a=5**0.5)
-                        print(f"[TTT] Initialized target_generator W_target at layer {idx}")
+                        nn.init.zeros_(tg.W_target.weight)
+                        print(f"[TTT] Zero-initialized target_generator W_target at layer {idx} for warm-start")
                         
         if ttt_layers_found:
             print(f"[TTT] Initialized TTT layers at indices: {ttt_layers_found}")

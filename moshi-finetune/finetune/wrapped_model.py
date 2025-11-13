@@ -134,7 +134,14 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
                         # Initialize based on parameter type
                         if "linear" in p_name:
                             torch.nn.init.kaiming_uniform_(param, a=math.sqrt(5))
-                        elif "conv" in p_name or "target_generator" in p_name:
+                        elif "target_generator" in p_name:
+                            # CRITICAL: Zero init for warm-start - ensures TTT has zero effect initially
+                            # This prevents random target_generator from corrupting pretrained outputs
+                            # During training, weights learn from zero via gradients
+                            torch.nn.init.zeros_(param)
+                            logger.info(f"  ✓ Zero-initialized {m_name}.{p_name} for warm-start")
+                        elif "conv" in p_name:
+                            # Small random init for conv layers (could also be zero)
                             torch.nn.init.normal_(param, mean=0.0, std=0.02)
                         else:
                             # Default initialization for other TTT params
