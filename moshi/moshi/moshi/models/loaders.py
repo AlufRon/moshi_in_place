@@ -399,6 +399,19 @@ def get_moshi_lm(
     lora_rank = lm_kwargs.pop("lora_rank", 128)
     lora_scaling = lm_kwargs.pop("lora_scaling", 2.0)
 
+    # YaRN params - extract if present, otherwise use defaults
+    yarn_config = lm_kwargs.pop("yarn_config", {})
+    if yarn_config.get('enabled', False):
+        # Add YaRN parameters with 'yarn_' prefix for StreamingTransformer
+        lm_kwargs['yarn_scale'] = yarn_config.get('scale', 1.0)
+        lm_kwargs['original_max_seq_len'] = yarn_config.get('original_max_seq_len', lm_kwargs.get('context', 3000))
+        lm_kwargs['yarn_beta_fast'] = yarn_config.get('beta_fast', 32)
+        lm_kwargs['yarn_beta_slow'] = yarn_config.get('beta_slow', 1)
+        lm_kwargs['yarn_mscale'] = yarn_config.get('mscale', 1.0)
+        lm_kwargs['yarn_mscale_all_dim'] = yarn_config.get('mscale_all_dim', 0.0)
+        print(f"[YaRN] Enabled with scale={yarn_config.get('scale', 1.0)}, "
+              f"original_len={lm_kwargs['original_max_seq_len']}")
+
     init_device = device
     if filename is not None:
         init_device = torch.device('meta')

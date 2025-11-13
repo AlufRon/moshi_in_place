@@ -155,6 +155,18 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
             'conv_kernel_size': args.ttt.conv_kernel_size,
         }
 
+    # Add YaRN config to saved checkpoint config
+    if args.yarn.enabled:
+        lm_config["yarn_config"] = {
+            'enabled': True,
+            'scale': args.yarn.scale,
+            'original_max_seq_len': args.yarn.original_max_seq_len,
+            'beta_fast': args.yarn.beta_fast,
+            'beta_slow': args.yarn.beta_slow,
+            'mscale': args.yarn.mscale,
+            'mscale_all_dim': args.yarn.mscale_all_dim,
+        }
+
     mimi = checkpoint_info.get_mimi(device="cuda")
     mimi.eval()
     for p in mimi.parameters():

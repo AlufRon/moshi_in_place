@@ -364,13 +364,46 @@ def get_fsdp_model(
             else:
                 param.requires_grad = False
     elif args.ttt and args.ttt.enabled:
-        # TTT-only fine-tuning: train only TTT target_generator parameters
-        # Freeze all pretrained Moshi parameters (as paper describes)
-        for name, param in model.named_parameters():
-            if "target_generator" in name:
-                param.requires_grad = True
-            else:
-                param.requires_grad = False
+        if args.ttt.unfreeze_ttt_layers:
+            # TTT-layer finetuning: train entire layers where TTT is applied
+            # This allows attention to co-adapt with TTT and YaRN scaling
+
+            # Identify layers with TTT
+            ttt_layer_indices = set()
+            if hasattr(model, 'transformer') and hasattr(model.transformer, 'layers'):
+                for idx, layer in enumerate(model.transformer.layers):
+                    # Check if this layer has TTT enabled
+                    mlp = getattr(layer, 'mlp', None) or getattr(layer, 'gating', None)
+                    if mlp and hasattr(mlp, 'ttt_enabled') and mlp.ttt_enabled:
+                        ttt_layer_indices.add(idx)
+
+            logger.info("=" * 70)
+            logger.info("TTT-LAYER UNFREEZING ENABLED")
+            logger.info(f"  Unfreezing entire layers at indices: {sorted(ttt_layer_indices)}")
+            logger.info(f"  Total layers to train: {len(ttt_layer_indices)}/{len(model.transformer.layers)}")
+            logger.info("=" * 70)
+
+            # Freeze all by default, then unfreeze TTT layers
+            for name, param in model.named_parameters():
+                # Check if parameter belongs to a TTT layer
+                is_ttt_layer = False
+                for idx in ttt_layer_indices:
+                    if f"transformer.layers.{idx}." in name:
+                        is_ttt_layer = True
+                        break
+
+                if is_ttt_layer:
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
+        else:
+            # TTT-only fine-tuning: train only TTT target_generator parameters
+            # Freeze all pretrained Moshi parameters (as paper describes)
+            for name, param in model.named_parameters():
+                if "target_generator" in name:
+                    param.requires_grad = True
+                else:
+                    param.requires_grad = False
     else:
         # Fallback: should not reach here due to assertion in train.py
         raise ValueError("Either full_finetuning, lora, or ttt must be enabled")

@@ -36,6 +36,31 @@ class TTTArgs(Serializable):
     chunk_size: int = 256  # Tokens per TTT update
     learning_rate: float = 1e-3  # TTT update learning rate
     conv_kernel_size: int = 2  # Kernel size for causal conv
+    unfreeze_ttt_layers: bool = False  # Unfreeze entire layers with TTT (attention + MLP)
+
+
+@dataclass
+class YaRNArgs(Serializable):
+    """YaRN (Yet another RoPE extensioN) configuration for context window extension.
+
+    Based on: Peng et al., 2023 - https://arxiv.org/abs/2309.00071
+
+    YaRN extends context length by modifying RoPE frequencies using NTK-by-parts
+    interpolation and attention scaling. It does NOT require model parameter updates.
+    """
+    enabled: bool = False
+    scale: float = 1.0  # Context extension factor (e.g., 4.0 for 4x extension)
+    original_max_seq_len: int = 3000  # Original training sequence length
+    beta_fast: int = 32  # Low frequency boundary for NTK-by-parts
+    beta_slow: int = 1  # High frequency boundary for NTK-by-parts
+    mscale: float = 1.0  # Attention scaling factor (1.0 recommended)
+    mscale_all_dim: float = 0.0  # Additional dimension-wise scaling (0.0 for standard)
+
+    def __post_init__(self) -> None:
+        if self.enabled:
+            assert self.scale >= 1.0, "YaRN scale must be >= 1.0"
+            assert self.original_max_seq_len > 0, "Original max seq length must be positive"
+            assert self.beta_fast > self.beta_slow, "beta_fast must be > beta_slow"
 
 
 @dataclass
@@ -121,6 +146,9 @@ class TrainArgs(Serializable):
 
     # TTT (Test-Time Training)
     ttt: TTTArgs = field(default_factory=TTTArgs)
+
+    # YaRN (Context window extension)
+    yarn: YaRNArgs = field(default_factory=YaRNArgs)
 
     param_dtype: str = "bfloat16"
 

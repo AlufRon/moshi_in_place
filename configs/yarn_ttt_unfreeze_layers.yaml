@@ -1,0 +1,121 @@
+# YaRN + TTT with Layer Unfreezing Configuration
+# This unfreezes entire layers where TTT is applied, allowing attention to co-adapt with YaRN
+
+# Run directory
+run_dir: ./runs/yarn_ttt_unfreeze_layers
+
+# Model paths
+moshi_paths:
+  hf_repo_id: kyutai/moshiko-pytorch-bf16
+  mimi_path: null
+  moshi_path: null
+  tokenizer_path: null
+  config_path: null
+
+# Data configuration
+data:
+  train:
+    dataset_type: dummy  # Replace with your dataset
+  eval:
+    dataset_type: dummy
+
+# Training hyperparameters
+duration_sec: 10.0
+batch_size: 1
+num_microbatches: 1
+max_steps: 10000
+seed: 42
+
+# Optimizer - slightly lower LR for training attention layers
+optim:
+  lr: 5e-5  # Lower than TTT-only (1e-4) since we're training more params
+  weight_decay: 0.1
+  pct_start: 0.05
+
+# Gradient clipping
+max_norm: 1.0
+
+# Logging and evaluation
+log_freq: 10
+eval_freq: 100
+do_eval: true
+
+# Checkpointing
+do_ckpt: true
+ckpt_freq: 500
+num_ckpt_keep: 3
+save_adapters: true  # Save only trained parameters (TTT layers)
+
+# Training mode: NEITHER full finetuning NOR LoRA
+full_finetuning: false
+lora:
+  enable: false
+
+# TTT Configuration with Layer Unfreezing
+ttt:
+  enabled: true
+  layer_frequency: 6        # Apply TTT every 6th layer
+  start_layer: 5            # Start from layer 5
+  chunk_size: 256
+  learning_rate: 1e-3
+  conv_kernel_size: 2
+  unfreeze_ttt_layers: true  # KEY: Unfreeze entire layers with TTT
+
+# YaRN Configuration
+yarn:
+  enabled: true
+  scale: 4.0                 # 4x context extension (3k -> 12k)
+  original_max_seq_len: 3000
+  beta_fast: 32
+  beta_slow: 1
+  mscale: 1.0
+  mscale_all_dim: 0.0
+
+# Loss weights
+text_padding_weight: 0.5
+first_codebook_weight_multiplier: 1.0
+
+# Mixed precision
+param_dtype: bfloat16
+
+# Efficiency
+gradient_checkpointing: true
+
+# WandB logging
+wandb:
+  project: null
+  offline: false
+  key: null
+  run_name: yarn_ttt_unfreeze_layers
+
+# Training Strategy Notes:
+#
+# This config uses "TTT-Layer Unfreezing" which is a middle ground:
+#
+# 1. TTT-Only (unfreeze_ttt_layers=false):
+#    - Trains: ~15 TTT params (target_generator)
+#    - Frozen: All attention, embeddings, base MLP
+#    - Best for: Maximum parameter efficiency, no forgetting
+#    - Trade-off: Attention can't adapt to YaRN scaling
+#
+# 2. TTT-Layer Unfreezing (unfreeze_ttt_layers=true) ← THIS CONFIG:
+#    - Trains: ~5-6 full transformer layers (attention + MLP + TTT)
+#    - Frozen: Other 26-27 layers, embeddings
+#    - Best for: Co-adaptation of attention with YaRN + TTT
+#    - Trade-off: ~15-20% of model parameters trained (vs ~0.1% TTT-only)
+#
+# 3. Full Finetuning (full_finetuning=true):
+#    - Trains: All 100% of parameters
+#    - Frozen: Nothing
+#    - Best for: Maximum performance (matches TTT paper)
+#    - Trade-off: Highest memory/compute, risk of forgetting
+#
+# Recommendation:
+# - Start with TTT-Only for quick baseline
+# - Use TTT-Layer Unfreezing if performance plateaus
+# - Only use Full Finetuning if you have compute budget
+#
+# Expected params trained (Moshi 4B):
+# - TTT-Only: ~4M params (0.1%)
+# - TTT-Layer (5 layers): ~625M params (15.6%)
+# - Full: ~4000M params (100%)
