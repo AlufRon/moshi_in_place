@@ -93,7 +93,9 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
     if args.full_finetuning:
         assert not args.lora.enable, "LoRA should not be enabled for full finetuning."
     else:
-        assert args.lora.enable, "LoRA should be enabled for partial finetuning"
+        # Partial fine-tuning: require either LoRA or TTT (or both)
+        assert args.lora.enable or (args.ttt and args.ttt.enabled), \
+            "For partial finetuning, either LoRA or TTT must be enabled"
 
     dist.barrier()
     run_dir.mkdir(exist_ok=True, parents=True)

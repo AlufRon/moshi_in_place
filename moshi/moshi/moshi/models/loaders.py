@@ -462,22 +462,23 @@ def get_moshi_lm(
                     if hasattr(tg, 'conv1d') and hasattr(tg.conv1d, 'conv'):
                         conv_weight = tg.conv1d.conv.weight
                         if conv_weight.is_meta:
-                            # Initialize conv weight properly (small random for symmetry breaking)
+                            # Initialize conv weight properly (small random for warm-start with gradient flow)
                             tg.conv1d.conv.weight = nn.Parameter(
                                 torch.empty_like(conv_weight, device=device, dtype=dtype)
                             )
-                            nn.init.normal_(tg.conv1d.conv.weight, mean=0.0, std=0.02)
-                            print(f"[TTT] Initialized target_generator conv1d at layer {idx}")
+                            nn.init.normal_(tg.conv1d.conv.weight, mean=0.0, std=1e-4)
+                            print(f"[TTT] Initialized target_generator conv1d at layer {idx} (std=1e-4)")
 
                     # Check W_target
                     if hasattr(tg, 'W_target') and tg.W_target.weight.is_meta:
-                        # CRITICAL: Zero init for warm-start - ensures TTT has zero effect initially
-                        # This prevents random target_generator from corrupting pretrained outputs
+                        # CRITICAL: Small random init for warm-start with gradient flow
+                        # std=1e-4 is tiny enough to not disrupt pretrained outputs (V_hat ≈ 1e-4)
+                        # but non-zero so gradients can flow and target_generator can learn
                         tg.W_target.weight = nn.Parameter(
                             torch.empty_like(tg.W_target.weight, device=device, dtype=dtype)
                         )
-                        nn.init.zeros_(tg.W_target.weight)
-                        print(f"[TTT] Zero-initialized target_generator W_target at layer {idx} for warm-start")
+                        nn.init.normal_(tg.W_target.weight, mean=0.0, std=1e-4)
+                        print(f"[TTT] Small-random-initialized target_generator W_target at layer {idx} (std=1e-4)")
                         
         if ttt_layers_found:
             print(f"[TTT] Initialized TTT layers at indices: {ttt_layers_found}")

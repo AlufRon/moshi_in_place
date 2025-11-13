@@ -24,13 +24,13 @@ def main_logger_info(message: str) -> None:
         logger.info(message)
 
 
-def get_fsdp_policy(is_lora: bool) -> Callable[[torch.nn.Module], bool]:
+def get_fsdp_policy(has_mixed_grad: bool) -> Callable[[torch.nn.Module], bool]:
     """
     This function instantiates the FSDP wrap policy.
     - Each Transformers block becomes its own FSDP group so that only a single
       Transformer block is sharded at a time
-    - If LoRA is enabled, we additionally create separate FSDP sub-groups for
-      every trainable and non-trainable parameter group since this is a
+    - If LoRA or TTT-only training is enabled, we additionally create separate FSDP
+      sub-groups for every trainable and non-trainable parameter group since this is a
       requirement for mixed requires_grad=True/False training. See:
       https://pytorch.org/docs/stable/fsdp.html
     """
@@ -41,19 +41,19 @@ def get_fsdp_policy(is_lora: bool) -> Callable[[torch.nn.Module], bool]:
         transformer_layer_cls=(StreamingTransformerLayer,),
     )
 
-    if not is_lora:
+    if not has_mixed_grad:
         return transformer_block_wrap_policy
 
-    def fsdp_lora_policy_fn(module):
+    def fsdp_mixed_grad_policy_fn(module):
         return all(p.requires_grad for p in module.parameters())
 
-    # For LoRA training, trainable and non-trainable parameters need to be put into
-    # different FSDP groups
-    fsdp_lora_policy = functools.partial(
-        torch_wrap.lambda_auto_wrap_policy, lambda_fn=fsdp_lora_policy_fn
+    # For partial training (LoRA or TTT-only), trainable and non-trainable parameters
+    # need to be put into different FSDP groups
+    fsdp_mixed_grad_policy = functools.partial(
+        torch_wrap.lambda_auto_wrap_policy, lambda_fn=fsdp_mixed_grad_policy_fn
     )
 
-    policies = [fsdp_lora_policy, transformer_block_wrap_policy]
+    policies = [fsdp_mixed_grad_policy, transformer_block_wrap_policy]
 
     return functools.partial(torch_wrap._or_policy, policies=policies)
 
@@ -145,17 +145,18 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
                         if "linear" in p_name:
                             torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
                         elif "target_generator" in p_name:
-                            # CRITICAL: Zero init for warm-start - ensures TTT has zero effect initially
-                            # This prevents random target_generator from corrupting pretrained outputs
-                            # During training, weights learn from zero via gradients
-                            torch.nn.init.zeros_(new_param)
-                            logger.info(f"  ✓ Zero-initialized {m_name}.{p_name} for warm-start")
+                            # CRITICAL: Small random init for warm-start with gradient flow
+                            # std=1e-4 is tiny enough to not disrupt pretrained outputs (V_hat ≈ 1e-4)
+                            # but non-zero so gradients can flow and target_generator can learn
+                            # This balances: (1) minimal initial effect, (2) trainability from step 1
+                            torch.nn.init.normal_(new_param, mean=0.0, std=1e-4)
+                            logger.info(f"  ✓ Small-random-initialized {m_name}.{p_name} (std=1e-4) for warm-start with gradient flow")
                         elif "conv" in p_name:
-                            # Small random init for conv layers (could also be zero)
-                            torch.nn.init.normal_(new_param, mean=0.0, std=0.02)
+                            # Small random init for conv layers
+                            torch.nn.init.normal_(new_param, mean=0.0, std=1e-4)
                         else:
                             # Default initialization for other TTT params
-                            torch.nn.init.kaiming_uniform_(param, a=math.sqrt(5))
+                            torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
             
             # Initialize buffers (e.g., w_down_pretrained)
             for b_name, buffer in module.named_buffers():
@@ -338,23 +339,42 @@ def get_fsdp_model(
 
     torch.distributed.barrier()
 
-    # only finetune LoRA parameters and freeze before wrapping
-    if args.lora.enable and not args.full_finetuning:
+    # Set requires_grad based on training mode
+    if args.full_finetuning:
+        # Full fine-tuning: train all parameters
+        for param in model.parameters():
+            param.requires_grad = True
+    elif args.lora.enable:
+        # LoRA fine-tuning: train only LoRA parameters (and optionally embeddings)
+        # TTT parameters will also be trained if TTT is enabled
         for name, param in model.named_parameters():
             if "lora" in name:
                 param.requires_grad = True
             elif args.lora.ft_embed and "emb" in name:
                 param.requires_grad = True
+            elif args.ttt and args.ttt.enabled and "target_generator" in name:
+                # Train TTT target_generator when both LoRA and TTT are enabled
+                param.requires_grad = True
+            else:
+                param.requires_grad = False
+    elif args.ttt and args.ttt.enabled:
+        # TTT-only fine-tuning: train only TTT target_generator parameters
+        # Freeze all pretrained Moshi parameters (as paper describes)
+        for name, param in model.named_parameters():
+            if "target_generator" in name:
+                param.requires_grad = True
             else:
                 param.requires_grad = False
     else:
-        for param in model.parameters():
-            param.requires_grad = True
+        # Fallback: should not reach here due to assertion in train.py
+        raise ValueError("Either full_finetuning, lora, or ttt must be enabled")
 
     if get_world_size() == 1:
         return model.cuda()
 
-    auto_wrap_policy = get_fsdp_policy(args.lora.enable)
+    # Use mixed grad policy for partial training (LoRA or TTT-only)
+    has_mixed_grad = not args.full_finetuning
+    auto_wrap_policy = get_fsdp_policy(has_mixed_grad)
 
     main_logger_info(f"Sharding model over {get_world_size()} GPUs ...")
 
