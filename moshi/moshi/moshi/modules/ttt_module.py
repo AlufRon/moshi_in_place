@@ -116,8 +116,8 @@ class TTTGating(nn.Module):
         if self.ttt_enabled:
             self.w_down = nn.Parameter(torch.empty(dim, hidden, device='meta'))
             # Store pretrained weights for optional reset (e.g., conversation boundaries)
-            # Also keep pretrained in float32 for precision
-            self.register_buffer('w_down_pretrained', torch.empty(dim, hidden))
+            # Keep pretrained in float32 for precision (matches w_down precision)
+            self.register_buffer('w_down_pretrained', torch.empty(dim, hidden, dtype=torch.float32))
             print(f"[TTT] Enabled TTT gating: chunk_size={self.chunk_size}, lr={self.ttt_lr}, dim={dim}, hidden={hidden}")
 
         # target generator (slow weights)
@@ -150,10 +150,67 @@ class TTTGating(nn.Module):
         Z = self.activation(h[..., 0, :]) * h[..., 1, :]  # [B, T, hidden]
 
         # V_hat from token embeddings
-        V_hat = self.target_generator(token_embeddings)  # [B, T, dim]
+        # For streaming (T <= chunk_size), apply Conv1D to full sequence - no chunk boundaries
+        # For training (T > chunk_size), apply Conv1D per-chunk to prevent cross-boundary leakage
+        if T <= self.chunk_size:
+            # Streaming case: no chunking needed, apply Conv1D normally
+            V_hat = self.target_generator(token_embeddings)  # [B, T, dim]
+        else:
+            # Training case: apply Conv1D per-chunk to maintain causality at chunk boundaries
+            # Paper Algorithm 1 line 2006: Vi ← Conv1D_K(X^(i)_0)·Wtarget
+            # X^(i)_0 means token embeddings for chunk i only (not full sequence)
+            V_hat = self._apply_conv1d_per_chunk(token_embeddings)  # [B, T, dim]
 
         # chunk-wise parallel update
         return self._parallel_ttt_update(Z, V_hat)
+
+    def _apply_conv1d_per_chunk(self, token_embeddings: torch.Tensor) -> torch.Tensor:
+        """Apply Conv1D per-chunk to maintain causality at chunk boundaries.
+
+        Per Paper Algorithm 1 line 2006: Vi ← Conv1D_K(X^(i)_0)·Wtarget
+        where X^(i)_0 is token embeddings for chunk i only.
+
+        This prevents Conv1D from seeing across chunk boundaries, which would
+        violate causality (chunk i's update should not use info from chunk i+1).
+
+        Args:
+            token_embeddings: [B, T, dim] where T > chunk_size
+
+        Returns:
+            V_hat: [B, T, dim] with Conv1D applied per-chunk
+        """
+        B, T, dim = token_embeddings.shape
+
+        # Calculate chunks and padding
+        num_chunks = (T + self.chunk_size - 1) // self.chunk_size
+        pad_size = num_chunks * self.chunk_size - T
+
+        # Pad if needed
+        if pad_size > 0:
+            token_embeddings = F.pad(token_embeddings, (0, 0, 0, pad_size))
+            T_padded = num_chunks * self.chunk_size
+        else:
+            T_padded = T
+
+        # Reshape into chunks: [B, num_chunks, chunk_size, dim]
+        token_emb_chunks = token_embeddings.view(B, num_chunks, self.chunk_size, dim)
+
+        # Apply Conv1D + projection per chunk
+        V_hat_chunks = []
+        for i in range(num_chunks):
+            chunk_emb = token_emb_chunks[:, i]  # [B, chunk_size, dim]
+            # Apply target generator (Conv1D + W_target) to this chunk only
+            V_hat_chunk = self.target_generator(chunk_emb)  # [B, chunk_size, dim]
+            V_hat_chunks.append(V_hat_chunk)
+
+        # Concatenate chunks back: [B, T_padded, dim]
+        V_hat = torch.cat(V_hat_chunks, dim=1)
+
+        # Remove padding if added
+        if pad_size > 0:
+            V_hat = V_hat[:, :T]
+
+        return V_hat
 
     def _parallel_ttt_update(self, Z: torch.Tensor, V_hat: torch.Tensor) -> torch.Tensor:
         # Shapes: Z [B, T, hidden], V_hat [B, T, dim]
@@ -232,16 +289,26 @@ class TTTGating(nn.Module):
 
         # Persist final state for inference (training uses optimizer)
         if not self.training:
+            # Streaming inference only supports batch_size=1 due to w_down being [dim, hidden]
+            # For batch_size > 1, each sample would need separate fast weights
+            if B > 1:
+                raise ValueError(
+                    f"TTT inference only supports batch_size=1, got batch_size={B}. "
+                    f"This is because w_down [dim, hidden] can only store one batch's state. "
+                    f"For batched inference, set batch_size=1 or disable TTT."
+                )
+
             # For the final state, we need to include the delta from the last chunk
             # W_eff[-1] only has prefix sum up to (but not including) the last chunk
             # So we need to add the delta from the last chunk: W_final = W_eff[-1] + lr * deltas[-1]
+            # Shape: W_eff[-1, 0] is [dim, hidden], deltas[-1, 0] is [dim, hidden]
             final_state = W_eff[-1, 0] + self.ttt_lr * deltas[-1, 0]  # [dim, hidden]
-            
+
             # Store update count for debugging (no .item() calls - breaks CUDA graphs)
             if not hasattr(self, '_update_count'):
                 self._update_count = 0
             self._update_count += 1
-            
+
             # Keep w_down in float32 during inference for efficiency
             # No conversion needed since final_state is already float32
             self.w_down.data.copy_(final_state)
