@@ -1,0 +1,101 @@
+# Example configuration for YaRN + TTT training on long sequences
+# This demonstrates extending context from 3000 to 12000 tokens (4x) with frozen base model
+
+# Run directory - where checkpoints and logs will be saved
+run_dir: ./runs/yarn_ttt_long_context
+
+# Model paths - using pretrained Moshi model
+moshi_paths:
+  hf_repo_id: kyutai/moshiko-pytorch-bf16
+  mimi_path: null
+  moshi_path: null
+  tokenizer_path: null
+  config_path: null
+
+# Data configuration
+data:
+  train:
+    dataset_type: dummy  # Replace with your dataset type
+    # For real training, configure your long-context dataset here
+    # Example: dataset_type: parquet, dataset_path: /path/to/long/sequences
+  eval:
+    dataset_type: dummy
+    # Configure evaluation dataset
+
+# Training hyperparameters
+duration_sec: 10.0  # Audio duration in seconds
+batch_size: 1  # Adjust based on GPU memory for long sequences
+num_microbatches: 1  # Gradient accumulation
+max_steps: 10000  # Total training steps
+seed: 42
+
+# Optimizer configuration
+optim:
+  lr: 1e-4  # Learning rate
+  weight_decay: 0.1
+  pct_start: 0.05  # Warmup percentage
+
+# Gradient clipping
+max_norm: 1.0
+
+# Logging and evaluation
+log_freq: 10  # Log every 10 steps
+eval_freq: 100  # Evaluate every 100 steps
+do_eval: true
+
+# Checkpointing
+do_ckpt: true
+ckpt_freq: 500  # Save checkpoint every 500 steps
+num_ckpt_keep: 3  # Keep last 3 checkpoints
+save_adapters: true  # Save only trained parameters (TTT)
+
+# Training mode
+full_finetuning: false  # Freeze base model, only train TTT
+
+# LoRA - disabled for TTT-only training
+lora:
+  enable: false
+
+# TTT (Test-Time Training) Configuration
+ttt:
+  enabled: true
+  layer_frequency: 6  # Apply TTT every 6th layer
+  start_layer: 5  # Start from layer 5
+  chunk_size: 256  # Tokens per TTT update (balance speed vs granularity)
+  learning_rate: 1e-3  # TTT fast weight learning rate
+  conv_kernel_size: 2  # Causal conv kernel size for target generation
+
+# YaRN (Context Window Extension) Configuration
+yarn:
+  enabled: true
+  scale: 4.0  # Extend context by 4x (3000 -> 12000 tokens)
+  original_max_seq_len: 3000  # Original Moshi context length
+  beta_fast: 32  # Low frequency boundary (keep default)
+  beta_slow: 1  # High frequency boundary (keep default)
+  mscale: 1.0  # Attention scaling factor (keep default)
+  mscale_all_dim: 0.0  # Additional scaling (keep default)
+
+# Loss weights
+text_padding_weight: 0.5
+first_codebook_weight_multiplier: 1.0
+
+# Mixed precision
+param_dtype: bfloat16
+
+# Efficiency
+gradient_checkpointing: true  # Reduce memory usage for long sequences
+
+# WandB logging (optional)
+wandb:
+  project: null  # Set to your wandb project name if using
+  offline: false
+  key: null
+  run_name: yarn_ttt_long_context
+
+# Notes on training strategy:
+# 1. Start with scale=2.0 (6000 tokens) to warm up, then increase to 4.0
+# 2. Monitor TTT gradient norms (should be stable, not exploding)
+# 3. Validate on long-context tasks (e.g., RULER benchmark)
+# 4. Consider progressive scaling: 3k -> 6k -> 12k over multiple stages
+# 5. Base model remains frozen - only TTT parameters are trained
+# 6. YaRN modifies position encodings automatically, no manual intervention needed

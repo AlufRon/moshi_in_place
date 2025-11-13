@@ -857,6 +857,13 @@ class StreamingTransformer(StreamingModule[_TransformerState]):
         layer_class: tp.Type[StreamingTransformerLayer] = StreamingTransformerLayer,
         quantize: bool = False,
         checkpointing: bool = False,
+        # YaRN parameters for context extension
+        yarn_scale: float = 1.0,
+        original_max_seq_len: int = 3000,
+        yarn_beta_fast: int = 32,
+        yarn_beta_slow: int = 1,
+        yarn_mscale: float = 1.0,
+        yarn_mscale_all_dim: float = 0.0,
         device=None,
         dtype=None,
         **kwargs,
@@ -872,7 +879,18 @@ class StreamingTransformer(StreamingModule[_TransformerState]):
         assert positional_embedding in {"sin", "rope", "sin_rope", "none"}
         self.rope: tp.Optional[RotaryEmbedding] = None
         if self.positional_embedding in {"rope", "sin_rope"}:
-            self.rope = RotaryEmbedding(max_period=max_period)
+            # Compute dimension per head for RoPE
+            dim_per_head = d_model // num_heads
+            self.rope = RotaryEmbedding(
+                max_period=max_period,
+                dim=dim_per_head,
+                yarn_scale=yarn_scale,
+                original_max_seq_len=original_max_seq_len,
+                beta_fast=yarn_beta_fast,
+                beta_slow=yarn_beta_slow,
+                mscale=yarn_mscale,
+                mscale_all_dim=yarn_mscale_all_dim,
+            )
 
         self.checkpointing = checkpointing
 
