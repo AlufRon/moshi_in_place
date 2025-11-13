@@ -27,7 +27,57 @@ This guide explains how to train Moshi with **YaRN position scaling** and **TTT 
 
 ## Configuration
 
-### Example: 4x Context Extension (3000 → 12000 tokens)
+### Training Modes: Three Options
+
+YaRN + TTT supports **three training modes** with different trade-offs:
+
+#### Mode 1: TTT-Only (Most Efficient) ✨ **RECOMMENDED TO START**
+```yaml
+ttt:
+  enabled: true
+  unfreeze_ttt_layers: false  # Only train TTT params
+full_finetuning: false
+lora:
+  enable: false
+
+# Trains: ~4M params (0.1% of model)
+# Memory: Low
+# Speed: Fast
+# Use when: Maximum efficiency, limited compute
+```
+
+#### Mode 2: TTT-Layer Unfreezing (Balanced) 🎯 **BEST FOR YARN**
+```yaml
+ttt:
+  enabled: true
+  unfreeze_ttt_layers: true   # Train entire layers with TTT
+full_finetuning: false
+lora:
+  enable: false
+
+# Trains: ~625M params (15.6% of model, ~5-6 layers)
+# Memory: Medium
+# Speed: Medium
+# Use when: YaRN needs attention to co-adapt
+```
+
+#### Mode 3: Full Finetuning (Maximum Performance) 📊 **MATCHES TTT PAPER**
+```yaml
+full_finetuning: true
+ttt:
+  enabled: true
+yarn:
+  enabled: true
+
+# Trains: ~4000M params (100% of model)
+# Memory: High
+# Speed: Slow
+# Use when: Maximum performance needed
+```
+
+---
+
+### Recommended Configuration (Mode 2: TTT-Layer Unfreezing)
 
 ```yaml
 # YaRN Configuration
@@ -48,11 +98,17 @@ ttt:
   chunk_size: 256                 # Update granularity
   learning_rate: 1e-3             # Fast weight LR
   conv_kernel_size: 2             # Target generator kernel
+  unfreeze_ttt_layers: true       # KEY: Unfreeze full layers with TTT
 
 # Training Mode
-full_finetuning: false            # Freeze base, train only TTT
+full_finetuning: false            # Not full finetuning
 lora:
   enable: false                   # Disable LoRA
+
+# Optimizer (adjusted for more parameters)
+optim:
+  lr: 5e-5                        # Lower LR for attention layers
+  weight_decay: 0.1
 ```
 
 ## Progressive Training Strategy
@@ -94,17 +150,60 @@ torchrun --nproc_per_node=8 \\
 
 ## What Gets Trained
 
-### Frozen (No Gradients):
-- ✗ Attention layers (Q, K, V, O projections)
+Depends on the training mode:
+
+### Mode 1: TTT-Only (unfreeze_ttt_layers=false)
+
+**Frozen (No Gradients):**
+- ✗ All attention layers (Q, K, V, O projections)
+- ✗ All input/output embeddings
+- ✗ All LayerNorms
+- ✗ All base MLP projections
+
+**Trained (Gradients Enabled):**
+- ✓ TTT target generators only (`conv1d`, `W_target`)
+- Total: ~4M params (0.1% of model)
+
+**Modified at Runtime (Not Parameters):**
+- → RoPE frequencies (via YaRN) - applied during forward pass
+
+---
+
+### Mode 2: TTT-Layer Unfreezing (unfreeze_ttt_layers=true) ⭐
+
+**Frozen (No Gradients):**
+- ✗ Layers WITHOUT TTT (e.g., layers 0-4, 6-10, 12-16, etc.)
 - ✗ Input/output embeddings
-- ✗ LayerNorms
-- ✗ Base MLP projections (except where TTT is applied)
 
-### Trained (Gradients Enabled):
-- ✓ TTT fast weights (`w_down` at selected layers)
-- ✓ TTT target generators (`conv1d`, `W_target`)
+**Trained (Gradients Enabled):**
+- ✓ **Entire layers with TTT** (typically 5-6 layers):
+  - Self-attention (Q, K, V, O projections)
+  - LayerNorms
+  - MLP (linear_in, linear_out, TTT)
+  - TTT target generators
+- Total: ~625M params (15.6% of model)
 
-### Modified at Runtime (Not Parameters):
+**Modified at Runtime (Not Parameters):**
+- → RoPE frequencies (via YaRN) - applied during forward pass
+
+**Why This Works Best with YaRN:**
+- Attention in TTT layers can adapt to YaRN-scaled positions
+- TTT and attention co-adapt for long-range dependencies
+- Still preserves 84% of base model (no forgetting)
+- Much more efficient than full finetuning
+
+---
+
+### Mode 3: Full Finetuning (full_finetuning=true)
+
+**Frozen (No Gradients):**
+- None
+
+**Trained (Gradients Enabled):**
+- ✓ Everything (all attention, embeddings, MLP, TTT)
+- Total: ~4000M params (100% of model)
+
+**Modified at Runtime (Not Parameters):**
 - → RoPE frequencies (via YaRN) - applied during forward pass
 
 ## Monitoring Training
@@ -225,20 +324,76 @@ This allows the model to:
 2. **TTT In-Place Paper**: Under review at ICLR 2026 (see `papers/ttt_in_place_paper.txt`)
 3. **RoPE**: [Su et al., 2022 - Rotary Position Embedding](https://arxiv.org/abs/2104.09864)
 
-## Example Training Script
+## Training Mode Comparison
 
-See complete example: [`configs/yarn_ttt_long_context_example.yaml`](configs/yarn_ttt_long_context_example.yaml)
+| Feature | TTT-Only | TTT-Layer Unfreezing ⭐ | Full Finetuning |
+|---------|----------|------------------------|-----------------|
+| **Params Trained** | 0.1% (~4M) | 15.6% (~625M) | 100% (~4B) |
+| **Memory Usage** | Low | Medium | High |
+| **Training Speed** | Fast | Medium | Slow |
+| **YaRN Compatibility** | Good | **Excellent** ✓ | Excellent |
+| **Attention Adaptation** | ✗ Frozen | ✓ Co-adapts | ✓ Fully adapts |
+| **Risk of Forgetting** | None | Low | Medium |
+| **Recommended LR** | 1e-4 | 5e-5 | 1e-5 to 5e-5 |
+| **Best For** | Quick baseline | **Production use** | Max performance |
 
-Quick start:
+### When to Use Each Mode:
+
+**Use TTT-Only if:**
+- Limited compute budget
+- Need quick baseline results
+- Don't want ANY risk of forgetting base model
+- YaRN scale is modest (≤2x)
+
+**Use TTT-Layer Unfreezing if:** ⭐ **RECOMMENDED**
+- Using YaRN for context extension
+- Want attention to adapt to long positions
+- Have moderate compute (can train 15% of model)
+- Need balance of performance and efficiency
+
+**Use Full Finetuning if:**
+- Maximum performance is critical
+- Following TTT paper exactly
+- Have sufficient compute budget
+- Long training time is acceptable
+
+## Example Training Scripts
+
+### Mode 1: TTT-Only
+```bash
+# Fastest, most efficient
+torchrun --nproc_per_node=8 moshi-finetune/train.py \
+  configs/yarn_ttt_long_context_example.yaml
+```
+Config: [`configs/yarn_ttt_long_context_example.yaml`](configs/yarn_ttt_long_context_example.yaml)
+
+### Mode 2: TTT-Layer Unfreezing ⭐ RECOMMENDED
+```bash
+# Best balance for YaRN
+torchrun --nproc_per_node=8 moshi-finetune/train.py \
+  configs/yarn_ttt_unfreeze_layers.yaml
+```
+Config: [`configs/yarn_ttt_unfreeze_layers.yaml`](configs/yarn_ttt_unfreeze_layers.yaml)
+
+### Mode 3: Full Finetuning
+```bash
+# Maximum performance (matches paper)
+# Create config with: full_finetuning: true
+torchrun --nproc_per_node=8 moshi-finetune/train.py \
+  configs/yarn_ttt_full_finetune.yaml
+```
+
+### Quick Start Workflow:
 ```bash
 # 1. Prepare long-context dataset
-# 2. Edit config (set dataset paths, wandb project, etc.)
-# 3. Run training
-torchrun --nproc_per_node=8 moshi-finetune/train.py \\
-  configs/yarn_ttt_long_context_example.yaml
+# 2. Choose your mode (recommend Mode 2)
+# 3. Edit config (set dataset paths, wandb project, etc.)
+# 4. Run training
+torchrun --nproc_per_node=8 moshi-finetune/train.py \
+  configs/yarn_ttt_unfreeze_layers.yaml
 
-# 4. Monitor with wandb or tensorboard
-# 5. Evaluate on long-context benchmarks
+# 5. Monitor with wandb or tensorboard
+# 6. Evaluate on long-context benchmarks
 ```
 
 ## Conclusion

@@ -36,6 +36,7 @@ class TTTArgs(Serializable):
     chunk_size: int = 256  # Tokens per TTT update
     learning_rate: float = 1e-3  # TTT update learning rate
     conv_kernel_size: int = 2  # Kernel size for causal conv
+    unfreeze_ttt_layers: bool = False  # Unfreeze entire layers with TTT (attention + MLP)
 
 
 @dataclass
