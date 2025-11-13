@@ -118,9 +118,10 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
                     # For w_down: should have been copied from checkpoint already
                     if "w_down" in p_name:
                         # Fallback: This shouldn't happen if checkpoint loading worked
-                        logger.warning(f"w_down {m_name}.{p_name} still meta - using random init as fallback")
+                        # Keep w_down in float32 for TTT precision (not param_dtype)
+                        logger.warning(f"w_down {m_name}.{p_name} still meta - using random init as fallback (float32)")
                         module._parameters[p_name] = torch.nn.Parameter(
-                            torch.empty_like(param, device="cpu", dtype=param_dtype)
+                            torch.empty_like(param, device="cpu", dtype=torch.float32)
                         )
                         torch.nn.init.kaiming_uniform_(module._parameters[p_name], a=math.sqrt(5))
                     else:
@@ -133,7 +134,14 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
                         # Initialize based on parameter type
                         if "linear" in p_name:
                             torch.nn.init.kaiming_uniform_(param, a=math.sqrt(5))
-                        elif "conv" in p_name or "target_generator" in p_name:
+                        elif "target_generator" in p_name:
+                            # CRITICAL: Zero init for warm-start - ensures TTT has zero effect initially
+                            # This prevents random target_generator from corrupting pretrained outputs
+                            # During training, weights learn from zero via gradients
+                            torch.nn.init.zeros_(param)
+                            logger.info(f"  ✓ Zero-initialized {m_name}.{p_name} for warm-start")
+                        elif "conv" in p_name:
+                            # Small random init for conv layers (could also be zero)
                             torch.nn.init.normal_(param, mean=0.0, std=0.02)
                         else:
                             # Default initialization for other TTT params
@@ -218,10 +226,10 @@ def get_fsdp_model(
                     # Find the corresponding checkpoint key
                     ckpt_key = f"{m_name}.linear_out.weight"
                     if ckpt_key in model_state_dict:
-                        # Copy from checkpoint dict directly
-                        pretrained_weight = model_state_dict[ckpt_key].clone()
+                        # Copy from checkpoint dict directly and convert to float32 for TTT precision
+                        pretrained_weight = model_state_dict[ckpt_key].clone().to(torch.float32)
                         module._parameters['w_down'] = torch.nn.Parameter(pretrained_weight)
-                        logger.info(f"  ✓ {m_name}.w_down <- {ckpt_key} (shape: {pretrained_weight.shape})")
+                        logger.info(f"  ✓ {m_name}.w_down <- {ckpt_key} (shape: {pretrained_weight.shape}, dtype: float32)")
                     else:
                         logger.warning(f"  ✗ Checkpoint key {ckpt_key} not found!")
 
