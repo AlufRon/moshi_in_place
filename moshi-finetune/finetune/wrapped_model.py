@@ -115,37 +115,49 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
             for p_name, param in module.named_parameters():
                 # Only initialize if this specific parameter is meta
                 if param.is_meta:
+                    # CRITICAL FIX: Navigate to nested module for LoRA layers
+                    # p_name can be like "target_generator.W_target.frozen_W.weight"
+                    # We need to navigate to the actual parent module before assigning
+                    parts = p_name.split('.')
+                    param_name = parts[-1]  # e.g., "weight"
+                    nested_module = module
+                    for part in parts[:-1]:  # Navigate through nested path
+                        nested_module = getattr(nested_module, part)
+
+                    # Determine dtype based on parameter type
                     # For w_down: should have been copied from checkpoint already
-                    if "w_down" in p_name:
+                    if "w_down" in p_name and "w_down_pretrained" not in p_name:
                         # Fallback: This shouldn't happen if checkpoint loading worked
                         # Keep w_down in float32 for TTT precision (not param_dtype)
                         logger.warning(f"w_down {m_name}.{p_name} still meta - using random init as fallback (float32)")
-                        module._parameters[p_name] = torch.nn.Parameter(
+                        new_param = torch.nn.Parameter(
                             torch.empty_like(param, device="cpu", dtype=torch.float32)
                         )
-                        torch.nn.init.kaiming_uniform_(module._parameters[p_name], a=math.sqrt(5))
+                        torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
                     else:
                         # For all other parameters (linear_in, conv, target_generator)
-                        module._parameters[p_name] = torch.nn.Parameter(
+                        new_param = torch.nn.Parameter(
                             torch.empty_like(param, device="cpu", dtype=param_dtype)
                         )
-                        param = module._parameters[p_name]
 
                         # Initialize based on parameter type
                         if "linear" in p_name:
-                            torch.nn.init.kaiming_uniform_(param, a=math.sqrt(5))
+                            torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
                         elif "target_generator" in p_name:
                             # CRITICAL: Zero init for warm-start - ensures TTT has zero effect initially
                             # This prevents random target_generator from corrupting pretrained outputs
                             # During training, weights learn from zero via gradients
-                            torch.nn.init.zeros_(param)
+                            torch.nn.init.zeros_(new_param)
                             logger.info(f"  ✓ Zero-initialized {m_name}.{p_name} for warm-start")
                         elif "conv" in p_name:
                             # Small random init for conv layers (could also be zero)
-                            torch.nn.init.normal_(param, mean=0.0, std=0.02)
+                            torch.nn.init.normal_(new_param, mean=0.0, std=0.02)
                         else:
                             # Default initialization for other TTT params
-                            torch.nn.init.kaiming_uniform_(param, a=math.sqrt(5))
+                            torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
+
+                    # Assign to the correct nested module
+                    nested_module._parameters[param_name] = new_param
 
 
 def get_fsdp_model(
