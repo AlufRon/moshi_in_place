@@ -39,7 +39,7 @@ ckpt_freq: 100
 
 save_adapters: true # Save LoRA adapters
 
-run_dir: "./ttt_training_run"
+run_dir: "./ttt_training_run1"
 overwrite_run_dir: true
 
 # TTT Configuration - In-Place Test-Time Training
