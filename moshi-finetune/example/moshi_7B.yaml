@@ -1,0 +1,59 @@
+# data
+data:
+  eval_data: '' # Optional Fill
+  shuffle: false
+  train_data: /sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl
+
+# model
+moshi_paths: 
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+
+full_finetuning: false # Use LoRA for memory efficiency
+lora:
+  enable: true # LoRA for base model + TTT for adaptive updates
+  rank: 64  # Reduced from 128 for memory
+  scaling: 2.
+  ft_embed: false # Optional, set to True if you want to finetune the embedding layer
+
+first_codebook_weight_multiplier: 100.
+text_padding_weight: .5
+
+# optim
+duration_sec: 100
+batch_size: 4  # Reduced from 16 for memory
+max_steps: 2000
+gradient_checkpointing: true
+optim:
+  lr: 2e-6
+  weight_decay: 0.1
+  pct_start: 0.05
+
+# other
+seed: 0
+log_freq: 1
+eval_freq: 100
+do_eval: false
+do_ckpt: true
+ckpt_freq: 100
+
+
+save_adapters: true # Save LoRA adapters
+
+run_dir: "./ttt_training_run"
+overwrite_run_dir: true
+
+# TTT Configuration - In-Place Test-Time Training
+ttt:
+  enabled: true
+  layer_frequency: 10   # TTT every 10th layer (reduced from 6 for memory)
+  start_layer: 10       # Start from layer 10 -> layers 10, 20, 30 (3 layers)
+  chunk_size: 256       # 256 tokens per update
+  learning_rate: 1e-3   # TTT learning rate
+  conv_kernel_size: 2
+
+# This part is optional and can be kept commented out
+# wandb:
+#   project: "" # your wandb project name
+#   run_name: "" # your wandb run name
+#   key: "" # your wandb api key
+#   offline: False

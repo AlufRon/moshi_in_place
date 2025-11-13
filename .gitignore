@@ -1,0 +1,29 @@
+# Large model weights and checkpoints
+**/consolidated/*.safetensors
+**/checkpoints/
+*.safetensors
+checkpoints/
+*.pt
+*.pth
+# Training artifacts and logs
+**/tb/
+**/*.tfevents*
+**/ttt_training_run/
+**/ttt_training_run/**
+*.tar.gz
+*.zip
+# backups of nested .git dirs
+**/*.git-backup.tar.gz
+# node/publish artifacts (optional)
+node_modules/
+dist/
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+# editor
+.vscode/
+.idea/

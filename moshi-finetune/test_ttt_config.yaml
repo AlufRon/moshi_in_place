@@ -1,0 +1,50 @@
+# Minimal Moshi + TTT training config for testing
+data:
+  train_jsonl: "dummy_train.jsonl"
+  num_workers: 1
+
+moshi_paths:
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+
+run_dir: "./test_ttt_run"
+duration_sec: 5.0
+batch_size: 1
+num_microbatches: 1
+max_steps: 10
+max_norm: 1.0
+
+log_freq: 1
+ckpt_freq: 0
+do_ckpt: false
+eval_freq: 0
+do_eval: false
+
+optim:
+  lr: 1e-4
+  weight_decay: 0.1
+  pct_start: 0.05
+
+lora:
+  enable: true
+  rank: 32
+  scaling: 2.0
+
+full_finetuning: false
+
+# TTT ENABLED
+ttt:
+  enabled: true
+  layer_frequency: 6
+  start_layer: 5
+  chunk_size: 256
+  learning_rate: 1e-3
+  conv_kernel_size: 2
+
+param_dtype: "bfloat16"
+gradient_checkpointing: true
+
+wandb:
+  project: null
+
+seed: 42
+overwrite_run_dir: true

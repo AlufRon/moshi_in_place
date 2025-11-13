@@ -1,0 +1,74 @@
+# Moshi Fine-tuning with In-Place Test-Time Training (TTT)
+# Based on moshi_finetune.ipynb example
+
+# Data configuration
+data:
+  train_jsonl: "path/to/train.jsonl"  # Your training data
+  val_jsonl: "path/to/val.jsonl"      # Your validation data (optional)
+  num_workers: 4
+
+# Model paths
+moshi_paths:
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+  # Or specify local paths:
+  # moshi_path: "path/to/moshi_weights.safetensors"
+  # mimi_path: "path/to/mimi_weights.safetensors"
+  # tokenizer_path: "path/to/tokenizer.model"
+  # config_path: "path/to/config.json"
+
+# Training configuration
+run_dir: "./outputs/moshi_ttt_run"
+duration_sec: 10.0
+batch_size: 2
+num_microbatches: 1
+max_steps: 1000
+max_norm: 1.0
+
+# Logging
+log_freq: 10
+ckpt_freq: 100
+do_ckpt: true
+num_ckpt_keep: 3
+eval_freq: 100
+do_eval: false
+
+# Optimization
+optim:
+  lr: 1e-4
+  weight_decay: 0.1
+  pct_start: 0.05
+
+# LoRA fine-tuning (recommended with TTT for memory efficiency)
+lora:
+  enable: true
+  rank: 64
+  scaling: 2.0
+  ft_embed: false
+
+full_finetuning: false
+
+# TTT Configuration (In-Place Test-Time Training)
+ttt:
+  enabled: true
+  layer_frequency: 6    # Apply TTT every 6th layer (layers 5, 11, 17, 23, 29 for 32-layer model)
+  start_layer: 5        # Start from layer 5
+  chunk_size: 256       # Process 256 tokens per TTT update
+  learning_rate: 1e-3   # Learning rate for TTT fast weight updates
+  conv_kernel_size: 2   # Kernel size for causal convolution in target generation
+
+# Mixed precision
+param_dtype: "bfloat16"
+gradient_checkpointing: true
+
+# W&B logging (optional)
+wandb:
+  project: null  # Set to your W&B project name to enable
+  offline: false
+  run_name: null
+
+# Misc
+seed: 42
+overwrite_run_dir: false
+first_codebook_weight_multiplier: 1.0
+text_padding_weight: 0.5
+save_adapters: true

@@ -1,0 +1,57 @@
+# Moshi + In-Place TTT Training - REAL CONFIG
+data:
+  train_data: /sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl
+  eval_data: ''
+  shuffle: false
+  num_workers: 4
+
+moshi_paths:
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+
+run_dir: "./ttt_training_run"
+duration_sec: 10.0
+batch_size: 2
+num_microbatches: 1
+max_steps: 1000
+max_norm: 1.0
+
+log_freq: 10
+ckpt_freq: 100
+do_ckpt: true
+num_ckpt_keep: 3
+eval_freq: 0
+do_eval: false
+
+optim:
+  lr: 1e-4
+  weight_decay: 0.1
+  pct_start: 0.05
+
+lora:
+  enable: true
+  rank: 64
+  scaling: 2.0
+  ft_embed: false
+
+full_finetuning: false
+
+# TTT Configuration - In-Place Test-Time Training
+ttt:
+  enabled: true
+  layer_frequency: 6    # TTT every 6th layer
+  start_layer: 5        # Start from layer 5 -> layers 5,11,17,23,29
+  chunk_size: 256       # 256 tokens per update
+  learning_rate: 1e-3   # TTT learning rate
+  conv_kernel_size: 2
+
+param_dtype: "bfloat16"
+gradient_checkpointing: true
+
+wandb:
+  project: null
+
+seed: 42
+overwrite_run_dir: true
+first_codebook_weight_multiplier: 1.0
+text_padding_weight: 0.5
+save_adapters: true

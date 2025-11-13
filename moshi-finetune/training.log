@@ -1,0 +1,173 @@
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-13 12:26:32 (IST) - 0:00:02 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-13 12:26:32 (IST) - 0:00:02 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-13 12:26:32 (IST) - 0:00:02 - distributed - INFO - local rank: 0
+2025-11-13 12:26:32 (IST) - 0:00:02 - train - INFO - Going to init comms...
+2025-11-13 12:26:32 (IST) - 0:00:02 - train - INFO - Run dir: ./ttt_training_run
+2025-11-13 12:26:32 (IST) - 0:00:02 - train - INFO - Removing run dir ttt_training_run...
+[rank0]:[W1113 12:26:33.412928898 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+2025-11-13 12:26:33 (IST) - 0:00:02 - train - INFO - TrainArgs: {'batch_size': 16,
+ 'ckpt_freq': 100,
+ 'data': {'eval_data': '',
+          'shuffle': False,
+          'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl'},
+ 'do_ckpt': True,
+ 'do_eval': False,
+ 'duration_sec': 100.0,
+ 'eval_freq': 100,
+ 'first_codebook_weight_multiplier': 100.0,
+ 'full_finetuning': False,
+ 'gradient_checkpointing': True,
+ 'log_freq': 1,
+ 'lora': {'enable': True, 'ft_embed': False, 'rank': 128, 'scaling': 2.0},
+ 'max_norm': 1.0,
+ 'max_steps': 2000,
+ 'moshi_paths': {'config_path': None,
+                 'hf_repo_id': 'kyutai/moshiko-pytorch-bf16',
+                 'mimi_path': None,
+                 'moshi_path': None,
+                 'tokenizer_path': None},
+ 'num_ckpt_keep': 3,
+ 'num_microbatches': 1,
+ 'optim': {'lr': 2e-06, 'pct_start': 0.05, 'weight_decay': 0.1},
+ 'overwrite_run_dir': True,
+ 'param_dtype': 'bfloat16',
+ 'run_dir': './ttt_training_run',
+ 'save_adapters': True,
+ 'seed': 0,
+ 'text_padding_weight': 0.5,
+ 'ttt': {'chunk_size': 256,
+         'conv_kernel_size': 2,
+         'enabled': True,
+         'layer_frequency': 6,
+         'learning_rate': 0.001,
+         'start_layer': 5},
+ 'wandb': {'key': None, 'offline': False, 'project': None, 'run_name': None},
+ 'world_size': 1}
+2025-11-13 12:26:33 (IST) - 0:00:02 - train - INFO - Loading Mimi and Moshi...
+/home/alufr/moshi_in_place_ttt/moshi/moshi/moshi/models/loaders.py:202: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO -   Layer frequency: 6
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO -   Start layer: 5
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO -   Learning rate: 0.001
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-13 12:26:34 (IST) - 0:00:03 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-13 12:26:34 (IST) - 0:00:04 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-13 12:26:34 (IST) - 0:00:04 - finetune.wrapped_model - INFO - Initializing lora layers ...
+2025-11-13 12:26:34 (IST) - 0:00:04 - utils - INFO - Closing: eval_logger
+2025-11-13 12:26:34 (IST) - 0:00:04 - utils - INFO - Closed: eval_logger
+2025-11-13 12:26:34 (IST) - 0:00:04 - utils - INFO - Closing: metrics_logger
+2025-11-13 12:26:34 (IST) - 0:00:04 - utils - INFO - Closed: metrics_logger
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi-finetune/train.py", line 372, in <module>
+[rank0]:     fire.Fire(train)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 135, in Fire
+[rank0]:     component_trace = _Fire(component, args, parsed_flag_args, context, name)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 468, in _Fire
+[rank0]:     component, remaining_args = _CallAndUpdateTrace(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+[rank0]:     component = fn(*varargs, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi-finetune/train.py", line 60, in train
+[rank0]:     _train(args, exit_stack)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi-finetune/train.py", line 151, in _train
+[rank0]:     model = get_fsdp_model(args, checkpoint_info)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi-finetune/finetune/wrapped_model.py", line 180, in get_fsdp_model
+[rank0]:     initialize_lora_parameters(model, param_dtype)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi-finetune/finetune/wrapped_model.py", line 103, in initialize_lora_parameters
+[rank0]:     raise ValueError(f"Only Lora and TTT layers should be randomly initialized. Got: {m_name}")
+[rank0]: ValueError: Only Lora and TTT layers should be randomly initialized. Got: transformer.layers.5.gating.target_generator
+[rank0]:[W1113 12:26:34.231507937 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+E1113 12:26:35.809000 1663123 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 0 (pid: 1663177) of binary: /home/alufr/.conda/envs/moshi_ttt_fixed/bin/python3.10
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-11-13_12:26:35
+  host      : ise-6000-06.auth.ad.bgu.ac.il
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 1663177)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-13 12:27:37 (IST) - 0:00:02 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-13 12:27:37 (IST) - 0:00:02 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-13 12:27:37 (IST) - 0:00:02 - distributed - INFO - local rank: 0
+2025-11-13 12:27:37 (IST) - 0:00:02 - train - INFO - Going to init comms...
+2025-11-13 12:27:37 (IST) - 0:00:02 - train - INFO - Run dir: ./ttt_training_run
+2025-11-13 12:27:37 (IST) - 0:00:02 - train - INFO - Removing run dir ttt_training_run...
+[rank0]:[W1113 12:27:37.276449398 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+2025-11-13 12:27:38 (IST) - 0:00:02 - train - INFO - TrainArgs: {'batch_size': 16,
+ 'ckpt_freq': 100,
+ 'data': {'eval_data': '',
+          'shuffle': False,
+          'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl'},
+ 'do_ckpt': True,
+ 'do_eval': False,
+ 'duration_sec': 100.0,
+ 'eval_freq': 100,
+ 'first_codebook_weight_multiplier': 100.0,
+ 'full_finetuning': False,
+ 'gradient_checkpointing': True,
+ 'log_freq': 1,
+ 'lora': {'enable': True, 'ft_embed': False, 'rank': 128, 'scaling': 2.0},
+ 'max_norm': 1.0,
+ 'max_steps': 2000,
+ 'moshi_paths': {'config_path': None,
+                 'hf_repo_id': 'kyutai/moshiko-pytorch-bf16',
+                 'mimi_path': None,
+                 'moshi_path': None,
+                 'tokenizer_path': None},
+ 'num_ckpt_keep': 3,
+ 'num_microbatches': 1,
+ 'optim': {'lr': 2e-06, 'pct_start': 0.05, 'weight_decay': 0.1},
+ 'overwrite_run_dir': True,
+ 'param_dtype': 'bfloat16',
+ 'run_dir': './ttt_training_run',
+ 'save_adapters': True,
+ 'seed': 0,
+ 'text_padding_weight': 0.5,
+ 'ttt': {'chunk_size': 256,
+         'conv_kernel_size': 2,
+         'enabled': True,
+         'layer_frequency': 6,
+         'learning_rate': 0.001,
+         'start_layer': 5},
+ 'wandb': {'key': None, 'offline': False, 'project': None, 'run_name': None},
+ 'world_size': 1}
+2025-11-13 12:27:38 (IST) - 0:00:02 - train - INFO - Loading Mimi and Moshi...
+/home/alufr/moshi_in_place_ttt/moshi/moshi/moshi/models/loaders.py:202: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO -   Layer frequency: 6
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO -   Start layer: 5
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO -   Learning rate: 0.001
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-13 12:27:39 (IST) - 0:00:04 - finetune.wrapped_model - INFO - Initializing lora layers ...
