@@ -101,7 +101,7 @@ def initialize_lora_parameters(model: torch.nn.Module, param_dtype: torch.dtype)
 
 def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
     """
-    Initialize TTT gating module parameters.
+    Initialize TTT gating module parameters and buffers.
     
     Per the In-Place TTT paper: only W_down is the fast weight.
     W_up and W_gate (in linear_in) are frozen slow weights.
@@ -112,6 +112,7 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
     for m_name, module in model.named_modules():
         # Only initialize TTT gating modules
         if "gating" in m_name:
+            # Initialize parameters
             for p_name, param in module.named_parameters():
                 # Only initialize if this specific parameter is meta
                 if param.is_meta:
@@ -154,10 +155,25 @@ def initialize_ttt_parameters(model: torch.nn.Module, param_dtype: torch.dtype):
                             torch.nn.init.normal_(new_param, mean=0.0, std=0.02)
                         else:
                             # Default initialization for other TTT params
-                            torch.nn.init.kaiming_uniform_(new_param, a=math.sqrt(5))
-
-                    # Assign to the correct nested module
-                    nested_module._parameters[param_name] = new_param
+                            torch.nn.init.kaiming_uniform_(param, a=math.sqrt(5))
+            
+            # Initialize buffers (e.g., w_down_pretrained)
+            for b_name, buffer in module.named_buffers():
+                if buffer.is_meta:
+                    # Initialize w_down_pretrained buffer to match w_down
+                    if "w_down_pretrained" in b_name:
+                        # Copy from w_down if it exists and is initialized
+                        if hasattr(module, 'w_down') and not module.w_down.is_meta:
+                            module._buffers[b_name] = module.w_down.data.clone().detach()
+                            logger.info(f"  ✓ Initialized {m_name}.{b_name} from w_down")
+                        else:
+                            # Fallback: create empty buffer on CPU in float32
+                            logger.warning(f"Buffer {m_name}.{b_name} still meta - initializing as zeros (float32)")
+                            module._buffers[b_name] = torch.zeros_like(buffer, device="cpu", dtype=torch.float32)
+                    else:
+                        # Other buffers: initialize on CPU with appropriate dtype
+                        logger.warning(f"Buffer {m_name}.{b_name} still meta - initializing as zeros")
+                        module._buffers[b_name] = torch.zeros_like(buffer, device="cpu")
 
 
 def get_fsdp_model(
@@ -257,19 +273,43 @@ def get_fsdp_model(
             logger.info("Initializing TTT layers ...")
             initialize_ttt_parameters(model, param_dtype)
 
-        # Debug: Check which parameters are still meta
+        # Debug: Check which parameters and buffers are still meta
         meta_params = [(name, param.shape) for name, param in model.named_parameters() if param.is_meta]
+        meta_buffers = [(name, buf.shape) for name, buf in model.named_buffers() if buf.is_meta]
+        
         if meta_params:
             logger.error(f"Found {len(meta_params)} meta parameters that were not initialized:")
             for name, shape in meta_params[:10]:  # Show first 10
+                logger.error(f"  {name}: {shape}")
+        
+        if meta_buffers:
+            logger.error(f"Found {len(meta_buffers)} meta buffers that were not initialized:")
+            for name, shape in meta_buffers[:10]:  # Show first 10
                 logger.error(f"  {name}: {shape}")
 
         assert not any(p.is_meta for p in model.parameters()), (
             "All parameters should be initialized by now"
         )
-        assert all(p.dtype == param_dtype for p in model.parameters()), (
-            f"All parameters should be on {param_dtype}"
+        
+        assert not any(b.is_meta for b in model.buffers()), (
+            "All buffers should be initialized by now"
         )
+        
+        # Check dtype, but allow w_down to be float32 for TTT precision
+        non_compliant = []
+        for name, p in model.named_parameters():
+            # w_down is intentionally kept in float32 for TTT precision
+            if 'w_down' in name and args.ttt and args.ttt.enabled:
+                if p.dtype != torch.float32:
+                    non_compliant.append((name, p.dtype))
+            elif p.dtype != param_dtype:
+                non_compliant.append((name, p.dtype))
+        
+        if non_compliant:
+            logger.error(f"Found {len(non_compliant)} parameters with wrong dtype:")
+            for name, dtype in non_compliant[:20]:
+                logger.error(f"  {name}: {dtype}")
+            raise AssertionError(f"All parameters should be on {param_dtype} (except w_down which should be float32)")
 
         logger.info("Finished initialization!")
         
