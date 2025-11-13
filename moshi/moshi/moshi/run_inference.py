@@ -336,6 +336,14 @@ def main():
             lm_kwargs_overrides['lora_rank'] = ckpt_config.get('lora_rank', 64)
             lm_kwargs_overrides['lora_scaling'] = ckpt_config.get('lora_scaling', 2.0)
             
+            # Load context/RoPE settings if present
+            if 'context' in ckpt_config:
+                lm_kwargs_overrides['context'] = ckpt_config['context']
+                log("info", f"Using context length from checkpoint: {ckpt_config['context']}")
+            if 'max_period' in ckpt_config:
+                lm_kwargs_overrides['max_period'] = ckpt_config['max_period']
+                log("info", f"Using max_period from checkpoint: {ckpt_config['max_period']}")
+            
             # Load TTT config if present
             if 'ttt_config' in ckpt_config:
                 lm_kwargs_overrides['ttt_config'] = ckpt_config['ttt_config']
@@ -367,6 +375,23 @@ def main():
     log("info", "moshi loaded")
     if lm.dep_q == 0:
         args.batch_size = 1
+    
+    # Check if TTT is enabled and force batch_size=1
+    ttt_enabled_layers = []
+    for idx, layer in enumerate(lm.transformer.layers):
+        mlp = getattr(layer, 'mlp', None) or getattr(layer, 'gating', None)
+        if mlp and hasattr(mlp, 'ttt_enabled') and mlp.ttt_enabled:
+            ttt_enabled_layers.append(idx)
+    
+    if ttt_enabled_layers:
+        log("info", f"TTT enabled at {len(ttt_enabled_layers)} layers")
+        for idx in ttt_enabled_layers:
+            mlp = getattr(lm.transformer.layers[idx], 'mlp', None) or getattr(lm.transformer.layers[idx], 'gating', None)
+            w_down_norm = torch.norm(mlp.w_down.data).item()
+            log("info", f"  Layer {idx} initial w_down norm: {w_down_norm:.4f}")
+        if args.batch_size != 1:
+            log("warning", f"TTT requires batch_size=1, changing from {args.batch_size} to 1")
+            args.batch_size = 1
 
     log("info", f"loading input file {args.infile}")
     in_pcms, _ = sphn.read(args.infile, sample_rate=mimi.sample_rate)

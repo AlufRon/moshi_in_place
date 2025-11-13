@@ -483,7 +483,20 @@ def get_moshi_lm(
         if ttt_layers_found:
             print(f"[TTT] Initialized TTT layers at indices: {ttt_layers_found}")
 
-    if lora:
+    # Load TTT weights if provided (even without LoRA)
+    if lora_weights is not None and not lora:
+        # This is a TTT-only checkpoint (no LoRA)
+        if _is_safetensors(lora_weights):
+            ttt_state = load_file(lora_weights, device=str(device))
+            # Load TTT target_generator weights
+            result = model.load_state_dict(ttt_state, strict=False)
+            if result.missing_keys or result.unexpected_keys:
+                print(f"[TTT] Loaded {len(ttt_state)} TTT parameters from checkpoint")
+                if result.unexpected_keys:
+                    print(f"[TTT] Warning: unexpected keys: {result.unexpected_keys[:5]}")
+        else:
+            raise ValueError(f"TTT weights must be in safetensors format, got: {lora_weights}")
+    elif lora:
         assert not lm_kwargs.get("quantize"), (
             "LoRA and quantization are incompatible for now."
         )
@@ -495,10 +508,6 @@ def get_moshi_lm(
             device=device,
             dtype=dtype,
             fuse_lora=fuse_lora,
-        )
-    else:
-        assert lora_weights is None, (
-            "`lora` is False, but received some lora_weights to load."
         )
     model.eval()
     return model
