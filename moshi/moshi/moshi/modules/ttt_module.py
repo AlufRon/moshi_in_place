@@ -420,13 +420,11 @@ class TTTGating(nn.Module):
         zero = torch.zeros_like(cumsum[0:1])
         S_prefix = torch.cat([zero, cumsum[:-1]], dim=0)  # [num_chunks, B, dim, hidden]
 
-        # When training we expose half of the current chunk's delta to its outputs to
-        # generate a usable gradient signal for the target generator (otherwise only
-        # later chunks receive the update and short documents yield near-zero grads).
-        if self.training:
-            S_apply = S_prefix + 0.5 * deltas
-        else:
-            S_apply = S_prefix
+        # Paper-compliant: chunk i uses only updates from chunks 0 to i-1
+        # Per Algorithm 1 line 11: W^(i-1)_down ← W^(0)_down + ηS_i
+        # With improved target_generator initialization (std=1e-2), this provides
+        # sufficient gradient signal without deviating from the paper's algorithm
+        S_apply = S_prefix
 
         # broadcast W_down_init to [num_chunks, B, dim, hidden]
         W_init_bc = W_down_init.unsqueeze(0).unsqueeze(0).expand(num_chunks, B, -1, -1)
