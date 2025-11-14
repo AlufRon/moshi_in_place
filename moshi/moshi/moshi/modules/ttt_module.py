@@ -515,13 +515,14 @@ class TTTGating(nn.Module):
 
             if self.training:
                 tg_norm = _target_generator_norm()
-                if tg_norm is not None:
+                w_down_norm = _safe_norm(self.w_down.data)
+                if tg_norm is not None and w_down_norm is not None:
                     logger.info(
-                        f"[TTT RESET][train] target_generator total norm {tg_norm:.6f}; "
-                        "w_down is frozen during training so its norm stays constant"
+                        f"[TTT RESET][train] target_generator norm {tg_norm:.6f}, w_down norm {w_down_norm:.6f}; "
+                        "both learn via backprop during training"
                     )
                 else:
-                    logger.info("[TTT RESET][train] target_generator parameters on meta device (norm unavailable)")
+                    logger.info("[TTT RESET][train] TTT parameters on meta device (norm unavailable)")
                 return
 
             if norm_before is not None and norm_after is not None:

@@ -24,7 +24,7 @@ batch_size: 2  # Reduced from 16 for memory
 max_steps: 2000
 gradient_checkpointing: true  # Keep enabled for memory
 optim:
-  lr: 1e-2  # 10x higher to overpower weight decay (0.1) with tiny gradients (~1e-8)
+  lr: 1e-4  # 10x higher to overpower weight decay (0.1) with tiny gradients (~1e-8)
   weight_decay: 0.1
   pct_start: 0.05
 
