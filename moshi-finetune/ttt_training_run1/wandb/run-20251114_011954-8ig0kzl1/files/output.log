@@ -1,0 +1,59 @@
+[34m[1mwandb[0m: [33mWARNING[0m Calling wandb.login() after wandb.init() has no effect.
+2025-11-14 01:19:55 (IST) - 0:00:07 - train - INFO - Loading Mimi and Moshi...
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:203: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Layer frequency: 10
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Start layer: 10
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Learning rate: 0.001
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - YaRN (Context Window Extension) ENABLED
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Scale: 4.0x
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Original max seq len: 3000
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Beta fast: 32
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Beta slow: 1
+2025-11-14 01:19:57 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+[YaRN] Enabled with scale=4.0, original_len=3000
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.001, dim=4096, hidden=11264
+2025-11-14 01:19:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-14 01:19:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO - Initializing TTT w_down from pretrained checkpoint...
+2025-11-14 01:19:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ transformer.layers.10.gating.w_down <- transformer.layers.10.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 01:19:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ transformer.layers.20.gating.w_down <- transformer.layers.20.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 01:19:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ transformer.layers.30.gating.w_down <- transformer.layers.30.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 01:19:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO - Initializing TTT layers ...
+2025-11-14 01:19:58 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 01:19:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 01:19:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.10.gating.w_down_pretrained from w_down
+2025-11-14 01:20:00 (IST) - 0:00:12 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 01:20:00 (IST) - 0:00:12 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 01:20:00 (IST) - 0:00:12 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.20.gating.w_down_pretrained from w_down
+2025-11-14 01:20:02 (IST) - 0:00:13 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.30.gating.w_down_pretrained from w_down
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO - Initializing YaRN RoPE buffers ...
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.rope.inv_freq (shape: torch.Size([64]), scale: 4.0x)
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO - Finished initialization!
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO - TTT ACTIVE: 3 layers enabled
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO - TTT layer indices: [10, 20, 30]
+2025-11-14 01:20:02 (IST) - 0:00:14 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 01:20:33 (IST) - 0:00:45 - train - INFO - [TTT] Step 1: grad_norm=0.0291, param_norm=1.2215, delta_norm=0.000850, relative_change=0.0696% (6 params)
+2025-11-14 01:20:33 (IST) - 0:00:45 - train - INFO - step: 000001 - done (%): 0.1 - loss: 3.522 - lr: 8.0e-08 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.7 - words_per_second: 1733.0 - avg_words_per_second: 1733.0 - ETA: >2025-11-14 15:45:41
+2025-11-14 01:20:41 (IST) - 0:00:53 - train - INFO - [TTT] Step 2: grad_norm=0.0229, param_norm=1.2215, delta_norm=0.000783, relative_change=0.0641% (6 params)
+2025-11-14 01:20:41 (IST) - 0:00:53 - train - INFO - step: 000002 - done (%): 0.1 - loss: 4.008 - lr: 8.0e-08 - peak_alloc_mem (GB): 38.9 - alloc_mem (GB): 18.7 - words_per_second: 5736.6 - avg_words_per_second: 2661.8 - ETA: >2025-11-14 10:43:38
+2025-11-14 01:20:52 (IST) - 0:01:04 - train - INFO - [TTT] Step 3: grad_norm=0.0161, param_norm=1.2215, delta_norm=0.000721, relative_change=0.0590% (6 params)
+2025-11-14 01:20:52 (IST) - 0:01:04 - train - INFO - step: 000003 - done (%): 0.1 - loss: 4.250 - lr: 8.2e-08 - peak_alloc_mem (GB): 38.9 - alloc_mem (GB): 18.7 - words_per_second: 4070.2 - avg_words_per_second: 3008.9 - ETA: >2025-11-14 09:38:39
+2025-11-14 01:21:00 (IST) - 0:01:12 - train - INFO - [TTT] Step 4: grad_norm=0.0304, param_norm=1.2215, delta_norm=0.000724, relative_change=0.0593% (6 params)
+2025-11-14 01:21:00 (IST) - 0:01:12 - train - INFO - step: 000004 - done (%): 0.2 - loss: 4.919 - lr: 8.4e-08 - peak_alloc_mem (GB): 38.9 - alloc_mem (GB): 18.7 - words_per_second: 5580.4 - avg_words_per_second: 3400.6 - ETA: >2025-11-14 08:41:13
+2025-11-14 01:21:08 (IST) - 0:01:20 - train - INFO - [TTT] Step 5: grad_norm=0.0155, param_norm=1.2215, delta_norm=0.000696, relative_change=0.0570% (6 params)
+2025-11-14 01:21:08 (IST) - 0:01:20 - train - INFO - step: 000005 - done (%): 0.2 - loss: 2.770 - lr: 8.8e-08 - peak_alloc_mem (GB): 38.9 - alloc_mem (GB): 18.7 - words_per_second: 5499.1 - avg_words_per_second: 3681.6 - ETA: >2025-11-14 08:07:33
+2025-11-14 01:21:16 (IST) - 0:01:28 - train - INFO - [TTT] Step 6: grad_norm=0.0188, param_norm=1.2215, delta_norm=0.000700, relative_change=0.0573% (6 params)
+2025-11-14 01:21:16 (IST) - 0:01:28 - train - INFO - step: 000006 - done (%): 0.3 - loss: 2.376 - lr: 9.2e-08 - peak_alloc_mem (GB): 38.9 - alloc_mem (GB): 18.7 - words_per_second: 5420.3 - avg_words_per_second: 3889.6 - ETA: >2025-11-14 07:45:46

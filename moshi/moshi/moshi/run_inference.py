@@ -359,6 +359,18 @@ def main():
                     'learning_rate': 0.001,
                     'conv_kernel_size': 2,
                 }
+            
+            # Load YARN config if present
+            if 'yarn_config' in ckpt_config:
+                yarn_cfg = ckpt_config['yarn_config']
+                if yarn_cfg.get('enabled', False):
+                    lm_kwargs_overrides['yarn_scale'] = yarn_cfg.get('scale', 1.0)
+                    lm_kwargs_overrides['original_max_seq_len'] = yarn_cfg.get('original_max_seq_len', 3000)
+                    lm_kwargs_overrides['yarn_beta_fast'] = yarn_cfg.get('beta_fast', 32)
+                    lm_kwargs_overrides['yarn_beta_slow'] = yarn_cfg.get('beta_slow', 1)
+                    lm_kwargs_overrides['yarn_mscale'] = yarn_cfg.get('mscale', 1.0)
+                    lm_kwargs_overrides['yarn_mscale_all_dim'] = yarn_cfg.get('mscale_all_dim', 0.0)
+                    log("info", f"Loaded YARN config from checkpoint: scale={yarn_cfg['scale']}x, original_len={yarn_cfg['original_max_seq_len']}")
         else:
             log("warning", f"No config.json found at {config_file}, using default settings")
             lm_kwargs_overrides['lora'] = True

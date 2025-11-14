@@ -228,16 +228,40 @@ def get_fsdp_model(
             logger.info(f"  Conv kernel: {args.ttt.conv_kernel_size}")
             logger.info("=" * 70)
         
+        # Build YARN config if enabled
+        yarn_config = None
+        if hasattr(args, 'yarn') and args.yarn.enabled:
+            yarn_config = {
+                'yarn_scale': args.yarn.scale,
+                'original_max_seq_len': args.yarn.original_max_seq_len,
+                'yarn_beta_fast': args.yarn.beta_fast,
+                'yarn_beta_slow': args.yarn.beta_slow,
+                'yarn_mscale': args.yarn.mscale,
+                'yarn_mscale_all_dim': args.yarn.mscale_all_dim,
+            }
+            logger.info("=" * 70)
+            logger.info("YaRN (Context Window Extension) ENABLED")
+            logger.info("=" * 70)
+            logger.info(f"  Scale: {args.yarn.scale}x")
+            logger.info(f"  Original max seq len: {args.yarn.original_max_seq_len}")
+            logger.info(f"  Beta fast: {args.yarn.beta_fast}")
+            logger.info(f"  Beta slow: {args.yarn.beta_slow}")
+            logger.info("=" * 70)
+        
+        lm_overrides = {
+            "gradient_checkpointing": args.gradient_checkpointing,
+            "lora": args.lora.enable,
+            "lora_rank": args.lora.rank,
+            "lora_scaling": args.lora.scaling,
+            "ttt_config": ttt_config,
+        }
+        if yarn_config:
+            lm_overrides.update(yarn_config)
+        
         model = checkpointer_info.get_moshi(
             device="meta",
             dtype=param_dtype,
-            lm_kwargs_overrides={
-                "gradient_checkpointing": args.gradient_checkpointing,
-                "lora": args.lora.enable,
-                "lora_rank": args.lora.rank,
-                "lora_scaling": args.lora.scaling,
-                "ttt_config": ttt_config,
-            },
+            lm_kwargs_overrides=lm_overrides,
             load_weight=False,
         )
 
@@ -279,6 +303,30 @@ def get_fsdp_model(
         if args.ttt and args.ttt.enabled:
             logger.info("Initializing TTT layers ...")
             initialize_ttt_parameters(model, param_dtype)
+
+        # Initialize YaRN inv_freq buffer if YARN is enabled
+        if hasattr(args, 'yarn') and args.yarn.enabled:
+            logger.info("Initializing YaRN RoPE buffers ...")
+            from moshi.modules.rope import _compute_yarn_parameters
+            for name, module in model.named_modules():
+                if hasattr(module, 'rope') and module.rope is not None:
+                    rope = module.rope
+                    if hasattr(rope, 'inv_freq') and rope.inv_freq is not None and rope.inv_freq.is_meta:
+                        # Recompute inv_freq on the correct device
+                        inv_freq, attention_factor = _compute_yarn_parameters(
+                            dim=rope.dim,
+                            max_period=rope.max_period,
+                            scale=rope.yarn_scale,
+                            original_max_seq_len=rope.original_max_seq_len,
+                            beta_fast=rope.beta_fast,
+                            beta_slow=rope.beta_slow,
+                            mscale=rope.mscale,
+                            mscale_all_dim=rope.mscale_all_dim,
+                            device="cuda",
+                        )
+                        rope._buffers['inv_freq'] = inv_freq.to(dtype=param_dtype)
+                        rope.attention_factor = attention_factor
+                        logger.info(f"  ✓ Initialized {name}.rope.inv_freq (shape: {inv_freq.shape}, scale: {rope.yarn_scale}x)")
 
         # Debug: Check which parameters and buffers are still meta
         meta_params = [(name, param.shape) for name, param in model.named_parameters() if param.is_meta]

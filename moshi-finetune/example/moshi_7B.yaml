@@ -51,6 +51,16 @@ ttt:
   learning_rate: 1e-3   # TTT learning rate
   conv_kernel_size: 2
 
+# YaRN (Context Window Extension) Configuration
+yarn:
+  enabled: true
+  scale: 4.0  # Extend context by 4x (3000 -> 12000 tokens)
+  original_max_seq_len: 3000  # Original Moshi context length
+  beta_fast: 32  # Low frequency boundary (keep default)
+  beta_slow: 1  # High frequency boundary (keep default)
+  mscale: 1.0  # Attention scaling factor (keep default)
+  mscale_all_dim: 0.0  # Additional scaling (keep default)
+
 # This part is optional and can be kept commented out
 wandb:
   project: "moshi_in_place" # your wandb project name

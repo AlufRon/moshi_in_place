@@ -1,0 +1,61 @@
+batch_size: 1
+ckpt_freq: 100
+data:
+  eval_data: ''
+  shuffle: false
+  train_data: /sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl
+do_ckpt: true
+do_eval: false
+duration_sec: 10.0
+eval_freq: 0
+first_codebook_weight_multiplier: 1.0
+full_finetuning: false
+gradient_checkpointing: true
+log_freq: 10
+lora:
+  enable: false
+  ft_embed: false
+  rank: 64
+  scaling: 2.0
+max_norm: 1.0
+max_steps: 1000
+moshi_paths:
+  config_path: null
+  hf_repo_id: kyutai/moshiko-pytorch-bf16
+  mimi_path: null
+  moshi_path: null
+  tokenizer_path: null
+num_ckpt_keep: 3
+num_microbatches: 1
+optim:
+  lr: 0.0001
+  pct_start: 0.05
+  weight_decay: 0.1
+overwrite_run_dir: false
+param_dtype: bfloat16
+run_dir: ./yarn_ttt_training_run
+save_adapters: true
+seed: 42
+text_padding_weight: 0.5
+ttt:
+  chunk_size: 256
+  conv_kernel_size: 2
+  enabled: true
+  layer_frequency: 6
+  learning_rate: 0.001
+  start_layer: 5
+  unfreeze_ttt_layers: false
+wandb:
+  key: null
+  offline: false
+  project: null
+  run_name: yarn_ttt_training
+world_size: 1
+yarn:
+  beta_fast: 32
+  beta_slow: 1
+  enabled: true
+  mscale: 1.0
+  mscale_all_dim: 0.0
+  original_max_seq_len: 3000
+  scale: 4.0

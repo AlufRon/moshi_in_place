@@ -1,0 +1,21 @@
+2025-11-14 01:19:54,523 INFO    MainThread:1315559 [wandb_setup.py:_flush():80] Current SDK version is 0.21.0
+2025-11-14 01:19:54,523 INFO    MainThread:1315559 [wandb_setup.py:_flush():80] Configure stats pid to 1315559
+2025-11-14 01:19:54,523 INFO    MainThread:1315559 [wandb_setup.py:_flush():80] Loading settings from /home/alufr/.config/wandb/settings
+2025-11-14 01:19:54,523 INFO    MainThread:1315559 [wandb_setup.py:_flush():80] Loading settings from /home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/wandb/settings
+2025-11-14 01:19:54,524 INFO    MainThread:1315559 [wandb_setup.py:_flush():80] Loading settings from environment variables
+2025-11-14 01:19:54,524 INFO    MainThread:1315559 [wandb_init.py:setup_run_log_directory():703] Logging user logs to ttt_training_run1/wandb/run-20251114_011954-8ig0kzl1/logs/debug.log
+2025-11-14 01:19:54,525 INFO    MainThread:1315559 [wandb_init.py:setup_run_log_directory():704] Logging internal logs to ttt_training_run1/wandb/run-20251114_011954-8ig0kzl1/logs/debug-internal.log
+2025-11-14 01:19:54,525 INFO    MainThread:1315559 [wandb_init.py:init():830] calling init triggers
+2025-11-14 01:19:54,526 INFO    MainThread:1315559 [wandb_init.py:init():835] wandb.init called with sweep_config: {}
+config: {'data': {'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl', 'shuffle': False, 'eval_data': ''}, 'run_dir': './ttt_training_run1', 'moshi_paths': {'hf_repo_id': 'kyutai/moshiko-pytorch-bf16', 'mimi_path': None, 'moshi_path': None, 'tokenizer_path': None, 'config_path': None}, 'first_codebook_weight_multiplier': 100.0, 'text_padding_weight': 0.5, 'optim': {'lr': 2e-06, 'weight_decay': 0.1, 'pct_start': 0.05}, 'seed': 0, 'num_microbatches': 1, 'duration_sec': 100.0, 'batch_size': 4, 'max_norm': 1.0, 'max_steps': 2000, 'log_freq': 1, 'ckpt_freq': 100, 'save_adapters': True, 'do_ckpt': True, 'num_ckpt_keep': 3, 'eval_freq': 100, 'do_eval': False, 'gradient_checkpointing': True, 'world_size': 1, 'wandb': {'project': 'moshi_in_place', 'offline': False, 'key': '', 'run_name': 'run1'}, 'lora': {'enable': False, 'rank': 64, 'scaling': 2.0, 'ft_embed': False}, 'full_finetuning': False, 'ttt': {'enabled': True, 'layer_frequency': 10, 'start_layer': 10, 'chunk_size': 256, 'learning_rate': 0.001, 'conv_kernel_size': 2, 'unfreeze_ttt_layers': False}, 'yarn': {'enabled': True, 'scale': 4.0, 'original_max_seq_len': 3000, 'beta_fast': 32, 'beta_slow': 1, 'mscale': 1.0, 'mscale_all_dim': 0.0}, 'param_dtype': 'bfloat16', 'overwrite_run_dir': True, '_wandb': {}}
+2025-11-14 01:19:54,526 INFO    MainThread:1315559 [wandb_init.py:init():871] starting backend
+2025-11-14 01:19:54,740 INFO    MainThread:1315559 [wandb_init.py:init():874] sending inform_init request
+2025-11-14 01:19:54,745 INFO    MainThread:1315559 [wandb_init.py:init():882] backend started and connected
+2025-11-14 01:19:54,747 INFO    MainThread:1315559 [wandb_init.py:init():953] updated telemetry
+2025-11-14 01:19:54,758 INFO    MainThread:1315559 [wandb_init.py:init():977] communicating run to backend with 90.0 second timeout
+2025-11-14 01:19:55,550 INFO    MainThread:1315559 [wandb_init.py:init():1029] starting run threads in backend
+2025-11-14 01:19:55,984 INFO    MainThread:1315559 [wandb_run.py:_console_start():2458] atexit reg
+2025-11-14 01:19:55,984 INFO    MainThread:1315559 [wandb_run.py:_redirect():2306] redirect: wrap_raw
+2025-11-14 01:19:55,985 INFO    MainThread:1315559 [wandb_run.py:_redirect():2375] Wrapping output streams.
+2025-11-14 01:19:55,985 INFO    MainThread:1315559 [wandb_run.py:_redirect():2398] Redirects installed.
+2025-11-14 01:19:55,988 INFO    MainThread:1315559 [wandb_init.py:init():1075] run started, returning control to user process

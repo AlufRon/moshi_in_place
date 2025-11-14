@@ -1,0 +1,46 @@
+{
+  "os":  "Linux-5.14.0-503.29.1.el9_5.x86_64-x86_64-with-glibc2.34",
+  "python":  "CPython 3.10.18",
+  "startedAt":  "2025-11-13T23:19:54.501545Z",
+  "args":  [
+    "example/moshi_7B.yaml"
+  ],
+  "program":  "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py",
+  "codePath":  "moshi-finetune/train.py",
+  "codePathLocal":  "train.py",
+  "git":  {
+    "remote":  "https://github.com/AlufRon/moshi_in_place",
+    "commit":  "e4bcd407f6876b93427ea567150f90c03202a077"
+  },
+  "email":  "alufr@post.bgu.ac.il",
+  "root":  "ttt_training_run1",
+  "host":  "ise-6000-08.auth.ad.bgu.ac.il",
+  "executable":  "/home/alufr/.conda/envs/moshi_ttt_fixed/bin/python3.10",
+  "cpu_count":  24,
+  "cpu_count_logical":  48,
+  "gpu":  "NVIDIA RTX 6000 Ada Generation",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "214310223872",
+      "used":  "90482266112"
+    }
+  },
+  "memory":  {
+    "total":  "269548703744"
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA RTX 6000 Ada Generation",
+      "memoryTotal":  "51527024640",
+      "cudaCores":  18176,
+      "architecture":  "Ada",
+      "uuid":  "GPU-0c20b5b3-d03d-c00e-1fde-0d0e85ba99ba"
+    }
+  ],
+  "cudaVersion":  "12.7",
+  "slurm":  {
+    "job_id":  "8157789"
+  },
+  "writerId":  "no76192mkt2t5bplg0ifyxyodof795bb"
+}

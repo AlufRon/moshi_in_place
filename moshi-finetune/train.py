@@ -324,20 +324,63 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
         # clip grad norm
         total_grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_norm)
         
-        # Log TTT gradient norms periodically
+        # Log TTT gradient norms and track parameter changes
+        ttt_stats = {}
         if state.step % args.log_freq == 0 and args.ttt.enabled:
+            # Collect TTT parameter stats BEFORE optimizer step
+            ttt_params_before = {}
             ttt_grad_norm = 0.0
+            ttt_param_norm = 0.0
             ttt_param_count = 0
+            
             for name, p in model.named_parameters():
-                if p.grad is not None and 'target_generator' in name:
+                if 'target_generator' in name and p.grad is not None:
                     ttt_grad_norm += p.grad.norm().item() ** 2
+                    ttt_param_norm += p.data.norm().item() ** 2
                     ttt_param_count += 1
+                    # Store parameter snapshot for computing delta
+                    ttt_params_before[name] = p.data.clone()
+            
             if ttt_param_count > 0:
                 ttt_grad_norm = (ttt_grad_norm ** 0.5)
-                logger.info(f"[TTT] Step {state.step}: grad_norm={ttt_grad_norm:.4f} ({ttt_param_count} params)")
+                ttt_param_norm = (ttt_param_norm ** 0.5)
+                ttt_stats['grad_norm'] = ttt_grad_norm
+                ttt_stats['param_norm_before'] = ttt_param_norm
+                ttt_stats['param_count'] = ttt_param_count
 
         # optimizer step
         optimizer.step()
+        
+        # Log TTT parameter changes AFTER optimizer step
+        if state.step % args.log_freq == 0 and args.ttt.enabled and ttt_stats:
+            ttt_delta_norm = 0.0
+            ttt_param_norm_after = 0.0
+            
+            for name, p in model.named_parameters():
+                if name in ttt_params_before:
+                    delta = (p.data - ttt_params_before[name]).norm().item()
+                    ttt_delta_norm += delta ** 2
+                    ttt_param_norm_after += p.data.norm().item() ** 2
+            
+            ttt_delta_norm = (ttt_delta_norm ** 0.5)
+            ttt_param_norm_after = (ttt_param_norm_after ** 0.5)
+            
+            # Calculate relative change
+            relative_change = (ttt_delta_norm / ttt_param_norm_after * 100) if ttt_param_norm_after > 0 else 0.0
+            
+            # Store for logging
+            ttt_stats['param_norm'] = ttt_param_norm_after
+            ttt_stats['delta_norm'] = ttt_delta_norm
+            ttt_stats['relative_change'] = relative_change
+            
+            logger.info(
+                f"[TTT] Step {state.step}: "
+                f"grad_norm={ttt_stats['grad_norm']:.4f}, "
+                f"param_norm={ttt_param_norm_after:.4f}, "
+                f"delta_norm={ttt_delta_norm:.6f}, "
+                f"relative_change={relative_change:.4f}% "
+                f"({ttt_stats['param_count']} params)"
+            )
 
         # downcast params for forward & backward
         downcast_mixed_precision(model.parameters(), param_dtype=param_dtype)
@@ -378,6 +421,15 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
                 torch.cuda.memory_allocated(),
                 args,
             )
+            
+            # Add TTT statistics to logs if available
+            if args.ttt.enabled and ttt_stats:
+                train_logs['ttt/grad_norm'] = ttt_stats.get('grad_norm', 0.0)
+                train_logs['ttt/param_norm'] = ttt_stats.get('param_norm', 0.0)
+                train_logs['ttt/delta_norm'] = ttt_stats.get('delta_norm', 0.0)
+                train_logs['ttt/relative_change_pct'] = ttt_stats.get('relative_change', 0.0)
+                train_logs['ttt/param_count'] = ttt_stats.get('param_count', 0)
+            
             main_logger_info(train_log_msg(state, logs=train_logs, loss=avg_loss))
             metrics_logger.log(train_logs, step=state.step)
 

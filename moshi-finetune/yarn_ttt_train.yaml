@@ -1,0 +1,95 @@
+# Moshi + YaRN + In-Place TTT Training
+# Context extension: 3000 -> 12000 tokens (4x) with frozen base model
+
+# Run directory - where checkpoints and logs will be saved
+run_dir: ./yarn_ttt_training_run
+
+# Model paths - using pretrained Moshi model
+moshi_paths:
+  hf_repo_id: "kyutai/moshiko-pytorch-bf16"
+  mimi_path: null
+  moshi_path: null
+  tokenizer_path: null
+  config_path: null
+
+# Data configuration - using your existing TalkBank CallHome dataset
+data:
+  train_data: /sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl
+  eval_data: ''
+  shuffle: false
+
+# Training hyperparameters
+duration_sec: 10.0  # Audio duration in seconds
+batch_size: 1  # Reduced for longer context (12000 tokens)
+num_microbatches: 1  # Gradient accumulation
+max_steps: 1000  # Total training steps
+seed: 42
+
+# Optimizer configuration
+optim:
+  lr: 1e-4  # Learning rate
+  weight_decay: 0.1
+  pct_start: 0.05  # Warmup percentage
+
+# Gradient clipping
+max_norm: 1.0
+
+# Logging and evaluation
+log_freq: 10  # Log every 10 steps
+eval_freq: 0  # Disable eval for now
+do_eval: false
+
+# Checkpointing
+do_ckpt: true
+ckpt_freq: 100  # Save checkpoint every 100 steps
+num_ckpt_keep: 3  # Keep last 3 checkpoints
+save_adapters: true  # Save only trained parameters (TTT)
+
+# Training mode - FROZEN BASE MODEL
+full_finetuning: false  # Freeze base model, only train TTT
+
+# LoRA - disabled for TTT-only training
+lora:
+  enable: false
+
+# TTT (Test-Time Training) Configuration
+ttt:
+  enabled: true
+  layer_frequency: 6  # Apply TTT every 6th layer
+  start_layer: 5  # Start from layer 5 -> layers 5,11,17,23,29
+  chunk_size: 256  # Tokens per TTT update
+  learning_rate: 1e-3  # TTT fast weight learning rate
+  conv_kernel_size: 2  # Causal conv kernel size for target generation
+
+# YaRN (Context Window Extension) Configuration
+yarn:
+  enabled: true
+  scale: 4.0  # Extend context by 4x (3000 -> 12000 tokens)
+  original_max_seq_len: 3000  # Original Moshi context length
+  beta_fast: 32  # Low frequency boundary (keep default)
+  beta_slow: 1  # High frequency boundary (keep default)
+  mscale: 1.0  # Attention scaling factor (keep default)
+  mscale_all_dim: 0.0  # Additional scaling (keep default)
+
+# Loss weights
+text_padding_weight: 0.5
+first_codebook_weight_multiplier: 1.0
+
+# Mixed precision
+param_dtype: bfloat16
+
+# Efficiency
+gradient_checkpointing: true  # Reduce memory usage for long sequences
+
+# WandB logging (optional)
+wandb:
+  project: null  # Set to your wandb project name if using
+  offline: false
+  key: null
+  run_name: yarn_ttt_training
+
+# Notes:
+# - Base model frozen, only TTT parameters trained (~4M params)
+# - YaRN extends context 4x (3000 -> 12000 tokens)
+# - batch_size=1 due to longer context memory requirements
+# - Monitor TTT gradient norms for stability
