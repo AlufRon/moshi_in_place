@@ -16,7 +16,7 @@ from torch.optim import AdamW, lr_scheduler
 from finetune.args import TrainArgs
 from finetune.checkpointing import Checkpointer
 from finetune.data.data_loader import build_data_loader
-from finetune.data.interleaver import InterleavedTokenizer, Interleaver
+from finetune.data.interleaver import Batch, InterleavedTokenizer, Interleaver
 from finetune.distributed import (
     BACKEND,
     avg_aggregate,
@@ -47,9 +47,73 @@ from moshi.models import loaders
 logger = logging.getLogger("train")
 
 
+def _is_rank_zero() -> bool:
+    if dist.is_available() and dist.is_initialized():
+        return dist.get_rank() == 0
+    return True
+
+
 def main_logger_info(message: str) -> None:
-    if get_rank() == 0:
+    if _is_rank_zero():
         logger.info(message)
+
+
+def _summarize_doc_runs(doc_ids: list[str], segment_indices: list[int | None]) -> list[str]:
+    runs: list[str] = []
+    current_doc: str | None = None
+    start_seg: int | None = None
+    last_seg: int | None = None
+    for doc_id, seg_idx in zip(doc_ids, segment_indices):
+        if current_doc != doc_id:
+            if current_doc is not None:
+                runs.append(_format_doc_run(current_doc, start_seg, last_seg))
+            current_doc = doc_id
+            start_seg = seg_idx
+        last_seg = seg_idx
+    if current_doc is not None:
+        runs.append(_format_doc_run(current_doc, start_seg, last_seg))
+    return runs
+
+
+def _format_doc_run(doc_id: str, start_seg: int | None, end_seg: int | None) -> str:
+    doc_name = Path(doc_id).name
+    if start_seg is None and end_seg is None:
+        return f"{doc_name}[segments=?]"
+    if start_seg == end_seg:
+        return f"{doc_name}[segment={start_seg}]"
+    return f"{doc_name}[segments={start_seg}-{end_seg}]"
+
+
+def log_doc_stream(step: int, microbatch_idx: int, batch: Batch) -> None:
+    if batch.doc_ids is None:
+        return
+    segment_indices = batch.segment_indices
+    if segment_indices is None:
+        segment_indices = [None] * len(batch.doc_ids)
+    runs = _summarize_doc_runs(batch.doc_ids, segment_indices)
+    unique_docs = len(set(batch.doc_ids))
+    preview = ", ".join(runs[:5])
+    if len(runs) > 5:
+        preview += ", ..."
+    main_logger_info(
+        f"[DocStream] step={step} microbatch={microbatch_idx} samples={len(batch.doc_ids)} "
+        f"unique_docs={unique_docs} runs={preview}"
+    )
+
+
+def reset_ttt_on_doc_switch(model, doc_ids: list[str], last_doc_id: str | None) -> str | None:
+    if not hasattr(model, "reset_ttt_state"):
+        return last_doc_id
+
+    current_doc = last_doc_id
+    for doc_id in doc_ids:
+        if doc_id is None:
+            continue
+        if doc_id != current_doc:
+            main_logger_info(f"[TTT RESET] Document switch detected: {current_doc} -> {doc_id}")
+            model.reset_ttt_state()
+            current_doc = doc_id
+    return current_doc
 
 
 def train(config: str):
@@ -256,6 +320,8 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
     model.train()
     torch.cuda.empty_cache()
 
+    last_doc_id: str | None = None
+
     while state.step < args.max_steps:
         state.start_step()
         is_last_step = state.step == args.max_steps
@@ -269,6 +335,12 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
         for i in range(args.num_microbatches):
             batch = next(data_loader)
             codes = batch.codes
+
+            if batch.doc_ids is not None and state.step % args.log_freq == 0:
+                log_doc_stream(state.step, i, batch)
+
+            if batch.doc_ids is not None:
+                last_doc_id = reset_ttt_on_doc_switch(model, batch.doc_ids, last_doc_id)
 
             condition_tensors = None
             if batch.condition_attributes is not None:
@@ -323,18 +395,36 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
 
         # clip grad norm
         total_grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), args.max_norm)
-        
+
+        # DEBUG: Check target_generator + w_down parameters
+        if state.step % args.log_freq == 0 and state.step < 5 and args.ttt.enabled:
+            main_logger_info("\n=== TTT Parameter Debug ===")
+            ttt_param_count = 0
+            for name, p in model.named_parameters():
+                if 'target_generator' in name or 'w_down' in name:
+                    ttt_param_count += 1
+                    main_logger_info(f"{name}:")
+                    main_logger_info(f"  requires_grad: {p.requires_grad}")
+                    main_logger_info(f"  has grad: {p.grad is not None}")
+                    if p.grad is not None:
+                        main_logger_info(f"  grad norm: {p.grad.norm().item():.6f}")
+                    else:
+                        main_logger_info(f"  grad: None")
+            if ttt_param_count == 0:
+                main_logger_info("WARNING: No TTT parameters (target_generator or w_down) found!")
+            main_logger_info("=========================\n")
+
         # Log TTT gradient norms and track parameter changes
         ttt_stats = {}
         if state.step % args.log_freq == 0 and args.ttt.enabled:
-            # Collect TTT parameter stats BEFORE optimizer step
+            # Collect TTT parameter stats BEFORE optimizer step (target_generator + w_down)
             ttt_params_before = {}
             ttt_grad_norm = 0.0
             ttt_param_norm = 0.0
             ttt_param_count = 0
             
             for name, p in model.named_parameters():
-                if 'target_generator' in name and p.grad is not None:
+                if ('target_generator' in name or 'w_down' in name) and p.grad is not None:
                     ttt_grad_norm += p.grad.norm().item() ** 2
                     ttt_param_norm += p.data.norm().item() ** 2
                     ttt_param_count += 1
@@ -375,9 +465,9 @@ def _train(args: TrainArgs, exit_stack: ExitStack):
             
             logger.info(
                 f"[TTT] Step {state.step}: "
-                f"grad_norm={ttt_stats['grad_norm']:.4f}, "
+                f"grad_norm={ttt_stats['grad_norm']:.3e}, "
                 f"param_norm={ttt_param_norm_after:.4f}, "
-                f"delta_norm={ttt_delta_norm:.6f}, "
+                f"delta_norm={ttt_delta_norm:.3e}, "
                 f"relative_change={relative_change:.4f}% "
                 f"({ttt_stats['param_count']} params)"
             )

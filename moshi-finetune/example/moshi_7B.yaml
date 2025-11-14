@@ -19,12 +19,12 @@ first_codebook_weight_multiplier: 100.
 text_padding_weight: .5
 
 # optim
-duration_sec: 100
-batch_size: 4  # Reduced from 16 for memory
+duration_sec: 150
+batch_size: 2  # Reduced from 16 for memory
 max_steps: 2000
-gradient_checkpointing: true
+gradient_checkpointing: true  # Keep enabled for memory
 optim:
-  lr: 2e-6
+  lr: 1e-2  # 10x higher to overpower weight decay (0.1) with tiny gradients (~1e-8)
   weight_decay: 0.1
   pct_start: 0.05
 
@@ -39,7 +39,7 @@ ckpt_freq: 100
 
 save_adapters: true # Save LoRA adapters
 
-run_dir: "./ttt_training_run1"
+run_dir: "/sise/eliyanac-group/ron_al/ttt_training_run2"
 overwrite_run_dir: true
 
 # TTT Configuration - In-Place Test-Time Training
@@ -48,8 +48,9 @@ ttt:
   layer_frequency: 10   # TTT every 10th layer (reduced from 6 for memory)
   start_layer: 10       # Start from layer 10 -> layers 10, 20, 30 (3 layers)
   chunk_size: 256       # 256 tokens per update
-  learning_rate: 1e-3   # TTT learning rate
+  learning_rate: 1e-4   # TTT learning rate
   conv_kernel_size: 2
+  delta_clip_fro_norm: 100.0  # Clip deltas to prevent instability (1e-5 was too aggressive for norm~70 weights)
 
 # YaRN (Context Window Extension) Configuration
 yarn:
@@ -64,6 +65,6 @@ yarn:
 # This part is optional and can be kept commented out
 wandb:
   project: "moshi_in_place" # your wandb project name
-  run_name: "run1" # your wandb run name
+  run_name: "run2" # your wandb run name
   key: "" # your wandb api key
   offline: False

@@ -1,0 +1,762 @@
+==================================================
+Job started at: Fri 14 Nov 2025 15:44:45 IST
+Running on node: cs-6000-01.auth.ad.bgu.ac.il
+GPU info:
+Fri Nov 14 15:44:45 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:A1:00.0 Off |                  Off |
+| 30%   32C    P8             22W /  300W |       2MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+==================================================
+Set CUDA_VISIBLE_DEVICES=0
+Starting YARN + TTT training...
+Context Extension: 4x (3000 -> 12000 tokens)
+TTT Layers: 3 (layers 10, 20, 30)
+Base Model: Frozen (only TTT params trained)
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-14 15:44:51 (IST) - 0:00:03 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-14 15:44:51 (IST) - 0:00:03 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-14 15:44:51 (IST) - 0:00:03 - distributed - INFO - local rank: 0
+2025-11-14 15:44:51 (IST) - 0:00:03 - train - INFO - Going to init comms...
+2025-11-14 15:44:51 (IST) - 0:00:03 - train - INFO - Run dir: /sise/eliyanac-group/ron_al/ttt_training_run2
+2025-11-14 15:44:51 (IST) - 0:00:03 - train - INFO - Removing run dir /sise/eliyanac-group/ron_al/ttt_training_run2...
+2025-11-14 15:44:52 (IST) - 0:00:04 - train - INFO - TrainArgs: {'batch_size': 2,
+ 'ckpt_freq': 100,
+ 'data': {'eval_data': '',
+          'shuffle': False,
+          'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl'},
+ 'do_ckpt': True,
+ 'do_eval': False,
+ 'duration_sec': 150.0,
+ 'eval_freq': 100,
+ 'first_codebook_weight_multiplier': 100.0,
+ 'full_finetuning': False,
+ 'gradient_checkpointing': True,
+ 'log_freq': 1,
+ 'lora': {'enable': False, 'ft_embed': False, 'rank': 64, 'scaling': 2.0},
+ 'max_norm': 1.0,
+ 'max_steps': 2000,
+ 'moshi_paths': {'config_path': None,
+                 'hf_repo_id': 'kyutai/moshiko-pytorch-bf16',
+                 'mimi_path': None,
+                 'moshi_path': None,
+                 'tokenizer_path': None},
+ 'num_ckpt_keep': 3,
+ 'num_microbatches': 1,
+ 'optim': {'lr': 4e-06, 'pct_start': 0.05, 'weight_decay': 0.1},
+ 'overwrite_run_dir': True,
+ 'param_dtype': 'bfloat16',
+ 'run_dir': '/sise/eliyanac-group/ron_al/ttt_training_run2',
+ 'save_adapters': True,
+ 'seed': 0,
+ 'text_padding_weight': 0.5,
+ 'ttt': {'chunk_size': 256,
+         'conv_kernel_size': 2,
+         'delta_clip_fro_norm': 5.0,
+         'enabled': True,
+         'layer_frequency': 10,
+         'learning_rate': 0.0001,
+         'start_layer': 10,
+         'unfreeze_ttt_layers': False},
+ 'wandb': {'key': '',
+           'offline': False,
+           'project': 'moshi_in_place',
+           'run_name': 'run2'},
+ 'world_size': 1,
+ 'yarn': {'beta_fast': 32,
+          'beta_slow': 1,
+          'enabled': True,
+          'mscale': 1.0,
+          'mscale_all_dim': 0.0,
+          'original_max_seq_len': 3000,
+          'scale': 4.0}}
+2025-11-14 15:44:52 (IST) - 0:00:04 - metrics_logger - INFO - initializing wandb
+2025-11-14 15:44:54 (IST) - 0:00:06 - train - INFO - Loading Mimi and Moshi...
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Layer frequency: 10
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Start layer: 10
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Learning rate: 0.0001
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - YaRN (Context Window Extension) ENABLED
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Scale: 4.0x
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Original max seq len: 3000
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Beta fast: 32
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Beta slow: 1
+2025-11-14 15:44:55 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+[YaRN] Enabled with scale=4.0, original_len=3000
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[YaRN] Initializing RoPE buffers on device=meta
+[YaRN] RoPE buffers initialized successfully
+2025-11-14 15:44:56 (IST) - 0:00:08 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-14 15:44:56 (IST) - 0:00:08 - finetune.wrapped_model - INFO - Initializing TTT w_down from pretrained checkpoint...
+2025-11-14 15:44:56 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ transformer.layers.10.gating.w_down <- transformer.layers.10.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 15:44:56 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ transformer.layers.20.gating.w_down <- transformer.layers.20.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 15:44:56 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ transformer.layers.30.gating.w_down <- transformer.layers.30.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 15:44:56 (IST) - 0:00:08 - finetune.wrapped_model - INFO - Initializing TTT layers ...
+2025-11-14 15:44:56 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 15:44:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 15:44:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.10.gating.w_down_pretrained from w_down
+2025-11-14 15:44:57 (IST) - 0:00:09 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 15:44:57 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 15:44:58 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 15:44:58 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.20.gating.w_down_pretrained from w_down
+2025-11-14 15:44:58 (IST) - 0:00:10 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 15:44:58 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.30.gating.w_down_pretrained from w_down
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO - Initializing YaRN RoPE buffers ...
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.rope.inv_freq (shape: torch.Size([64]), scale: 4.0x)
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO - Finished initialization!
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO - TTT ACTIVE: 3 layers enabled
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO - TTT layer indices: [10, 20, 30]
+2025-11-14 15:44:59 (IST) - 0:00:11 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 15:45:05 (IST) - 0:00:17 - train - INFO - [DocStream] step=1 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=0-1]
+2025-11-14 15:45:05 (IST) - 0:00:17 - train - INFO - [TTT RESET] Document switch detected: None -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav
+2025-11-14 15:45:05 (IST) - 0:00:17 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:45:05 (IST) - 0:00:17 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:45:05 (IST) - 0:00:17 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:45:14 (IST) - 0:00:26 - train - INFO - [TTT] Step 1: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000022, relative_change=0.0018% (6 params)
+2025-11-14 15:45:14 (IST) - 0:00:26 - train - INFO - step: 000001 - done (%): 0.1 - loss: 3.378 - lr: 1.6e-07 - peak_alloc_mem (GB): 35.5 - alloc_mem (GB): 18.6 - words_per_second: 2880.5 - avg_words_per_second: 2880.5 - ETA: >2025-11-14 22:15:35
+2025-11-14 15:45:14 (IST) - 0:00:26 - train - INFO - [DocStream] step=2 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=2-3]
+2025-11-14 15:45:20 (IST) - 0:00:32 - train - INFO - [TTT] Step 2: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000024, relative_change=0.0020% (6 params)
+2025-11-14 15:45:20 (IST) - 0:00:32 - train - INFO - step: 000002 - done (%): 0.1 - loss: 3.943 - lr: 1.6e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5553.5 - avg_words_per_second: 3793.4 - ETA: >2025-11-14 20:41:36
+2025-11-14 15:45:20 (IST) - 0:00:32 - train - INFO - [DocStream] step=3 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=4-5]
+2025-11-14 15:45:26 (IST) - 0:00:38 - train - INFO - [TTT] Step 3: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000021, relative_change=0.0017% (6 params)
+2025-11-14 15:45:26 (IST) - 0:00:38 - train - INFO - step: 000003 - done (%): 0.1 - loss: 3.365 - lr: 1.6e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5138.6 - avg_words_per_second: 4156.1 - ETA: >2025-11-14 20:15:43
+2025-11-14 15:45:27 (IST) - 0:00:39 - train - INFO - [DocStream] step=4 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=0-1]
+2025-11-14 15:45:27 (IST) - 0:00:39 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4065.wav
+2025-11-14 15:45:27 (IST) - 0:00:39 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:45:27 (IST) - 0:00:39 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:45:27 (IST) - 0:00:39 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:45:32 (IST) - 0:00:44 - train - INFO - [TTT] Step 4: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000019, relative_change=0.0016% (6 params)
+2025-11-14 15:45:32 (IST) - 0:00:44 - train - INFO - step: 000004 - done (%): 0.2 - loss: 4.809 - lr: 1.7e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5468.1 - avg_words_per_second: 4421.3 - ETA: >2025-11-14 19:59:29
+2025-11-14 15:45:33 (IST) - 0:00:45 - train - INFO - [DocStream] step=5 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=2-3]
+2025-11-14 15:45:39 (IST) - 0:00:51 - train - INFO - [TTT] Step 5: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000020, relative_change=0.0016% (6 params)
+2025-11-14 15:45:39 (IST) - 0:00:51 - train - INFO - step: 000005 - done (%): 0.2 - loss: 4.950 - lr: 1.8e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5440.2 - avg_words_per_second: 4593.4 - ETA: >2025-11-14 19:49:57
+2025-11-14 15:45:39 (IST) - 0:00:51 - train - INFO - [DocStream] step=6 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=4-5]
+2025-11-14 15:45:45 (IST) - 0:00:57 - train - INFO - [TTT] Step 6: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000021, relative_change=0.0017% (6 params)
+2025-11-14 15:45:45 (IST) - 0:00:57 - train - INFO - step: 000006 - done (%): 0.3 - loss: 3.375 - lr: 1.8e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5409.8 - avg_words_per_second: 4711.9 - ETA: >2025-11-14 19:43:47
+2025-11-14 15:45:45 (IST) - 0:00:57 - train - INFO - [DocStream] step=7 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=6-7]
+2025-11-14 15:45:51 (IST) - 0:01:03 - train - INFO - [TTT] Step 7: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000020, relative_change=0.0016% (6 params)
+2025-11-14 15:45:51 (IST) - 0:01:03 - train - INFO - step: 000007 - done (%): 0.3 - loss: 2.610 - lr: 1.9e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5376.6 - avg_words_per_second: 4796.6 - ETA: >2025-11-14 19:39:34
+2025-11-14 15:45:51 (IST) - 0:01:03 - train - INFO - [DocStream] step=8 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=8-9]
+2025-11-14 15:45:57 (IST) - 0:01:09 - train - INFO - [TTT] Step 8: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000019, relative_change=0.0015% (6 params)
+2025-11-14 15:45:57 (IST) - 0:01:09 - train - INFO - step: 000008 - done (%): 0.4 - loss: 2.320 - lr: 2.1e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5346.8 - avg_words_per_second: 4859.1 - ETA: >2025-11-14 19:36:33
+2025-11-14 15:45:58 (IST) - 0:01:10 - train - INFO - [DocStream] step=9 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=10-11]
+2025-11-14 15:46:04 (IST) - 0:01:16 - train - INFO - [TTT] Step 9: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000018, relative_change=0.0015% (6 params)
+2025-11-14 15:46:04 (IST) - 0:01:16 - train - INFO - step: 000009 - done (%): 0.5 - loss: 2.321 - lr: 2.2e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5323.0 - avg_words_per_second: 4906.6 - ETA: >2025-11-14 19:34:19
+2025-11-14 15:46:04 (IST) - 0:01:16 - train - INFO - [DocStream] step=10 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=0-1]
+2025-11-14 15:46:04 (IST) - 0:01:16 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4065.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4074.wav
+2025-11-14 15:46:04 (IST) - 0:01:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:46:04 (IST) - 0:01:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:46:04 (IST) - 0:01:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:46:10 (IST) - 0:01:22 - train - INFO - [TTT] Step 10: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000018, relative_change=0.0015% (6 params)
+2025-11-14 15:46:10 (IST) - 0:01:22 - train - INFO - step: 000010 - done (%): 0.5 - loss: 5.038 - lr: 2.4e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5289.2 - avg_words_per_second: 4942.4 - ETA: >2025-11-14 19:32:39
+2025-11-14 15:46:10 (IST) - 0:01:22 - train - INFO - [DocStream] step=11 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=2-3]
+2025-11-14 15:46:17 (IST) - 0:01:29 - train - INFO - [TTT] Step 11: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000018, relative_change=0.0015% (6 params)
+2025-11-14 15:46:17 (IST) - 0:01:29 - train - INFO - step: 000011 - done (%): 0.6 - loss: 4.583 - lr: 2.6e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5260.9 - avg_words_per_second: 4969.7 - ETA: >2025-11-14 19:31:24
+2025-11-14 15:46:17 (IST) - 0:01:29 - train - INFO - [DocStream] step=12 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=4-5]
+2025-11-14 15:46:23 (IST) - 0:01:35 - train - INFO - [TTT] Step 12: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000018, relative_change=0.0015% (6 params)
+2025-11-14 15:46:23 (IST) - 0:01:35 - train - INFO - step: 000012 - done (%): 0.6 - loss: 2.718 - lr: 2.8e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5244.1 - avg_words_per_second: 4991.5 - ETA: >2025-11-14 19:30:25
+2025-11-14 15:46:23 (IST) - 0:01:35 - train - INFO - [DocStream] step=13 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=6-7]
+2025-11-14 15:46:29 (IST) - 0:01:41 - train - INFO - [TTT] Step 13: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000019, relative_change=0.0015% (6 params)
+2025-11-14 15:46:29 (IST) - 0:01:41 - train - INFO - step: 000013 - done (%): 0.7 - loss: 3.064 - lr: 3.0e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5227.4 - avg_words_per_second: 5008.9 - ETA: >2025-11-14 19:29:38
+2025-11-14 15:46:30 (IST) - 0:01:42 - train - INFO - [DocStream] step=14 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=8-9]
+2025-11-14 15:46:36 (IST) - 0:01:48 - train - INFO - [TTT] Step 14: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000019, relative_change=0.0016% (6 params)
+2025-11-14 15:46:36 (IST) - 0:01:48 - train - INFO - step: 000014 - done (%): 0.7 - loss: 2.885 - lr: 3.2e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5208.8 - avg_words_per_second: 5022.6 - ETA: >2025-11-14 19:29:01
+2025-11-14 15:46:36 (IST) - 0:01:48 - train - INFO - [DocStream] step=15 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=10-11]
+2025-11-14 15:46:42 (IST) - 0:01:54 - train - INFO - [TTT] Step 15: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000020, relative_change=0.0016% (6 params)
+2025-11-14 15:46:42 (IST) - 0:01:54 - train - INFO - step: 000015 - done (%): 0.8 - loss: 2.801 - lr: 3.5e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5193.6 - avg_words_per_second: 5033.7 - ETA: >2025-11-14 19:28:32
+2025-11-14 15:46:43 (IST) - 0:01:55 - train - INFO - [DocStream] step=16 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=0-1]
+2025-11-14 15:46:43 (IST) - 0:01:55 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4074.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4077.wav
+2025-11-14 15:46:43 (IST) - 0:01:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:46:43 (IST) - 0:01:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:46:43 (IST) - 0:01:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:46:49 (IST) - 0:02:01 - train - INFO - [TTT] Step 16: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000027, relative_change=0.0022% (6 params)
+2025-11-14 15:46:49 (IST) - 0:02:01 - train - INFO - step: 000016 - done (%): 0.8 - loss: 4.238 - lr: 3.7e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5175.5 - avg_words_per_second: 5042.3 - ETA: >2025-11-14 19:28:09
+2025-11-14 15:46:49 (IST) - 0:02:01 - train - INFO - [DocStream] step=17 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=2-3]
+2025-11-14 15:46:56 (IST) - 0:02:07 - train - INFO - [TTT] Step 17: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000037, relative_change=0.0031% (6 params)
+2025-11-14 15:46:56 (IST) - 0:02:07 - train - INFO - step: 000017 - done (%): 0.8 - loss: 4.053 - lr: 4.0e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5162.7 - avg_words_per_second: 5049.2 - ETA: >2025-11-14 19:27:50
+2025-11-14 15:46:56 (IST) - 0:02:08 - train - INFO - [DocStream] step=18 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=4-5]
+2025-11-14 15:47:02 (IST) - 0:02:14 - train - INFO - [TTT] Step 18: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000038, relative_change=0.0031% (6 params)
+2025-11-14 15:47:02 (IST) - 0:02:14 - train - INFO - step: 000018 - done (%): 0.9 - loss: 2.536 - lr: 4.3e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5147.8 - avg_words_per_second: 5054.6 - ETA: >2025-11-14 19:27:36
+2025-11-14 15:47:02 (IST) - 0:02:14 - train - INFO - [DocStream] step=19 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=6-7]
+2025-11-14 15:47:09 (IST) - 0:02:21 - train - INFO - [TTT] Step 19: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000038, relative_change=0.0031% (6 params)
+2025-11-14 15:47:09 (IST) - 0:02:21 - train - INFO - step: 000019 - done (%): 0.9 - loss: 3.870 - lr: 4.6e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5147.7 - avg_words_per_second: 5059.4 - ETA: >2025-11-14 19:27:23
+2025-11-14 15:47:09 (IST) - 0:02:21 - train - INFO - [DocStream] step=20 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=8-9]
+2025-11-14 15:47:15 (IST) - 0:02:27 - train - INFO - [TTT] Step 20: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000039, relative_change=0.0032% (6 params)
+2025-11-14 15:47:15 (IST) - 0:02:27 - train - INFO - step: 000020 - done (%): 1.0 - loss: 3.452 - lr: 5.0e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5132.6 - avg_words_per_second: 5063.0 - ETA: >2025-11-14 19:27:14
+2025-11-14 15:47:16 (IST) - 0:02:28 - train - INFO - [DocStream] step=21 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=10-11]
+2025-11-14 15:47:22 (IST) - 0:02:34 - train - INFO - [TTT] Step 21: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000040, relative_change=0.0032% (6 params)
+2025-11-14 15:47:22 (IST) - 0:02:34 - train - INFO - step: 000021 - done (%): 1.1 - loss: 1.979 - lr: 5.3e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5131.9 - avg_words_per_second: 5066.3 - ETA: >2025-11-14 19:27:05
+2025-11-14 15:47:22 (IST) - 0:02:34 - train - INFO - [DocStream] step=22 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=0-1]
+2025-11-14 15:47:22 (IST) - 0:02:34 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4077.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4092.wav
+2025-11-14 15:47:22 (IST) - 0:02:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:47:22 (IST) - 0:02:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:47:22 (IST) - 0:02:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:47:28 (IST) - 0:02:40 - train - INFO - [TTT] Step 22: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000045, relative_change=0.0037% (6 params)
+2025-11-14 15:47:28 (IST) - 0:02:40 - train - INFO - step: 000022 - done (%): 1.1 - loss: 3.863 - lr: 5.7e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5117.0 - avg_words_per_second: 5068.6 - ETA: >2025-11-14 19:26:59
+2025-11-14 15:47:29 (IST) - 0:02:41 - train - INFO - [DocStream] step=23 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=2-3]
+2025-11-14 15:47:35 (IST) - 0:02:47 - train - INFO - [TTT] Step 23: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000049, relative_change=0.0040% (6 params)
+2025-11-14 15:47:35 (IST) - 0:02:47 - train - INFO - step: 000023 - done (%): 1.1 - loss: 3.770 - lr: 6.1e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5116.9 - avg_words_per_second: 5070.6 - ETA: >2025-11-14 19:26:54
+2025-11-14 15:47:35 (IST) - 0:02:47 - train - INFO - [DocStream] step=24 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=4-5]
+2025-11-14 15:47:42 (IST) - 0:02:54 - train - INFO - [TTT] Step 24: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000050, relative_change=0.0041% (6 params)
+2025-11-14 15:47:42 (IST) - 0:02:54 - train - INFO - step: 000024 - done (%): 1.2 - loss: 2.564 - lr: 6.5e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5101.1 - avg_words_per_second: 5071.9 - ETA: >2025-11-14 19:26:51
+2025-11-14 15:47:42 (IST) - 0:02:54 - train - INFO - [DocStream] step=25 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=6-7]
+2025-11-14 15:47:48 (IST) - 0:03:00 - train - INFO - [TTT] Step 25: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000052, relative_change=0.0043% (6 params)
+2025-11-14 15:47:48 (IST) - 0:03:00 - train - INFO - step: 000025 - done (%): 1.2 - loss: 2.588 - lr: 6.9e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5102.0 - avg_words_per_second: 5073.1 - ETA: >2025-11-14 19:26:47
+2025-11-14 15:47:49 (IST) - 0:03:01 - train - INFO - [DocStream] step=26 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=8-9]
+2025-11-14 15:47:55 (IST) - 0:03:07 - train - INFO - [TTT] Step 26: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000052, relative_change=0.0043% (6 params)
+2025-11-14 15:47:55 (IST) - 0:03:07 - train - INFO - step: 000026 - done (%): 1.3 - loss: 1.815 - lr: 7.3e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5101.0 - avg_words_per_second: 5074.2 - ETA: >2025-11-14 19:26:45
+2025-11-14 15:47:55 (IST) - 0:03:07 - train - INFO - [DocStream] step=27 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=10-11]
+2025-11-14 15:48:01 (IST) - 0:03:13 - train - INFO - [TTT] Step 27: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000054, relative_change=0.0044% (6 params)
+2025-11-14 15:48:01 (IST) - 0:03:13 - train - INFO - step: 000027 - done (%): 1.4 - loss: 2.478 - lr: 7.8e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5087.5 - avg_words_per_second: 5074.7 - ETA: >2025-11-14 19:26:43
+2025-11-14 15:48:02 (IST) - 0:03:14 - train - INFO - [DocStream] step=28 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=0-1]
+2025-11-14 15:48:02 (IST) - 0:03:14 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4092.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4104.wav
+2025-11-14 15:48:02 (IST) - 0:03:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:48:02 (IST) - 0:03:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:48:02 (IST) - 0:03:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:48:08 (IST) - 0:03:20 - train - INFO - [TTT] Step 28: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000059, relative_change=0.0048% (6 params)
+2025-11-14 15:48:08 (IST) - 0:03:20 - train - INFO - step: 000028 - done (%): 1.4 - loss: 3.956 - lr: 8.2e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5084.9 - avg_words_per_second: 5075.0 - ETA: >2025-11-14 19:26:42
+2025-11-14 15:48:08 (IST) - 0:03:20 - train - INFO - [DocStream] step=29 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=2-3]
+2025-11-14 15:48:15 (IST) - 0:03:27 - train - INFO - [TTT] Step 29: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000065, relative_change=0.0053% (6 params)
+2025-11-14 15:48:15 (IST) - 0:03:27 - train - INFO - step: 000029 - done (%): 1.4 - loss: 3.995 - lr: 8.7e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5086.1 - avg_words_per_second: 5075.4 - ETA: >2025-11-14 19:26:41
+2025-11-14 15:48:15 (IST) - 0:03:27 - train - INFO - [DocStream] step=30 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=4-5]
+2025-11-14 15:48:21 (IST) - 0:03:33 - train - INFO - [TTT] Step 30: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000065, relative_change=0.0053% (6 params)
+2025-11-14 15:48:21 (IST) - 0:03:33 - train - INFO - step: 000030 - done (%): 1.5 - loss: 1.973 - lr: 9.2e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5100.4 - avg_words_per_second: 5076.2 - ETA: >2025-11-14 19:26:39
+2025-11-14 15:48:22 (IST) - 0:03:34 - train - INFO - [DocStream] step=31 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=6-7]
+2025-11-14 15:48:28 (IST) - 0:03:40 - train - INFO - [TTT] Step 31: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000066, relative_change=0.0054% (6 params)
+2025-11-14 15:48:28 (IST) - 0:03:40 - train - INFO - step: 000031 - done (%): 1.6 - loss: 2.288 - lr: 9.7e-07 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5086.5 - avg_words_per_second: 5076.6 - ETA: >2025-11-14 19:26:38
+2025-11-14 15:48:28 (IST) - 0:03:40 - train - INFO - [DocStream] step=32 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=8-9]
+2025-11-14 15:48:35 (IST) - 0:03:47 - train - INFO - [TTT] Step 32: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000066, relative_change=0.0054% (6 params)
+2025-11-14 15:48:35 (IST) - 0:03:47 - train - INFO - step: 000032 - done (%): 1.6 - loss: 2.075 - lr: 1.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5087.6 - avg_words_per_second: 5076.9 - ETA: >2025-11-14 19:26:37
+2025-11-14 15:48:35 (IST) - 0:03:47 - train - INFO - [DocStream] step=33 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=10-11]
+2025-11-14 15:48:41 (IST) - 0:03:53 - train - INFO - [TTT] Step 33: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000066, relative_change=0.0054% (6 params)
+2025-11-14 15:48:41 (IST) - 0:03:53 - train - INFO - step: 000033 - done (%): 1.6 - loss: 1.945 - lr: 1.1e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5084.2 - avg_words_per_second: 5077.1 - ETA: >2025-11-14 19:26:37
+2025-11-14 15:48:42 (IST) - 0:03:54 - train - INFO - [DocStream] step=34 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=0-1]
+2025-11-14 15:48:42 (IST) - 0:03:54 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4104.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4112.wav
+2025-11-14 15:48:42 (IST) - 0:03:54 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:48:42 (IST) - 0:03:54 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:48:42 (IST) - 0:03:54 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:48:48 (IST) - 0:04:00 - train - INFO - [TTT] Step 34: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000075, relative_change=0.0062% (6 params)
+2025-11-14 15:48:48 (IST) - 0:04:00 - train - INFO - step: 000034 - done (%): 1.7 - loss: 4.182 - lr: 1.1e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5071.5 - avg_words_per_second: 5077.0 - ETA: >2025-11-14 19:26:37
+2025-11-14 15:48:48 (IST) - 0:04:00 - train - INFO - [DocStream] step=35 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=2-3]
+2025-11-14 15:48:55 (IST) - 0:04:07 - train - INFO - [TTT] Step 35: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000076, relative_change=0.0062% (6 params)
+2025-11-14 15:48:55 (IST) - 0:04:07 - train - INFO - step: 000035 - done (%): 1.8 - loss: 3.399 - lr: 1.2e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5070.5 - avg_words_per_second: 5076.8 - ETA: >2025-11-14 19:26:38
+2025-11-14 15:48:55 (IST) - 0:04:07 - train - INFO - [DocStream] step=36 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=4-5]
+2025-11-14 15:49:01 (IST) - 0:04:13 - train - INFO - [TTT] Step 36: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000077, relative_change=0.0063% (6 params)
+2025-11-14 15:49:01 (IST) - 0:04:13 - train - INFO - step: 000036 - done (%): 1.8 - loss: 2.910 - lr: 1.2e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5071.5 - avg_words_per_second: 5076.6 - ETA: >2025-11-14 19:26:38
+2025-11-14 15:49:02 (IST) - 0:04:14 - train - INFO - [DocStream] step=37 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=6-7]
+2025-11-14 15:49:08 (IST) - 0:04:20 - train - INFO - [TTT] Step 37: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000078, relative_change=0.0064% (6 params)
+2025-11-14 15:49:08 (IST) - 0:04:20 - train - INFO - step: 000037 - done (%): 1.9 - loss: 2.659 - lr: 1.3e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5070.6 - avg_words_per_second: 5076.5 - ETA: >2025-11-14 19:26:39
+2025-11-14 15:49:08 (IST) - 0:04:20 - train - INFO - [DocStream] step=38 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=8-9]
+2025-11-14 15:49:15 (IST) - 0:04:27 - train - INFO - [TTT] Step 38: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000080, relative_change=0.0065% (6 params)
+2025-11-14 15:49:15 (IST) - 0:04:27 - train - INFO - step: 000038 - done (%): 1.9 - loss: 2.412 - lr: 1.3e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5085.1 - avg_words_per_second: 5076.7 - ETA: >2025-11-14 19:26:38
+2025-11-14 15:49:15 (IST) - 0:04:27 - train - INFO - [DocStream] step=39 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=10-11]
+2025-11-14 15:49:21 (IST) - 0:04:33 - train - INFO - [TTT] Step 39: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000080, relative_change=0.0065% (6 params)
+2025-11-14 15:49:21 (IST) - 0:04:33 - train - INFO - step: 000039 - done (%): 1.9 - loss: 2.046 - lr: 1.4e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5083.1 - avg_words_per_second: 5076.9 - ETA: >2025-11-14 19:26:38
+2025-11-14 15:49:22 (IST) - 0:04:34 - train - INFO - [DocStream] step=40 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=0-1]
+2025-11-14 15:49:22 (IST) - 0:04:34 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4112.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4145.wav
+2025-11-14 15:49:22 (IST) - 0:04:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:49:22 (IST) - 0:04:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:49:22 (IST) - 0:04:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:49:28 (IST) - 0:04:40 - train - INFO - [TTT] Step 40: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000093, relative_change=0.0076% (6 params)
+2025-11-14 15:49:28 (IST) - 0:04:40 - train - INFO - step: 000040 - done (%): 2.0 - loss: 4.980 - lr: 1.5e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5058.6 - avg_words_per_second: 5076.4 - ETA: >2025-11-14 19:26:39
+2025-11-14 15:49:28 (IST) - 0:04:40 - train - INFO - [DocStream] step=41 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=2-3]
+2025-11-14 15:49:35 (IST) - 0:04:47 - train - INFO - [TTT] Step 41: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000129, relative_change=0.0105% (6 params)
+2025-11-14 15:49:35 (IST) - 0:04:47 - train - INFO - step: 000041 - done (%): 2.0 - loss: 3.974 - lr: 1.5e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.8 - avg_words_per_second: 5075.9 - ETA: >2025-11-14 19:26:40
+2025-11-14 15:49:35 (IST) - 0:04:47 - train - INFO - [DocStream] step=42 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=4-5]
+2025-11-14 15:49:41 (IST) - 0:04:53 - train - INFO - [TTT] Step 42: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000131, relative_change=0.0107% (6 params)
+2025-11-14 15:49:41 (IST) - 0:04:53 - train - INFO - step: 000042 - done (%): 2.1 - loss: 3.740 - lr: 1.6e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5069.0 - avg_words_per_second: 5075.8 - ETA: >2025-11-14 19:26:40
+2025-11-14 15:49:42 (IST) - 0:04:54 - train - INFO - [DocStream] step=43 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=6-7]
+2025-11-14 15:49:48 (IST) - 0:05:00 - train - INFO - [TTT] Step 43: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000131, relative_change=0.0107% (6 params)
+2025-11-14 15:49:48 (IST) - 0:05:00 - train - INFO - step: 000043 - done (%): 2.1 - loss: 1.905 - lr: 1.6e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5067.0 - avg_words_per_second: 5075.6 - ETA: >2025-11-14 19:26:41
+2025-11-14 15:49:48 (IST) - 0:05:00 - train - INFO - [DocStream] step=44 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=8-9]
+2025-11-14 15:49:55 (IST) - 0:05:07 - train - INFO - [TTT] Step 44: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000131, relative_change=0.0108% (6 params)
+2025-11-14 15:49:55 (IST) - 0:05:07 - train - INFO - step: 000044 - done (%): 2.2 - loss: 2.634 - lr: 1.7e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5061.3 - avg_words_per_second: 5075.2 - ETA: >2025-11-14 19:26:42
+2025-11-14 15:49:55 (IST) - 0:05:07 - train - INFO - [DocStream] step=45 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=10-11]
+2025-11-14 15:50:01 (IST) - 0:05:13 - train - INFO - [TTT] Step 45: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000133, relative_change=0.0109% (6 params)
+2025-11-14 15:50:01 (IST) - 0:05:13 - train - INFO - step: 000045 - done (%): 2.2 - loss: 2.330 - lr: 1.7e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.3 - avg_words_per_second: 5074.8 - ETA: >2025-11-14 19:26:43
+2025-11-14 15:50:02 (IST) - 0:05:14 - train - INFO - [DocStream] step=46 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=0-1]
+2025-11-14 15:50:02 (IST) - 0:05:14 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4145.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4156.wav
+2025-11-14 15:50:02 (IST) - 0:05:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:50:02 (IST) - 0:05:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:50:02 (IST) - 0:05:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:50:08 (IST) - 0:05:20 - train - INFO - [TTT] Step 46: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000162, relative_change=0.0133% (6 params)
+2025-11-14 15:50:08 (IST) - 0:05:20 - train - INFO - step: 000046 - done (%): 2.3 - loss: 4.402 - lr: 1.8e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5035.7 - avg_words_per_second: 5073.9 - ETA: >2025-11-14 19:26:45
+2025-11-14 15:50:08 (IST) - 0:05:20 - train - INFO - [DocStream] step=47 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=2-3]
+2025-11-14 15:50:15 (IST) - 0:05:27 - train - INFO - [TTT] Step 47: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000185, relative_change=0.0151% (6 params)
+2025-11-14 15:50:15 (IST) - 0:05:27 - train - INFO - step: 000047 - done (%): 2.4 - loss: 4.791 - lr: 1.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.5 - avg_words_per_second: 5073.5 - ETA: >2025-11-14 19:26:46
+2025-11-14 15:50:15 (IST) - 0:05:27 - train - INFO - [DocStream] step=48 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=4-5]
+2025-11-14 15:50:21 (IST) - 0:05:33 - train - INFO - [TTT] Step 48: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000217, relative_change=0.0178% (6 params)
+2025-11-14 15:50:21 (IST) - 0:05:33 - train - INFO - step: 000048 - done (%): 2.4 - loss: 4.999 - lr: 1.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.5 - avg_words_per_second: 5073.2 - ETA: >2025-11-14 19:26:47
+2025-11-14 15:50:22 (IST) - 0:05:34 - train - INFO - [DocStream] step=49 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=6-7]
+2025-11-14 15:50:28 (IST) - 0:05:40 - train - INFO - [TTT] Step 49: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000232, relative_change=0.0190% (6 params)
+2025-11-14 15:50:28 (IST) - 0:05:40 - train - INFO - step: 000049 - done (%): 2.5 - loss: 5.164 - lr: 2.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.2 - avg_words_per_second: 5072.8 - ETA: >2025-11-14 19:26:48
+2025-11-14 15:50:28 (IST) - 0:05:40 - train - INFO - [DocStream] step=50 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=8-9]
+2025-11-14 15:50:35 (IST) - 0:05:47 - train - INFO - [TTT] Step 50: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000261, relative_change=0.0214% (6 params)
+2025-11-14 15:50:35 (IST) - 0:05:47 - train - INFO - step: 000050 - done (%): 2.5 - loss: 4.785 - lr: 2.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5138.5 - avg_words_per_second: 5074.1 - ETA: >2025-11-14 19:26:45
+2025-11-14 15:50:35 (IST) - 0:05:47 - train - INFO - [DocStream] step=51 microbatch=0 samples=2 unique_docs=1 runs=4157.wav[segments=0-1]
+2025-11-14 15:50:35 (IST) - 0:05:47 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4156.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4157.wav
+2025-11-14 15:50:35 (IST) - 0:05:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:50:35 (IST) - 0:05:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:50:35 (IST) - 0:05:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:50:41 (IST) - 0:05:53 - train - INFO - [TTT] Step 51: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000267, relative_change=0.0219% (6 params)
+2025-11-14 15:50:41 (IST) - 0:05:53 - train - INFO - step: 000051 - done (%): 2.5 - loss: 4.902 - lr: 2.1e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5051.9 - avg_words_per_second: 5073.7 - ETA: >2025-11-14 19:26:46
+2025-11-14 15:50:42 (IST) - 0:05:54 - train - INFO - [DocStream] step=52 microbatch=0 samples=2 unique_docs=1 runs=4157.wav[segments=2-3]
+2025-11-14 15:50:48 (IST) - 0:06:00 - train - INFO - [TTT] Step 52: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000275, relative_change=0.0225% (6 params)
+2025-11-14 15:50:48 (IST) - 0:06:00 - train - INFO - step: 000052 - done (%): 2.6 - loss: 4.385 - lr: 2.2e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5061.1 - avg_words_per_second: 5073.4 - ETA: >2025-11-14 19:26:47
+2025-11-14 15:50:48 (IST) - 0:06:00 - train - INFO - [DocStream] step=53 microbatch=0 samples=2 unique_docs=1 runs=4157.wav[segments=4-5]
+2025-11-14 15:50:55 (IST) - 0:06:07 - train - INFO - [TTT] Step 53: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000263, relative_change=0.0216% (6 params)
+2025-11-14 15:50:55 (IST) - 0:06:07 - train - INFO - step: 000053 - done (%): 2.6 - loss: 3.942 - lr: 2.2e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5166.1 - avg_words_per_second: 5075.1 - ETA: >2025-11-14 19:26:42
+2025-11-14 15:50:55 (IST) - 0:06:07 - train - INFO - [DocStream] step=54 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=0-1]
+2025-11-14 15:50:55 (IST) - 0:06:07 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4157.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4170.wav
+2025-11-14 15:50:55 (IST) - 0:06:07 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:50:55 (IST) - 0:06:07 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:50:55 (IST) - 0:06:07 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:51:01 (IST) - 0:06:13 - train - INFO - [TTT] Step 54: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000259, relative_change=0.0212% (6 params)
+2025-11-14 15:51:01 (IST) - 0:06:13 - train - INFO - step: 000054 - done (%): 2.7 - loss: 4.467 - lr: 2.3e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5053.9 - avg_words_per_second: 5074.7 - ETA: >2025-11-14 19:26:43
+2025-11-14 15:51:02 (IST) - 0:06:14 - train - INFO - [DocStream] step=55 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=2-3]
+2025-11-14 15:51:08 (IST) - 0:06:20 - train - INFO - [TTT] Step 55: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000260, relative_change=0.0213% (6 params)
+2025-11-14 15:51:08 (IST) - 0:06:20 - train - INFO - step: 000055 - done (%): 2.8 - loss: 4.874 - lr: 2.4e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5065.5 - avg_words_per_second: 5074.6 - ETA: >2025-11-14 19:26:44
+2025-11-14 15:51:08 (IST) - 0:06:20 - train - INFO - [DocStream] step=56 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=4-5]
+2025-11-14 15:51:15 (IST) - 0:06:27 - train - INFO - [TTT] Step 56: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000255, relative_change=0.0209% (6 params)
+2025-11-14 15:51:15 (IST) - 0:06:27 - train - INFO - step: 000056 - done (%): 2.8 - loss: 5.386 - lr: 2.4e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.8 - avg_words_per_second: 5074.2 - ETA: >2025-11-14 19:26:45
+2025-11-14 15:51:15 (IST) - 0:06:27 - train - INFO - [DocStream] step=57 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=6-7]
+2025-11-14 15:51:21 (IST) - 0:06:33 - train - INFO - [TTT] Step 57: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000259, relative_change=0.0212% (6 params)
+2025-11-14 15:51:21 (IST) - 0:06:33 - train - INFO - step: 000057 - done (%): 2.9 - loss: 5.060 - lr: 2.5e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.7 - avg_words_per_second: 5073.9 - ETA: >2025-11-14 19:26:45
+2025-11-14 15:51:22 (IST) - 0:06:34 - train - INFO - [DocStream] step=58 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=8-9]
+2025-11-14 15:51:28 (IST) - 0:06:40 - train - INFO - [TTT] Step 58: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000275, relative_change=0.0225% (6 params)
+2025-11-14 15:51:28 (IST) - 0:06:40 - train - INFO - step: 000058 - done (%): 2.9 - loss: 4.863 - lr: 2.5e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.4 - avg_words_per_second: 5073.6 - ETA: >2025-11-14 19:26:46
+2025-11-14 15:51:28 (IST) - 0:06:40 - train - INFO - [DocStream] step=59 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=10-11]
+2025-11-14 15:51:35 (IST) - 0:06:47 - train - INFO - [TTT] Step 59: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000280, relative_change=0.0229% (6 params)
+2025-11-14 15:51:35 (IST) - 0:06:47 - train - INFO - step: 000059 - done (%): 3.0 - loss: 4.906 - lr: 2.6e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5060.3 - avg_words_per_second: 5073.4 - ETA: >2025-11-14 19:26:47
+2025-11-14 15:51:35 (IST) - 0:06:47 - train - INFO - [DocStream] step=60 microbatch=0 samples=2 unique_docs=1 runs=4183.wav[segments=0-1]
+2025-11-14 15:51:35 (IST) - 0:06:47 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4170.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4183.wav
+2025-11-14 15:51:35 (IST) - 0:06:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:51:35 (IST) - 0:06:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:51:35 (IST) - 0:06:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:51:41 (IST) - 0:06:53 - train - INFO - [TTT] Step 60: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000334, relative_change=0.0274% (6 params)
+2025-11-14 15:51:41 (IST) - 0:06:53 - train - INFO - step: 000060 - done (%): 3.0 - loss: 4.429 - lr: 2.7e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5070.6 - avg_words_per_second: 5073.3 - ETA: >2025-11-14 19:26:47
+2025-11-14 15:51:42 (IST) - 0:06:54 - train - INFO - [DocStream] step=61 microbatch=0 samples=2 unique_docs=1 runs=4183.wav[segments=2-3]
+2025-11-14 15:51:48 (IST) - 0:07:00 - train - INFO - [TTT] Step 61: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000336, relative_change=0.0275% (6 params)
+2025-11-14 15:51:48 (IST) - 0:07:00 - train - INFO - step: 000061 - done (%): 3.0 - loss: 4.376 - lr: 2.7e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.6 - avg_words_per_second: 5073.0 - ETA: >2025-11-14 19:26:48
+2025-11-14 15:51:48 (IST) - 0:07:00 - train - INFO - [DocStream] step=62 microbatch=0 samples=2 unique_docs=1 runs=4183.wav[segments=4-5]
+2025-11-14 15:51:55 (IST) - 0:07:07 - train - INFO - [TTT] Step 62: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000359, relative_change=0.0294% (6 params)
+2025-11-14 15:51:55 (IST) - 0:07:07 - train - INFO - step: 000062 - done (%): 3.1 - loss: 4.348 - lr: 2.8e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.8 - avg_words_per_second: 5072.8 - ETA: >2025-11-14 19:26:48
+2025-11-14 15:51:55 (IST) - 0:07:07 - train - INFO - [DocStream] step=63 microbatch=0 samples=2 unique_docs=1 runs=4183.wav[segments=6-7]
+2025-11-14 15:52:01 (IST) - 0:07:13 - train - INFO - [TTT] Step 63: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000393, relative_change=0.0322% (6 params)
+2025-11-14 15:52:01 (IST) - 0:07:13 - train - INFO - step: 000063 - done (%): 3.1 - loss: 4.373 - lr: 2.8e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5071.2 - avg_words_per_second: 5072.7 - ETA: >2025-11-14 19:26:49
+2025-11-14 15:52:02 (IST) - 0:07:14 - train - INFO - [DocStream] step=64 microbatch=0 samples=2 unique_docs=1 runs=4183.wav[segments=8-9]
+2025-11-14 15:52:08 (IST) - 0:07:20 - train - INFO - [TTT] Step 64: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000420, relative_change=0.0344% (6 params)
+2025-11-14 15:52:08 (IST) - 0:07:20 - train - INFO - step: 000064 - done (%): 3.2 - loss: 4.179 - lr: 2.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.4 - avg_words_per_second: 5072.5 - ETA: >2025-11-14 19:26:49
+2025-11-14 15:52:08 (IST) - 0:07:20 - train - INFO - [DocStream] step=65 microbatch=0 samples=2 unique_docs=1 runs=4183.wav[segments=10-11]
+2025-11-14 15:52:15 (IST) - 0:07:27 - train - INFO - [TTT] Step 65: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000436, relative_change=0.0357% (6 params)
+2025-11-14 15:52:15 (IST) - 0:07:27 - train - INFO - step: 000065 - done (%): 3.2 - loss: 4.326 - lr: 2.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5041.9 - avg_words_per_second: 5072.0 - ETA: >2025-11-14 19:26:50
+2025-11-14 15:52:15 (IST) - 0:07:27 - train - INFO - [DocStream] step=66 microbatch=0 samples=2 unique_docs=1 runs=4184.wav[segments=0-1]
+2025-11-14 15:52:15 (IST) - 0:07:27 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4183.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4184.wav
+2025-11-14 15:52:15 (IST) - 0:07:27 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:52:15 (IST) - 0:07:27 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:52:15 (IST) - 0:07:27 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:52:21 (IST) - 0:07:33 - train - INFO - [TTT] Step 66: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000399, relative_change=0.0326% (6 params)
+2025-11-14 15:52:21 (IST) - 0:07:33 - train - INFO - step: 000066 - done (%): 3.3 - loss: 4.736 - lr: 3.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5049.6 - avg_words_per_second: 5071.7 - ETA: >2025-11-14 19:26:51
+2025-11-14 15:52:22 (IST) - 0:07:34 - train - INFO - [DocStream] step=67 microbatch=0 samples=2 unique_docs=1 runs=4184.wav[segments=2-3]
+2025-11-14 15:52:28 (IST) - 0:07:40 - train - INFO - [TTT] Step 67: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000367, relative_change=0.0300% (6 params)
+2025-11-14 15:52:28 (IST) - 0:07:40 - train - INFO - step: 000067 - done (%): 3.4 - loss: 4.650 - lr: 3.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5068.2 - avg_words_per_second: 5071.6 - ETA: >2025-11-14 19:26:52
+2025-11-14 15:52:28 (IST) - 0:07:40 - train - INFO - [DocStream] step=68 microbatch=0 samples=2 unique_docs=1 runs=4184.wav[segments=4-5]
+2025-11-14 15:52:35 (IST) - 0:07:47 - train - INFO - [TTT] Step 68: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000332, relative_change=0.0272% (6 params)
+2025-11-14 15:52:35 (IST) - 0:07:47 - train - INFO - step: 000068 - done (%): 3.4 - loss: 3.138 - lr: 3.1e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.7 - avg_words_per_second: 5071.4 - ETA: >2025-11-14 19:26:52
+2025-11-14 15:52:35 (IST) - 0:07:47 - train - INFO - [DocStream] step=69 microbatch=0 samples=2 unique_docs=1 runs=4184.wav[segments=6-7]
+2025-11-14 15:52:41 (IST) - 0:07:53 - train - INFO - [TTT] Step 69: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000298, relative_change=0.0244% (6 params)
+2025-11-14 15:52:41 (IST) - 0:07:53 - train - INFO - step: 000069 - done (%): 3.5 - loss: 2.804 - lr: 3.1e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.5 - avg_words_per_second: 5071.2 - ETA: >2025-11-14 19:26:53
+2025-11-14 15:52:42 (IST) - 0:07:54 - train - INFO - [DocStream] step=70 microbatch=0 samples=2 unique_docs=1 runs=4184.wav[segments=8-9]
+2025-11-14 15:52:48 (IST) - 0:08:00 - train - INFO - [TTT] Step 70: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000269, relative_change=0.0220% (6 params)
+2025-11-14 15:52:48 (IST) - 0:08:00 - train - INFO - step: 000070 - done (%): 3.5 - loss: 2.880 - lr: 3.2e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5054.8 - avg_words_per_second: 5070.9 - ETA: >2025-11-14 19:26:53
+2025-11-14 15:52:48 (IST) - 0:08:00 - train - INFO - [DocStream] step=71 microbatch=0 samples=2 unique_docs=1 runs=4184.wav[segments=10-11]
+2025-11-14 15:52:55 (IST) - 0:08:07 - train - INFO - [TTT] Step 71: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000244, relative_change=0.0200% (6 params)
+2025-11-14 15:52:55 (IST) - 0:08:07 - train - INFO - step: 000071 - done (%): 3.5 - loss: 2.194 - lr: 3.2e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.6 - avg_words_per_second: 5070.7 - ETA: >2025-11-14 19:26:54
+2025-11-14 15:52:55 (IST) - 0:08:07 - train - INFO - [DocStream] step=72 microbatch=0 samples=2 unique_docs=1 runs=4234.wav[segments=0-1]
+2025-11-14 15:52:55 (IST) - 0:08:07 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4184.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4234.wav
+2025-11-14 15:52:55 (IST) - 0:08:07 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:52:55 (IST) - 0:08:07 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:52:55 (IST) - 0:08:07 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:53:01 (IST) - 0:08:13 - train - INFO - [TTT] Step 72: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000231, relative_change=0.0189% (6 params)
+2025-11-14 15:53:01 (IST) - 0:08:13 - train - INFO - step: 000072 - done (%): 3.6 - loss: 4.724 - lr: 3.3e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.8 - avg_words_per_second: 5070.4 - ETA: >2025-11-14 19:26:55
+2025-11-14 15:53:02 (IST) - 0:08:14 - train - INFO - [DocStream] step=73 microbatch=0 samples=2 unique_docs=1 runs=4234.wav[segments=2-3]
+2025-11-14 15:53:08 (IST) - 0:08:20 - train - INFO - [TTT] Step 73: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000215, relative_change=0.0176% (6 params)
+2025-11-14 15:53:08 (IST) - 0:08:20 - train - INFO - step: 000073 - done (%): 3.6 - loss: 5.181 - lr: 3.3e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 4988.8 - avg_words_per_second: 5069.3 - ETA: >2025-11-14 19:26:58
+2025-11-14 15:53:09 (IST) - 0:08:21 - train - INFO - [DocStream] step=74 microbatch=0 samples=2 unique_docs=1 runs=4234.wav[segments=4-5]
+2025-11-14 15:53:15 (IST) - 0:08:27 - train - INFO - [TTT] Step 74: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000198, relative_change=0.0162% (6 params)
+2025-11-14 15:53:15 (IST) - 0:08:27 - train - INFO - step: 000074 - done (%): 3.7 - loss: 3.806 - lr: 3.4e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.9 - avg_words_per_second: 5069.1 - ETA: >2025-11-14 19:26:58
+2025-11-14 15:53:15 (IST) - 0:08:27 - train - INFO - [DocStream] step=75 microbatch=0 samples=2 unique_docs=1 runs=4234.wav[segments=6-7]
+2025-11-14 15:53:22 (IST) - 0:08:34 - train - INFO - [TTT] Step 75: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000181, relative_change=0.0148% (6 params)
+2025-11-14 15:53:22 (IST) - 0:08:34 - train - INFO - step: 000075 - done (%): 3.8 - loss: 2.451 - lr: 3.4e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.0 - avg_words_per_second: 5068.9 - ETA: >2025-11-14 19:26:59
+2025-11-14 15:53:22 (IST) - 0:08:34 - train - INFO - [DocStream] step=76 microbatch=0 samples=2 unique_docs=1 runs=4234.wav[segments=8-9]
+2025-11-14 15:53:28 (IST) - 0:08:40 - train - INFO - [TTT] Step 76: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000169, relative_change=0.0139% (6 params)
+2025-11-14 15:53:28 (IST) - 0:08:40 - train - INFO - step: 000076 - done (%): 3.8 - loss: 2.976 - lr: 3.5e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5069.3 - avg_words_per_second: 5069.0 - ETA: >2025-11-14 19:26:59
+2025-11-14 15:53:29 (IST) - 0:08:41 - train - INFO - [DocStream] step=77 microbatch=0 samples=2 unique_docs=1 runs=4234.wav[segments=10-11]
+2025-11-14 15:53:35 (IST) - 0:08:47 - train - INFO - [TTT] Step 77: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000159, relative_change=0.0130% (6 params)
+2025-11-14 15:53:35 (IST) - 0:08:47 - train - INFO - step: 000077 - done (%): 3.9 - loss: 2.770 - lr: 3.5e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5013.2 - avg_words_per_second: 5068.2 - ETA: >2025-11-14 19:27:00
+2025-11-14 15:53:35 (IST) - 0:08:47 - train - INFO - [DocStream] step=78 microbatch=0 samples=2 unique_docs=1 runs=4245.wav[segments=0-1]
+2025-11-14 15:53:35 (IST) - 0:08:47 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4234.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4245.wav
+2025-11-14 15:53:35 (IST) - 0:08:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:53:35 (IST) - 0:08:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:53:35 (IST) - 0:08:47 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:53:42 (IST) - 0:08:54 - train - INFO - [TTT] Step 78: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000161, relative_change=0.0131% (6 params)
+2025-11-14 15:53:42 (IST) - 0:08:54 - train - INFO - step: 000078 - done (%): 3.9 - loss: 5.301 - lr: 3.6e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5059.7 - avg_words_per_second: 5068.1 - ETA: >2025-11-14 19:27:01
+2025-11-14 15:53:42 (IST) - 0:08:54 - train - INFO - [DocStream] step=79 microbatch=0 samples=2 unique_docs=1 runs=4245.wav[segments=2-3]
+2025-11-14 15:53:48 (IST) - 0:09:00 - train - INFO - [TTT] Step 79: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000159, relative_change=0.0130% (6 params)
+2025-11-14 15:53:48 (IST) - 0:09:00 - train - INFO - step: 000079 - done (%): 4.0 - loss: 5.473 - lr: 3.6e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.8 - avg_words_per_second: 5068.0 - ETA: >2025-11-14 19:27:01
+2025-11-14 15:53:49 (IST) - 0:09:01 - train - INFO - [DocStream] step=80 microbatch=0 samples=2 unique_docs=1 runs=4245.wav[segments=4-5]
+2025-11-14 15:53:55 (IST) - 0:09:07 - train - INFO - [TTT] Step 80: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000158, relative_change=0.0130% (6 params)
+2025-11-14 15:53:55 (IST) - 0:09:07 - train - INFO - step: 000080 - done (%): 4.0 - loss: 4.311 - lr: 3.6e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5058.4 - avg_words_per_second: 5067.8 - ETA: >2025-11-14 19:27:02
+2025-11-14 15:53:55 (IST) - 0:09:07 - train - INFO - [DocStream] step=81 microbatch=0 samples=2 unique_docs=1 runs=4245.wav[segments=6-7]
+2025-11-14 15:54:02 (IST) - 0:09:14 - train - INFO - [TTT] Step 81: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000152, relative_change=0.0125% (6 params)
+2025-11-14 15:54:02 (IST) - 0:09:14 - train - INFO - step: 000081 - done (%): 4.0 - loss: 3.087 - lr: 3.7e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.5 - avg_words_per_second: 5067.7 - ETA: >2025-11-14 19:27:02
+2025-11-14 15:54:02 (IST) - 0:09:14 - train - INFO - [DocStream] step=82 microbatch=0 samples=2 unique_docs=2 runs=4245.wav[segment=8], 4247.wav[segment=0]
+2025-11-14 15:54:02 (IST) - 0:09:14 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4245.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4247.wav
+2025-11-14 15:54:02 (IST) - 0:09:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:54:02 (IST) - 0:09:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:54:02 (IST) - 0:09:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:54:08 (IST) - 0:09:20 - train - INFO - [TTT] Step 82: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000147, relative_change=0.0120% (6 params)
+2025-11-14 15:54:08 (IST) - 0:09:20 - train - INFO - step: 000082 - done (%): 4.1 - loss: 4.170 - lr: 3.7e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5102.3 - avg_words_per_second: 5068.1 - ETA: >2025-11-14 19:27:01
+2025-11-14 15:54:09 (IST) - 0:09:21 - train - INFO - [DocStream] step=83 microbatch=0 samples=2 unique_docs=1 runs=4247.wav[segments=1-2]
+2025-11-14 15:54:15 (IST) - 0:09:27 - train - INFO - [TTT] Step 83: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000148, relative_change=0.0121% (6 params)
+2025-11-14 15:54:15 (IST) - 0:09:27 - train - INFO - step: 000083 - done (%): 4.2 - loss: 4.701 - lr: 3.7e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5049.7 - avg_words_per_second: 5067.9 - ETA: >2025-11-14 19:27:01
+2025-11-14 15:54:15 (IST) - 0:09:27 - train - INFO - [DocStream] step=84 microbatch=0 samples=2 unique_docs=1 runs=4247.wav[segments=3-4]
+2025-11-14 15:54:22 (IST) - 0:09:34 - train - INFO - [TTT] Step 84: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000147, relative_change=0.0120% (6 params)
+2025-11-14 15:54:22 (IST) - 0:09:34 - train - INFO - step: 000084 - done (%): 4.2 - loss: 3.916 - lr: 3.8e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5062.2 - avg_words_per_second: 5067.8 - ETA: >2025-11-14 19:27:02
+2025-11-14 15:54:22 (IST) - 0:09:34 - train - INFO - [DocStream] step=85 microbatch=0 samples=2 unique_docs=1 runs=4247.wav[segments=5-6]
+2025-11-14 15:54:28 (IST) - 0:09:40 - train - INFO - [TTT] Step 85: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000137, relative_change=0.0112% (6 params)
+2025-11-14 15:54:28 (IST) - 0:09:40 - train - INFO - step: 000085 - done (%): 4.2 - loss: 2.116 - lr: 3.8e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5054.6 - avg_words_per_second: 5067.7 - ETA: >2025-11-14 19:27:02
+2025-11-14 15:54:29 (IST) - 0:09:41 - train - INFO - [DocStream] step=86 microbatch=0 samples=2 unique_docs=1 runs=4247.wav[segments=7-8]
+2025-11-14 15:54:35 (IST) - 0:09:47 - train - INFO - [TTT] Step 86: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000133, relative_change=0.0109% (6 params)
+2025-11-14 15:54:35 (IST) - 0:09:47 - train - INFO - step: 000086 - done (%): 4.3 - loss: 2.578 - lr: 3.8e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.5 - avg_words_per_second: 5067.5 - ETA: >2025-11-14 19:27:02
+2025-11-14 15:54:35 (IST) - 0:09:47 - train - INFO - [DocStream] step=87 microbatch=0 samples=2 unique_docs=1 runs=4247.wav[segments=9-10]
+2025-11-14 15:54:42 (IST) - 0:09:54 - train - INFO - [TTT] Step 87: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000133, relative_change=0.0109% (6 params)
+2025-11-14 15:54:42 (IST) - 0:09:54 - train - INFO - step: 000087 - done (%): 4.3 - loss: 2.649 - lr: 3.8e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.0 - avg_words_per_second: 5067.4 - ETA: >2025-11-14 19:27:03
+2025-11-14 15:54:42 (IST) - 0:09:54 - train - INFO - [DocStream] step=88 microbatch=0 samples=2 unique_docs=2 runs=4247.wav[segment=11], 4248.wav[segment=0]
+2025-11-14 15:54:42 (IST) - 0:09:54 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4247.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4248.wav
+2025-11-14 15:54:42 (IST) - 0:09:54 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:54:42 (IST) - 0:09:54 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:54:42 (IST) - 0:09:54 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:54:48 (IST) - 0:10:00 - train - INFO - [TTT] Step 88: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000131, relative_change=0.0107% (6 params)
+2025-11-14 15:54:48 (IST) - 0:10:00 - train - INFO - step: 000088 - done (%): 4.4 - loss: 4.109 - lr: 3.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.9 - avg_words_per_second: 5067.3 - ETA: >2025-11-14 19:27:03
+2025-11-14 15:54:49 (IST) - 0:10:01 - train - INFO - [DocStream] step=89 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=1-2]
+2025-11-14 15:54:55 (IST) - 0:10:07 - train - INFO - [TTT] Step 89: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000140, relative_change=0.0114% (6 params)
+2025-11-14 15:54:55 (IST) - 0:10:07 - train - INFO - step: 000089 - done (%): 4.5 - loss: 4.854 - lr: 3.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5064.7 - avg_words_per_second: 5067.2 - ETA: >2025-11-14 19:27:03
+2025-11-14 15:54:55 (IST) - 0:10:07 - train - INFO - [DocStream] step=90 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=3-4]
+2025-11-14 15:55:02 (IST) - 0:10:14 - train - INFO - [TTT] Step 90: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000151, relative_change=0.0124% (6 params)
+2025-11-14 15:55:02 (IST) - 0:10:14 - train - INFO - step: 000090 - done (%): 4.5 - loss: 4.132 - lr: 3.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5044.8 - avg_words_per_second: 5067.0 - ETA: >2025-11-14 19:27:04
+2025-11-14 15:55:02 (IST) - 0:10:14 - train - INFO - [DocStream] step=91 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=5-6]
+2025-11-14 15:55:08 (IST) - 0:10:20 - train - INFO - [TTT] Step 91: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000142, relative_change=0.0116% (6 params)
+2025-11-14 15:55:08 (IST) - 0:10:20 - train - INFO - step: 000091 - done (%): 4.5 - loss: 2.828 - lr: 3.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.4 - avg_words_per_second: 5066.8 - ETA: >2025-11-14 19:27:04
+2025-11-14 15:55:09 (IST) - 0:10:21 - train - INFO - [DocStream] step=92 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=7-8]
+2025-11-14 15:55:15 (IST) - 0:10:27 - train - INFO - [TTT] Step 92: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000132, relative_change=0.0108% (6 params)
+2025-11-14 15:55:15 (IST) - 0:10:27 - train - INFO - step: 000092 - done (%): 4.6 - loss: 2.461 - lr: 3.9e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5047.0 - avg_words_per_second: 5066.6 - ETA: >2025-11-14 19:27:05
+2025-11-14 15:55:15 (IST) - 0:10:27 - train - INFO - [DocStream] step=93 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=9-10]
+2025-11-14 15:55:22 (IST) - 0:10:34 - train - INFO - [TTT] Step 93: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000126, relative_change=0.0103% (6 params)
+2025-11-14 15:55:22 (IST) - 0:10:34 - train - INFO - step: 000093 - done (%): 4.7 - loss: 2.781 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5054.6 - avg_words_per_second: 5066.5 - ETA: >2025-11-14 19:27:05
+2025-11-14 15:55:22 (IST) - 0:10:34 - train - INFO - [DocStream] step=94 microbatch=0 samples=2 unique_docs=2 runs=4248.wav[segment=11], 4289.wav[segment=0]
+2025-11-14 15:55:22 (IST) - 0:10:34 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4248.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4289.wav
+2025-11-14 15:55:22 (IST) - 0:10:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:55:22 (IST) - 0:10:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:55:22 (IST) - 0:10:34 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:55:28 (IST) - 0:10:40 - train - INFO - [TTT] Step 94: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000149, relative_change=0.0122% (6 params)
+2025-11-14 15:55:28 (IST) - 0:10:40 - train - INFO - step: 000094 - done (%): 4.7 - loss: 3.213 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5051.0 - avg_words_per_second: 5066.3 - ETA: >2025-11-14 19:27:06
+2025-11-14 15:55:29 (IST) - 0:10:41 - train - INFO - [DocStream] step=95 microbatch=0 samples=2 unique_docs=1 runs=4289.wav[segments=1-2]
+2025-11-14 15:55:35 (IST) - 0:10:47 - train - INFO - [TTT] Step 95: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000156, relative_change=0.0128% (6 params)
+2025-11-14 15:55:35 (IST) - 0:10:47 - train - INFO - step: 000095 - done (%): 4.8 - loss: 2.368 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.3 - avg_words_per_second: 5066.2 - ETA: >2025-11-14 19:27:06
+2025-11-14 15:55:35 (IST) - 0:10:47 - train - INFO - [DocStream] step=96 microbatch=0 samples=2 unique_docs=1 runs=4289.wav[segments=3-4]
+2025-11-14 15:55:42 (IST) - 0:10:54 - train - INFO - [TTT] Step 96: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000133, relative_change=0.0109% (6 params)
+2025-11-14 15:55:42 (IST) - 0:10:54 - train - INFO - step: 000096 - done (%): 4.8 - loss: 1.117 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5061.1 - avg_words_per_second: 5066.1 - ETA: >2025-11-14 19:27:06
+2025-11-14 15:55:42 (IST) - 0:10:54 - train - INFO - [DocStream] step=97 microbatch=0 samples=2 unique_docs=1 runs=4289.wav[segments=5-6]
+2025-11-14 15:55:48 (IST) - 0:11:00 - train - INFO - [TTT] Step 97: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000114, relative_change=0.0094% (6 params)
+2025-11-14 15:55:48 (IST) - 0:11:00 - train - INFO - step: 000097 - done (%): 4.8 - loss: 0.906 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5068.9 - avg_words_per_second: 5066.2 - ETA: >2025-11-14 19:27:06
+2025-11-14 15:55:49 (IST) - 0:11:01 - train - INFO - [DocStream] step=98 microbatch=0 samples=2 unique_docs=1 runs=4289.wav[segments=7-8]
+2025-11-14 15:55:55 (IST) - 0:11:07 - train - INFO - [TTT] Step 98: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000103, relative_change=0.0084% (6 params)
+2025-11-14 15:55:55 (IST) - 0:11:07 - train - INFO - step: 000098 - done (%): 4.9 - loss: 1.401 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5057.9 - avg_words_per_second: 5066.1 - ETA: >2025-11-14 19:27:06
+2025-11-14 15:55:55 (IST) - 0:11:07 - train - INFO - [DocStream] step=99 microbatch=0 samples=2 unique_docs=1 runs=4289.wav[segments=9-10]
+2025-11-14 15:56:02 (IST) - 0:11:14 - train - INFO - [TTT] Step 99: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000094, relative_change=0.0077% (6 params)
+2025-11-14 15:56:02 (IST) - 0:11:14 - train - INFO - step: 000099 - done (%): 5.0 - loss: 1.453 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5054.7 - avg_words_per_second: 5066.0 - ETA: >2025-11-14 19:27:07
+2025-11-14 15:56:02 (IST) - 0:11:14 - train - INFO - [DocStream] step=100 microbatch=0 samples=2 unique_docs=2 runs=4289.wav[segment=11], 4290.wav[segment=0]
+2025-11-14 15:56:02 (IST) - 0:11:14 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4289.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4290.wav
+2025-11-14 15:56:02 (IST) - 0:11:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:56:02 (IST) - 0:11:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:56:02 (IST) - 0:11:14 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:56:08 (IST) - 0:11:20 - train - INFO - [TTT] Step 100: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000089, relative_change=0.0073% (6 params)
+2025-11-14 15:56:09 (IST) - 0:11:20 - train - INFO - step: 000100 - done (%): 5.0 - loss: 3.247 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.6 - avg_words_per_second: 5065.8 - ETA: >2025-11-14 19:27:07
+2025-11-14 15:56:09 (IST) - 0:11:20 - checkpointing - INFO - Dumping checkpoint in /sise/eliyanac-group/ron_al/ttt_training_run2/checkpoints/checkpoint_000100/consolidated using tmp name: tmp.consolidated
+2025-11-14 15:56:10 (IST) - 0:11:22 - checkpointing - INFO - Done dumping checkpoint in /sise/eliyanac-group/ron_al/ttt_training_run2/checkpoints/checkpoint_000100/consolidated for step: 100
+2025-11-14 15:56:10 (IST) - 0:11:22 - checkpointing - INFO - Done deleting checkpoints 
+2025-11-14 15:56:10 (IST) - 0:11:22 - checkpointing - INFO - Done!
+2025-11-14 15:56:10 (IST) - 0:11:22 - train - INFO - [DocStream] step=101 microbatch=0 samples=2 unique_docs=1 runs=4290.wav[segments=1-2]
+2025-11-14 15:56:16 (IST) - 0:11:28 - train - INFO - [TTT] Step 101: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000101, relative_change=0.0082% (6 params)
+2025-11-14 15:56:16 (IST) - 0:11:28 - train - INFO - step: 000101 - done (%): 5.0 - loss: 3.399 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5061.4 - avg_words_per_second: 5065.8 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:56:17 (IST) - 0:11:29 - train - INFO - [DocStream] step=102 microbatch=0 samples=2 unique_docs=1 runs=4290.wav[segments=3-4]
+2025-11-14 15:56:23 (IST) - 0:11:35 - train - INFO - [TTT] Step 102: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000092, relative_change=0.0075% (6 params)
+2025-11-14 15:56:23 (IST) - 0:11:35 - train - INFO - step: 000102 - done (%): 5.1 - loss: 1.848 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5070.1 - avg_words_per_second: 5065.8 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:56:23 (IST) - 0:11:35 - train - INFO - [DocStream] step=103 microbatch=0 samples=2 unique_docs=1 runs=4290.wav[segments=5-6]
+2025-11-14 15:56:30 (IST) - 0:11:42 - train - INFO - [TTT] Step 103: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000087, relative_change=0.0071% (6 params)
+2025-11-14 15:56:30 (IST) - 0:11:42 - train - INFO - step: 000103 - done (%): 5.2 - loss: 2.010 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5071.2 - avg_words_per_second: 5065.8 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:56:30 (IST) - 0:11:42 - train - INFO - [DocStream] step=104 microbatch=0 samples=2 unique_docs=1 runs=4290.wav[segments=7-8]
+2025-11-14 15:56:36 (IST) - 0:11:48 - train - INFO - [TTT] Step 104: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000086, relative_change=0.0070% (6 params)
+2025-11-14 15:56:36 (IST) - 0:11:48 - train - INFO - step: 000104 - done (%): 5.2 - loss: 2.885 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5071.5 - avg_words_per_second: 5065.9 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:56:37 (IST) - 0:11:49 - train - INFO - [DocStream] step=105 microbatch=0 samples=2 unique_docs=1 runs=4290.wav[segments=9-10]
+2025-11-14 15:56:43 (IST) - 0:11:55 - train - INFO - [TTT] Step 105: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000090, relative_change=0.0073% (6 params)
+2025-11-14 15:56:43 (IST) - 0:11:55 - train - INFO - step: 000105 - done (%): 5.2 - loss: 2.925 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5070.1 - avg_words_per_second: 5065.9 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:56:43 (IST) - 0:11:55 - train - INFO - [DocStream] step=106 microbatch=0 samples=2 unique_docs=2 runs=4290.wav[segment=11], 4310.wav[segment=0]
+2025-11-14 15:56:43 (IST) - 0:11:55 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4290.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4310.wav
+2025-11-14 15:56:43 (IST) - 0:11:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:56:43 (IST) - 0:11:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:56:43 (IST) - 0:11:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:56:50 (IST) - 0:12:02 - train - INFO - [TTT] Step 106: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000095, relative_change=0.0078% (6 params)
+2025-11-14 15:56:50 (IST) - 0:12:02 - train - INFO - step: 000106 - done (%): 5.3 - loss: 4.148 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5064.7 - avg_words_per_second: 5065.9 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:56:50 (IST) - 0:12:02 - train - INFO - [DocStream] step=107 microbatch=0 samples=2 unique_docs=1 runs=4310.wav[segments=1-2]
+2025-11-14 15:56:56 (IST) - 0:12:08 - train - INFO - [TTT] Step 107: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000103, relative_change=0.0084% (6 params)
+2025-11-14 15:56:56 (IST) - 0:12:08 - train - INFO - step: 000107 - done (%): 5.3 - loss: 5.252 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.0 - avg_words_per_second: 5065.8 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:56:57 (IST) - 0:12:09 - train - INFO - [DocStream] step=108 microbatch=0 samples=2 unique_docs=1 runs=4310.wav[segments=3-4]
+2025-11-14 15:57:03 (IST) - 0:12:15 - train - INFO - [TTT] Step 108: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000108, relative_change=0.0089% (6 params)
+2025-11-14 15:57:03 (IST) - 0:12:15 - train - INFO - step: 000108 - done (%): 5.4 - loss: 4.963 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.9 - avg_words_per_second: 5065.7 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:57:03 (IST) - 0:12:15 - train - INFO - [DocStream] step=109 microbatch=0 samples=2 unique_docs=1 runs=4310.wav[segments=5-6]
+2025-11-14 15:57:10 (IST) - 0:12:22 - train - INFO - [TTT] Step 109: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000110, relative_change=0.0090% (6 params)
+2025-11-14 15:57:10 (IST) - 0:12:22 - train - INFO - step: 000109 - done (%): 5.5 - loss: 4.012 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5061.6 - avg_words_per_second: 5065.7 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:57:10 (IST) - 0:12:22 - train - INFO - [DocStream] step=110 microbatch=0 samples=2 unique_docs=1 runs=4310.wav[segments=7-8]
+2025-11-14 15:57:16 (IST) - 0:12:28 - train - INFO - [TTT] Step 110: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000113, relative_change=0.0093% (6 params)
+2025-11-14 15:57:16 (IST) - 0:12:28 - train - INFO - step: 000110 - done (%): 5.5 - loss: 2.975 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5064.6 - avg_words_per_second: 5065.7 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:57:17 (IST) - 0:12:29 - train - INFO - [DocStream] step=111 microbatch=0 samples=2 unique_docs=1 runs=4310.wav[segments=9-10]
+2025-11-14 15:57:23 (IST) - 0:12:35 - train - INFO - [TTT] Step 111: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000114, relative_change=0.0094% (6 params)
+2025-11-14 15:57:23 (IST) - 0:12:35 - train - INFO - step: 000111 - done (%): 5.5 - loss: 3.106 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5172.5 - avg_words_per_second: 5066.6 - ETA: >2025-11-14 19:27:06
+2025-11-14 15:57:23 (IST) - 0:12:35 - train - INFO - [DocStream] step=112 microbatch=0 samples=2 unique_docs=1 runs=4315.wav[segments=0-1]
+2025-11-14 15:57:23 (IST) - 0:12:35 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4310.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4315.wav
+2025-11-14 15:57:23 (IST) - 0:12:35 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:57:23 (IST) - 0:12:35 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:57:23 (IST) - 0:12:35 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:57:30 (IST) - 0:12:42 - train - INFO - [TTT] Step 112: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000114, relative_change=0.0093% (6 params)
+2025-11-14 15:57:30 (IST) - 0:12:42 - train - INFO - step: 000112 - done (%): 5.6 - loss: 4.802 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5052.1 - avg_words_per_second: 5066.5 - ETA: >2025-11-14 19:27:06
+2025-11-14 15:57:30 (IST) - 0:12:42 - train - INFO - [DocStream] step=113 microbatch=0 samples=2 unique_docs=1 runs=4315.wav[segments=2-3]
+2025-11-14 15:57:36 (IST) - 0:12:48 - train - INFO - [TTT] Step 113: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000131, relative_change=0.0107% (6 params)
+2025-11-14 15:57:36 (IST) - 0:12:48 - train - INFO - step: 000113 - done (%): 5.7 - loss: 4.427 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5036.0 - avg_words_per_second: 5066.2 - ETA: >2025-11-14 19:27:07
+2025-11-14 15:57:37 (IST) - 0:12:49 - train - INFO - [DocStream] step=114 microbatch=0 samples=2 unique_docs=1 runs=4315.wav[segments=4-5]
+2025-11-14 15:57:43 (IST) - 0:12:55 - train - INFO - [TTT] Step 114: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000127, relative_change=0.0104% (6 params)
+2025-11-14 15:57:43 (IST) - 0:12:55 - train - INFO - step: 000114 - done (%): 5.7 - loss: 4.051 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5060.6 - avg_words_per_second: 5066.2 - ETA: >2025-11-14 19:27:07
+2025-11-14 15:57:43 (IST) - 0:12:55 - train - INFO - [DocStream] step=115 microbatch=0 samples=2 unique_docs=1 runs=4315.wav[segments=6-7]
+2025-11-14 15:57:50 (IST) - 0:13:02 - train - INFO - [TTT] Step 115: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000119, relative_change=0.0097% (6 params)
+2025-11-14 15:57:50 (IST) - 0:13:02 - train - INFO - step: 000115 - done (%): 5.8 - loss: 2.361 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.4 - avg_words_per_second: 5066.1 - ETA: >2025-11-14 19:27:07
+2025-11-14 15:57:50 (IST) - 0:13:02 - train - INFO - [DocStream] step=116 microbatch=0 samples=2 unique_docs=1 runs=4315.wav[segments=8-9]
+2025-11-14 15:57:56 (IST) - 0:13:08 - train - INFO - [TTT] Step 116: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000115, relative_change=0.0094% (6 params)
+2025-11-14 15:57:56 (IST) - 0:13:08 - train - INFO - step: 000116 - done (%): 5.8 - loss: 2.425 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.2 - avg_words_per_second: 5066.0 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:57:57 (IST) - 0:13:09 - train - INFO - [DocStream] step=117 microbatch=0 samples=2 unique_docs=1 runs=4315.wav[segments=10-11]
+2025-11-14 15:58:03 (IST) - 0:13:15 - train - INFO - [TTT] Step 117: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000114, relative_change=0.0093% (6 params)
+2025-11-14 15:58:03 (IST) - 0:13:15 - train - INFO - step: 000117 - done (%): 5.8 - loss: 2.359 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5059.5 - avg_words_per_second: 5065.9 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:58:03 (IST) - 0:13:15 - train - INFO - [DocStream] step=118 microbatch=0 samples=2 unique_docs=1 runs=4316.wav[segments=0-1]
+2025-11-14 15:58:03 (IST) - 0:13:15 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4315.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4316.wav
+2025-11-14 15:58:03 (IST) - 0:13:15 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:58:03 (IST) - 0:13:15 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:58:03 (IST) - 0:13:15 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:58:10 (IST) - 0:13:22 - train - INFO - [TTT] Step 118: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000119, relative_change=0.0097% (6 params)
+2025-11-14 15:58:10 (IST) - 0:13:22 - train - INFO - step: 000118 - done (%): 5.9 - loss: 3.693 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5051.7 - avg_words_per_second: 5065.8 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:58:10 (IST) - 0:13:22 - train - INFO - [DocStream] step=119 microbatch=0 samples=2 unique_docs=1 runs=4316.wav[segments=2-3]
+2025-11-14 15:58:16 (IST) - 0:13:28 - train - INFO - [TTT] Step 119: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000118, relative_change=0.0097% (6 params)
+2025-11-14 15:58:16 (IST) - 0:13:28 - train - INFO - step: 000119 - done (%): 6.0 - loss: 2.727 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.7 - avg_words_per_second: 5065.7 - ETA: >2025-11-14 19:27:08
+2025-11-14 15:58:17 (IST) - 0:13:29 - train - INFO - [DocStream] step=120 microbatch=0 samples=2 unique_docs=1 runs=4316.wav[segments=4-5]
+2025-11-14 15:58:23 (IST) - 0:13:35 - train - INFO - [TTT] Step 120: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000117, relative_change=0.0096% (6 params)
+2025-11-14 15:58:23 (IST) - 0:13:35 - train - INFO - step: 000120 - done (%): 6.0 - loss: 2.110 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5045.1 - avg_words_per_second: 5065.5 - ETA: >2025-11-14 19:27:09
+2025-11-14 15:58:23 (IST) - 0:13:35 - train - INFO - [DocStream] step=121 microbatch=0 samples=2 unique_docs=1 runs=4316.wav[segments=6-7]
+2025-11-14 15:58:30 (IST) - 0:13:42 - train - INFO - [TTT] Step 121: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000120, relative_change=0.0098% (6 params)
+2025-11-14 15:58:30 (IST) - 0:13:42 - train - INFO - step: 000121 - done (%): 6.0 - loss: 2.384 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5057.5 - avg_words_per_second: 5065.5 - ETA: >2025-11-14 19:27:09
+2025-11-14 15:58:30 (IST) - 0:13:42 - train - INFO - [DocStream] step=122 microbatch=0 samples=2 unique_docs=1 runs=4316.wav[segments=8-9]
+2025-11-14 15:58:36 (IST) - 0:13:48 - train - INFO - [TTT] Step 122: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000123, relative_change=0.0100% (6 params)
+2025-11-14 15:58:36 (IST) - 0:13:48 - train - INFO - step: 000122 - done (%): 6.1 - loss: 2.837 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5054.4 - avg_words_per_second: 5065.4 - ETA: >2025-11-14 19:27:09
+2025-11-14 15:58:37 (IST) - 0:13:49 - train - INFO - [DocStream] step=123 microbatch=0 samples=2 unique_docs=1 runs=4316.wav[segments=10-11]
+2025-11-14 15:58:43 (IST) - 0:13:55 - train - INFO - [TTT] Step 123: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000128, relative_change=0.0105% (6 params)
+2025-11-14 15:58:43 (IST) - 0:13:55 - train - INFO - step: 000123 - done (%): 6.2 - loss: 1.990 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.9 - avg_words_per_second: 5065.3 - ETA: >2025-11-14 19:27:09
+2025-11-14 15:58:43 (IST) - 0:13:55 - train - INFO - [DocStream] step=124 microbatch=0 samples=2 unique_docs=1 runs=4325.wav[segments=0-1]
+2025-11-14 15:58:43 (IST) - 0:13:55 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4316.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4325.wav
+2025-11-14 15:58:43 (IST) - 0:13:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:58:43 (IST) - 0:13:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:58:43 (IST) - 0:13:55 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:58:50 (IST) - 0:14:02 - train - INFO - [TTT] Step 124: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000147, relative_change=0.0120% (6 params)
+2025-11-14 15:58:50 (IST) - 0:14:02 - train - INFO - step: 000124 - done (%): 6.2 - loss: 3.879 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5053.5 - avg_words_per_second: 5065.2 - ETA: >2025-11-14 19:27:10
+2025-11-14 15:58:50 (IST) - 0:14:02 - train - INFO - [DocStream] step=125 microbatch=0 samples=2 unique_docs=1 runs=4325.wav[segments=2-3]
+2025-11-14 15:58:56 (IST) - 0:14:08 - train - INFO - [TTT] Step 125: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000173, relative_change=0.0142% (6 params)
+2025-11-14 15:58:56 (IST) - 0:14:08 - train - INFO - step: 000125 - done (%): 6.2 - loss: 3.681 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5057.6 - avg_words_per_second: 5065.1 - ETA: >2025-11-14 19:27:10
+2025-11-14 15:58:57 (IST) - 0:14:09 - train - INFO - [DocStream] step=126 microbatch=0 samples=2 unique_docs=1 runs=4325.wav[segments=4-5]
+2025-11-14 15:59:03 (IST) - 0:14:15 - train - INFO - [TTT] Step 126: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000172, relative_change=0.0141% (6 params)
+2025-11-14 15:59:03 (IST) - 0:14:15 - train - INFO - step: 000126 - done (%): 6.3 - loss: 2.415 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.9 - avg_words_per_second: 5065.1 - ETA: >2025-11-14 19:27:10
+2025-11-14 15:59:03 (IST) - 0:14:15 - train - INFO - [DocStream] step=127 microbatch=0 samples=2 unique_docs=1 runs=4325.wav[segments=6-7]
+2025-11-14 15:59:10 (IST) - 0:14:22 - train - INFO - [TTT] Step 127: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000155, relative_change=0.0127% (6 params)
+2025-11-14 15:59:10 (IST) - 0:14:22 - train - INFO - step: 000127 - done (%): 6.3 - loss: 1.628 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5064.3 - avg_words_per_second: 5065.1 - ETA: >2025-11-14 19:27:10
+2025-11-14 15:59:10 (IST) - 0:14:22 - train - INFO - [DocStream] step=128 microbatch=0 samples=2 unique_docs=1 runs=4325.wav[segments=8-9]
+2025-11-14 15:59:16 (IST) - 0:14:28 - train - INFO - [TTT] Step 128: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000148, relative_change=0.0121% (6 params)
+2025-11-14 15:59:16 (IST) - 0:14:28 - train - INFO - step: 000128 - done (%): 6.4 - loss: 1.969 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.2 - avg_words_per_second: 5065.0 - ETA: >2025-11-14 19:27:10
+2025-11-14 15:59:17 (IST) - 0:14:29 - train - INFO - [DocStream] step=129 microbatch=0 samples=2 unique_docs=1 runs=4325.wav[segments=10-11]
+2025-11-14 15:59:23 (IST) - 0:14:35 - train - INFO - [TTT] Step 129: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000138, relative_change=0.0113% (6 params)
+2025-11-14 15:59:23 (IST) - 0:14:35 - train - INFO - step: 000129 - done (%): 6.5 - loss: 1.640 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.0 - avg_words_per_second: 5064.9 - ETA: >2025-11-14 19:27:10
+2025-11-14 15:59:23 (IST) - 0:14:35 - train - INFO - [DocStream] step=130 microbatch=0 samples=2 unique_docs=1 runs=4335.wav[segments=0-1]
+2025-11-14 15:59:23 (IST) - 0:14:35 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4325.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4335.wav
+2025-11-14 15:59:23 (IST) - 0:14:35 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 15:59:23 (IST) - 0:14:35 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 15:59:23 (IST) - 0:14:35 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 15:59:30 (IST) - 0:14:42 - train - INFO - [TTT] Step 130: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000118, relative_change=0.0097% (6 params)
+2025-11-14 15:59:30 (IST) - 0:14:42 - train - INFO - step: 000130 - done (%): 6.5 - loss: 5.134 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.7 - avg_words_per_second: 5064.9 - ETA: >2025-11-14 19:27:11
+2025-11-14 15:59:30 (IST) - 0:14:42 - train - INFO - [DocStream] step=131 microbatch=0 samples=2 unique_docs=1 runs=4335.wav[segments=2-3]
+2025-11-14 15:59:36 (IST) - 0:14:48 - train - INFO - [TTT] Step 131: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000111, relative_change=0.0091% (6 params)
+2025-11-14 15:59:36 (IST) - 0:14:48 - train - INFO - step: 000131 - done (%): 6.5 - loss: 4.922 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5054.7 - avg_words_per_second: 5064.8 - ETA: >2025-11-14 19:27:11
+2025-11-14 15:59:37 (IST) - 0:14:49 - train - INFO - [DocStream] step=132 microbatch=0 samples=2 unique_docs=1 runs=4335.wav[segments=4-5]
+2025-11-14 15:59:43 (IST) - 0:14:55 - train - INFO - [TTT] Step 132: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000102, relative_change=0.0083% (6 params)
+2025-11-14 15:59:43 (IST) - 0:14:55 - train - INFO - step: 000132 - done (%): 6.6 - loss: 4.468 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.7 - avg_words_per_second: 5064.7 - ETA: >2025-11-14 19:27:11
+2025-11-14 15:59:43 (IST) - 0:14:55 - train - INFO - [DocStream] step=133 microbatch=0 samples=2 unique_docs=1 runs=4335.wav[segments=6-7]
+2025-11-14 15:59:50 (IST) - 0:15:02 - train - INFO - [TTT] Step 133: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000092, relative_change=0.0075% (6 params)
+2025-11-14 15:59:50 (IST) - 0:15:02 - train - INFO - step: 000133 - done (%): 6.7 - loss: 2.181 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5060.3 - avg_words_per_second: 5064.6 - ETA: >2025-11-14 19:27:11
+2025-11-14 15:59:50 (IST) - 0:15:02 - train - INFO - [DocStream] step=134 microbatch=0 samples=2 unique_docs=1 runs=4335.wav[segments=8-9]
+2025-11-14 15:59:57 (IST) - 0:15:08 - train - INFO - [TTT] Step 134: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000084, relative_change=0.0069% (6 params)
+2025-11-14 15:59:57 (IST) - 0:15:08 - train - INFO - step: 000134 - done (%): 6.7 - loss: 2.614 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.6 - avg_words_per_second: 5064.5 - ETA: >2025-11-14 19:27:12
+2025-11-14 15:59:57 (IST) - 0:15:09 - train - INFO - [DocStream] step=135 microbatch=0 samples=2 unique_docs=1 runs=4335.wav[segments=10-11]
+2025-11-14 16:00:03 (IST) - 0:15:15 - train - INFO - [TTT] Step 135: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000079, relative_change=0.0064% (6 params)
+2025-11-14 16:00:03 (IST) - 0:15:15 - train - INFO - step: 000135 - done (%): 6.8 - loss: 1.858 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.5 - avg_words_per_second: 5064.5 - ETA: >2025-11-14 19:27:12
+2025-11-14 16:00:04 (IST) - 0:15:16 - train - INFO - [DocStream] step=136 microbatch=0 samples=2 unique_docs=1 runs=4365.wav[segments=0-1]
+2025-11-14 16:00:04 (IST) - 0:15:16 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4335.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4365.wav
+2025-11-14 16:00:04 (IST) - 0:15:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 16:00:04 (IST) - 0:15:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 16:00:04 (IST) - 0:15:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 16:00:10 (IST) - 0:15:22 - train - INFO - [TTT] Step 136: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000135, relative_change=0.0110% (6 params)
+2025-11-14 16:00:10 (IST) - 0:15:22 - train - INFO - step: 000136 - done (%): 6.8 - loss: 3.977 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5045.3 - avg_words_per_second: 5064.3 - ETA: >2025-11-14 19:27:12
+2025-11-14 16:00:10 (IST) - 0:15:22 - train - INFO - [DocStream] step=137 microbatch=0 samples=2 unique_docs=1 runs=4365.wav[segments=2-3]
+2025-11-14 16:00:17 (IST) - 0:15:29 - train - INFO - [TTT] Step 137: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000162, relative_change=0.0133% (6 params)
+2025-11-14 16:00:17 (IST) - 0:15:29 - train - INFO - step: 000137 - done (%): 6.8 - loss: 4.313 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5051.1 - avg_words_per_second: 5064.2 - ETA: >2025-11-14 19:27:12
+2025-11-14 16:00:17 (IST) - 0:15:29 - train - INFO - [DocStream] step=138 microbatch=0 samples=2 unique_docs=1 runs=4365.wav[segments=4-5]
+2025-11-14 16:00:23 (IST) - 0:15:35 - train - INFO - [TTT] Step 138: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000142, relative_change=0.0117% (6 params)
+2025-11-14 16:00:23 (IST) - 0:15:35 - train - INFO - step: 000138 - done (%): 6.9 - loss: 3.305 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5070.8 - avg_words_per_second: 5064.3 - ETA: >2025-11-14 19:27:12
+2025-11-14 16:00:24 (IST) - 0:15:36 - train - INFO - [DocStream] step=139 microbatch=0 samples=2 unique_docs=1 runs=4365.wav[segments=6-7]
+2025-11-14 16:00:30 (IST) - 0:15:42 - train - INFO - [TTT] Step 139: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000124, relative_change=0.0101% (6 params)
+2025-11-14 16:00:30 (IST) - 0:15:42 - train - INFO - step: 000139 - done (%): 7.0 - loss: 2.068 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5061.0 - avg_words_per_second: 5064.3 - ETA: >2025-11-14 19:27:12
+2025-11-14 16:00:30 (IST) - 0:15:42 - train - INFO - [DocStream] step=140 microbatch=0 samples=2 unique_docs=1 runs=4365.wav[segments=8-9]
+2025-11-14 16:00:37 (IST) - 0:15:49 - train - INFO - [TTT] Step 140: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000109, relative_change=0.0089% (6 params)
+2025-11-14 16:00:37 (IST) - 0:15:49 - train - INFO - step: 000140 - done (%): 7.0 - loss: 1.563 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.4 - avg_words_per_second: 5064.2 - ETA: >2025-11-14 19:27:12
+2025-11-14 16:00:37 (IST) - 0:15:49 - train - INFO - [DocStream] step=141 microbatch=0 samples=2 unique_docs=1 runs=4365.wav[segments=10-11]
+2025-11-14 16:00:43 (IST) - 0:15:55 - train - INFO - [TTT] Step 141: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000096, relative_change=0.0079% (6 params)
+2025-11-14 16:00:43 (IST) - 0:15:55 - train - INFO - step: 000141 - done (%): 7.0 - loss: 1.732 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5057.4 - avg_words_per_second: 5064.2 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:00:44 (IST) - 0:15:56 - train - INFO - [DocStream] step=142 microbatch=0 samples=2 unique_docs=1 runs=4371.wav[segments=0-1]
+2025-11-14 16:00:44 (IST) - 0:15:56 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4365.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4371.wav
+2025-11-14 16:00:44 (IST) - 0:15:56 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 16:00:44 (IST) - 0:15:56 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 16:00:44 (IST) - 0:15:56 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 16:00:50 (IST) - 0:16:02 - train - INFO - [TTT] Step 142: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000097, relative_change=0.0080% (6 params)
+2025-11-14 16:00:50 (IST) - 0:16:02 - train - INFO - step: 000142 - done (%): 7.1 - loss: 5.320 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5052.9 - avg_words_per_second: 5064.1 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:00:50 (IST) - 0:16:02 - train - INFO - [DocStream] step=143 microbatch=0 samples=2 unique_docs=1 runs=4371.wav[segments=2-3]
+2025-11-14 16:00:57 (IST) - 0:16:09 - train - INFO - [TTT] Step 143: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000095, relative_change=0.0078% (6 params)
+2025-11-14 16:00:57 (IST) - 0:16:09 - train - INFO - step: 000143 - done (%): 7.2 - loss: 5.342 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.5 - avg_words_per_second: 5064.0 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:00:57 (IST) - 0:16:09 - train - INFO - [DocStream] step=144 microbatch=0 samples=2 unique_docs=1 runs=4371.wav[segments=4-5]
+2025-11-14 16:01:03 (IST) - 0:16:15 - train - INFO - [TTT] Step 144: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000090, relative_change=0.0074% (6 params)
+2025-11-14 16:01:03 (IST) - 0:16:15 - train - INFO - step: 000144 - done (%): 7.2 - loss: 5.200 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5057.6 - avg_words_per_second: 5064.0 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:01:04 (IST) - 0:16:16 - train - INFO - [DocStream] step=145 microbatch=0 samples=2 unique_docs=1 runs=4371.wav[segments=6-7]
+2025-11-14 16:01:10 (IST) - 0:16:22 - train - INFO - [TTT] Step 145: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000080, relative_change=0.0065% (6 params)
+2025-11-14 16:01:10 (IST) - 0:16:22 - train - INFO - step: 000145 - done (%): 7.2 - loss: 2.815 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5063.8 - avg_words_per_second: 5064.0 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:01:10 (IST) - 0:16:22 - train - INFO - [DocStream] step=146 microbatch=0 samples=2 unique_docs=1 runs=4371.wav[segments=8-9]
+2025-11-14 16:01:17 (IST) - 0:16:29 - train - INFO - [TTT] Step 146: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000078, relative_change=0.0064% (6 params)
+2025-11-14 16:01:17 (IST) - 0:16:29 - train - INFO - step: 000146 - done (%): 7.3 - loss: 3.274 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5061.6 - avg_words_per_second: 5064.0 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:01:17 (IST) - 0:16:29 - train - INFO - [DocStream] step=147 microbatch=0 samples=2 unique_docs=1 runs=4371.wav[segments=10-11]
+2025-11-14 16:01:23 (IST) - 0:16:35 - train - INFO - [TTT] Step 147: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000075, relative_change=0.0061% (6 params)
+2025-11-14 16:01:23 (IST) - 0:16:35 - train - INFO - step: 000147 - done (%): 7.3 - loss: 2.487 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.7 - avg_words_per_second: 5063.9 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:01:24 (IST) - 0:16:36 - train - INFO - [DocStream] step=148 microbatch=0 samples=2 unique_docs=1 runs=4404.wav[segments=0-1]
+2025-11-14 16:01:24 (IST) - 0:16:36 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4371.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4404.wav
+2025-11-14 16:01:24 (IST) - 0:16:36 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 16:01:24 (IST) - 0:16:36 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 16:01:24 (IST) - 0:16:36 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 16:01:30 (IST) - 0:16:42 - train - INFO - [TTT] Step 148: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000079, relative_change=0.0065% (6 params)
+2025-11-14 16:01:30 (IST) - 0:16:42 - train - INFO - step: 000148 - done (%): 7.4 - loss: 4.385 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.5 - avg_words_per_second: 5063.8 - ETA: >2025-11-14 19:27:13
+2025-11-14 16:01:30 (IST) - 0:16:42 - train - INFO - [DocStream] step=149 microbatch=0 samples=2 unique_docs=1 runs=4404.wav[segments=2-3]
+2025-11-14 16:01:37 (IST) - 0:16:49 - train - INFO - [TTT] Step 149: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000086, relative_change=0.0070% (6 params)
+2025-11-14 16:01:37 (IST) - 0:16:49 - train - INFO - step: 000149 - done (%): 7.5 - loss: 4.258 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5015.4 - avg_words_per_second: 5063.5 - ETA: >2025-11-14 19:27:14
+2025-11-14 16:01:37 (IST) - 0:16:49 - train - INFO - [DocStream] step=150 microbatch=0 samples=2 unique_docs=1 runs=4404.wav[segments=4-5]
+2025-11-14 16:01:43 (IST) - 0:16:55 - train - INFO - [TTT] Step 150: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000101, relative_change=0.0083% (6 params)
+2025-11-14 16:01:43 (IST) - 0:16:55 - train - INFO - step: 000150 - done (%): 7.5 - loss: 4.016 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5050.8 - avg_words_per_second: 5063.4 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:01:44 (IST) - 0:16:56 - train - INFO - [DocStream] step=151 microbatch=0 samples=2 unique_docs=1 runs=4404.wav[segments=6-7]
+2025-11-14 16:01:50 (IST) - 0:17:02 - train - INFO - [TTT] Step 151: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000152, relative_change=0.0125% (6 params)
+2025-11-14 16:01:50 (IST) - 0:17:02 - train - INFO - step: 000151 - done (%): 7.5 - loss: 3.654 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.1 - avg_words_per_second: 5063.3 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:01:50 (IST) - 0:17:02 - train - INFO - [DocStream] step=152 microbatch=0 samples=2 unique_docs=1 runs=4404.wav[segments=8-9]
+2025-11-14 16:01:57 (IST) - 0:17:09 - train - INFO - [TTT] Step 152: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000206, relative_change=0.0168% (6 params)
+2025-11-14 16:01:57 (IST) - 0:17:09 - train - INFO - step: 000152 - done (%): 7.6 - loss: 4.472 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5060.8 - avg_words_per_second: 5063.3 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:01:57 (IST) - 0:17:09 - train - INFO - [DocStream] step=153 microbatch=0 samples=2 unique_docs=1 runs=4404.wav[segments=10-11]
+2025-11-14 16:02:03 (IST) - 0:17:15 - train - INFO - [TTT] Step 153: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000177, relative_change=0.0145% (6 params)
+2025-11-14 16:02:03 (IST) - 0:17:15 - train - INFO - step: 000153 - done (%): 7.7 - loss: 1.692 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.6 - avg_words_per_second: 5063.3 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:02:04 (IST) - 0:17:16 - train - INFO - [DocStream] step=154 microbatch=0 samples=2 unique_docs=1 runs=4415.wav[segments=0-1]
+2025-11-14 16:02:04 (IST) - 0:17:16 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4404.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4415.wav
+2025-11-14 16:02:04 (IST) - 0:17:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 16:02:04 (IST) - 0:17:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 16:02:04 (IST) - 0:17:16 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 16:02:10 (IST) - 0:17:22 - train - INFO - [TTT] Step 154: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000199, relative_change=0.0163% (6 params)
+2025-11-14 16:02:10 (IST) - 0:17:22 - train - INFO - step: 000154 - done (%): 7.7 - loss: 4.611 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5049.9 - avg_words_per_second: 5063.2 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:02:10 (IST) - 0:17:22 - train - INFO - [DocStream] step=155 microbatch=0 samples=2 unique_docs=1 runs=4415.wav[segments=2-3]
+2025-11-14 16:02:17 (IST) - 0:17:29 - train - INFO - [TTT] Step 155: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000183, relative_change=0.0150% (6 params)
+2025-11-14 16:02:17 (IST) - 0:17:29 - train - INFO - step: 000155 - done (%): 7.8 - loss: 4.206 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.5 - avg_words_per_second: 5063.2 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:02:17 (IST) - 0:17:29 - train - INFO - [DocStream] step=156 microbatch=0 samples=2 unique_docs=1 runs=4415.wav[segments=4-5]
+2025-11-14 16:02:23 (IST) - 0:17:35 - train - INFO - [TTT] Step 156: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000155, relative_change=0.0127% (6 params)
+2025-11-14 16:02:23 (IST) - 0:17:35 - train - INFO - step: 000156 - done (%): 7.8 - loss: 3.491 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.3 - avg_words_per_second: 5063.1 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:02:24 (IST) - 0:17:36 - train - INFO - [DocStream] step=157 microbatch=0 samples=2 unique_docs=1 runs=4415.wav[segments=6-7]
+2025-11-14 16:02:30 (IST) - 0:17:42 - train - INFO - [TTT] Step 157: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000136, relative_change=0.0112% (6 params)
+2025-11-14 16:02:30 (IST) - 0:17:42 - train - INFO - step: 000157 - done (%): 7.8 - loss: 3.501 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.4 - avg_words_per_second: 5063.1 - ETA: >2025-11-14 19:27:15
+2025-11-14 16:02:30 (IST) - 0:17:42 - train - INFO - [DocStream] step=158 microbatch=0 samples=2 unique_docs=1 runs=4415.wav[segments=8-9]
+2025-11-14 16:02:37 (IST) - 0:17:49 - train - INFO - [TTT] Step 158: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000123, relative_change=0.0101% (6 params)
+2025-11-14 16:02:37 (IST) - 0:17:49 - train - INFO - step: 000158 - done (%): 7.9 - loss: 3.265 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.2 - avg_words_per_second: 5063.0 - ETA: >2025-11-14 19:27:16
+2025-11-14 16:02:37 (IST) - 0:17:49 - train - INFO - [DocStream] step=159 microbatch=0 samples=2 unique_docs=1 runs=4415.wav[segments=10-11]
+2025-11-14 16:02:43 (IST) - 0:17:55 - train - INFO - [TTT] Step 159: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000111, relative_change=0.0091% (6 params)
+2025-11-14 16:02:43 (IST) - 0:17:55 - train - INFO - step: 000159 - done (%): 8.0 - loss: 3.124 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.6 - avg_words_per_second: 5063.0 - ETA: >2025-11-14 19:27:16
+2025-11-14 16:02:44 (IST) - 0:17:56 - train - INFO - [DocStream] step=160 microbatch=0 samples=2 unique_docs=1 runs=4431.wav[segments=0-1]
+2025-11-14 16:02:44 (IST) - 0:17:56 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4415.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4431.wav
+2025-11-14 16:02:44 (IST) - 0:17:56 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 71.500000 -> 71.500000
+2025-11-14 16:02:44 (IST) - 0:17:56 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 73.000000 -> 73.000000
+2025-11-14 16:02:44 (IST) - 0:17:56 - moshi.modules.ttt_module - INFO - [TTT RESET] Layer reset: w_down norm 74.000000 -> 74.000000
+2025-11-14 16:02:50 (IST) - 0:18:02 - train - INFO - [TTT] Step 160: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000102, relative_change=0.0083% (6 params)
+2025-11-14 16:02:50 (IST) - 0:18:02 - train - INFO - step: 000160 - done (%): 8.0 - loss: 4.369 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.3 - avg_words_per_second: 5062.9 - ETA: >2025-11-14 19:27:16
+2025-11-14 16:02:51 (IST) - 0:18:02 - train - INFO - [DocStream] step=161 microbatch=0 samples=2 unique_docs=1 runs=4431.wav[segments=2-3]
+2025-11-14 16:02:57 (IST) - 0:18:09 - train - INFO - [TTT] Step 161: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000103, relative_change=0.0084% (6 params)
+2025-11-14 16:02:57 (IST) - 0:18:09 - train - INFO - step: 000161 - done (%): 8.1 - loss: 4.296 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5045.1 - avg_words_per_second: 5062.8 - ETA: >2025-11-14 19:27:16
+2025-11-14 16:02:57 (IST) - 0:18:09 - train - INFO - [DocStream] step=162 microbatch=0 samples=2 unique_docs=1 runs=4431.wav[segments=4-5]
+2025-11-14 16:03:04 (IST) - 0:18:16 - train - INFO - [TTT] Step 162: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000096, relative_change=0.0079% (6 params)
+2025-11-14 16:03:04 (IST) - 0:18:16 - train - INFO - step: 000162 - done (%): 8.1 - loss: 2.706 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5052.3 - avg_words_per_second: 5062.7 - ETA: >2025-11-14 19:27:16
+2025-11-14 16:03:04 (IST) - 0:18:16 - train - INFO - [DocStream] step=163 microbatch=0 samples=2 unique_docs=1 runs=4431.wav[segments=6-7]
+2025-11-14 16:03:10 (IST) - 0:18:22 - train - INFO - [TTT] Step 163: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000088, relative_change=0.0072% (6 params)
+2025-11-14 16:03:10 (IST) - 0:18:22 - train - INFO - step: 000163 - done (%): 8.2 - loss: 2.844 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5060.4 - avg_words_per_second: 5062.7 - ETA: >2025-11-14 19:27:16
+2025-11-14 16:03:11 (IST) - 0:18:23 - train - INFO - [DocStream] step=164 microbatch=0 samples=2 unique_docs=1 runs=4431.wav[segments=8-9]
+2025-11-14 16:03:17 (IST) - 0:18:29 - train - INFO - [TTT] Step 164: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000089, relative_change=0.0073% (6 params)
+2025-11-14 16:03:17 (IST) - 0:18:29 - train - INFO - step: 000164 - done (%): 8.2 - loss: 2.882 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5055.6 - avg_words_per_second: 5062.7 - ETA: >2025-11-14 19:27:16
+2025-11-14 16:03:17 (IST) - 0:18:29 - train - INFO - [DocStream] step=165 microbatch=0 samples=2 unique_docs=1 runs=4431.wav[segments=10-11]
+2025-11-14 16:03:24 (IST) - 0:18:36 - train - INFO - [TTT] Step 165: grad_norm=0.0000, param_norm=1.2215, delta_norm=0.000088, relative_change=0.0072% (6 params)
+2025-11-14 16:03:24 (IST) - 0:18:36 - train - INFO - step: 000165 - done (%): 8.2 - loss: 2.646 - lr: 4.0e-06 - peak_alloc_mem (GB): 37.2 - alloc_mem (GB): 18.6 - words_per_second: 5056.3 - avg_words_per_second: 5062.6 - ETA: >2025-11-14 19:27:17
+2025-11-14 16:03:24 (IST) - 0:18:36 - utils - INFO - Closing: eval_logger
+2025-11-14 16:03:24 (IST) - 0:18:36 - utils - ERROR - Error while closing eval_logger!
+2025-11-14 16:03:24 (IST) - 0:18:36 - utils - INFO - Closing: metrics_logger
+2025-11-14 16:03:24 (IST) - 0:18:36 - utils - ERROR - Error while closing metrics_logger!
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mrun2[0m at: [34mhttps://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place/runs/50zhkfdo[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_154453-50zhkfdo/logs[0m
+==================================================
+Job finished at: Fri 14 Nov 2025 16:03:27 IST
+==================================================

@@ -1,0 +1,70 @@
+==================================================
+Job started at: Fri 14 Nov 2025 10:49:52 IST
+Running on node: cs-6000-01.auth.ad.bgu.ac.il
+GPU info:
+Fri Nov 14 10:49:52 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:01:00.0 Off |                  Off |
+| 30%   31C    P8             24W /  300W |       2MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+==================================================
+Set CUDA_VISIBLE_DEVICES=0
+Starting YARN + TTT inference...
+Checkpoint: checkpoint_000100
+Input: /sise/eliyanac-group/ron_al/examples/combined_2198538934964547889_24000hz.wav
+Output: ./out.wav
+[1;34m[Info][0m retrieving checkpoint
+[1;34m[Info][0m loading mimi
+[1;34m[Info][0m mimi loaded
+[1;34m[Info][0m loading moshi
+[1;34m[Info][0m Loading checkpoint config from /home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/ttt_training_run2/checkpoints/checkpoint_002000/consolidated/config.json
+[1;34m[Info][0m Using context length from checkpoint: 3000
+[1;34m[Info][0m Using max_period from checkpoint: 10000
+[1;34m[Info][0m Loaded TTT config from checkpoint: {'enabled': True, 'layer_frequency': 10, 'start_layer': 10, 'chunk_size': 256, 'learning_rate': 0.001, 'conv_kernel_size': 2}
+[1;34m[Info][0m Loaded YARN config from checkpoint: scale=4.0x, original_len=3000
+[YaRN] Enabled with scale=4.0, original_len=3000
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.001, dim=4096, hidden=11264
+[TTT] Initializing 12 TTT parameters (not in base checkpoint)
+[TTT] Initialized w_down at layer 10 from linear_out (float32)
+[TTT] Initialized target_generator conv1d at layer 10 (std=1e-4)
+[TTT] Small-random-initialized target_generator W_target at layer 10 (std=1e-4)
+[TTT] Initialized w_down at layer 20 from linear_out (float32)
+[TTT] Initialized target_generator conv1d at layer 20 (std=1e-4)
+[TTT] Small-random-initialized target_generator W_target at layer 20 (std=1e-4)
+[TTT] Initialized w_down at layer 30 from linear_out (float32)
+[TTT] Initialized target_generator conv1d at layer 30 (std=1e-4)
+[TTT] Small-random-initialized target_generator W_target at layer 30 (std=1e-4)
+[TTT] Initialized TTT layers at indices: [10, 20, 30]
+[TTT] Loaded 6 TTT parameters from checkpoint
+[1;34m[Info][0m moshi loaded
+[1;34m[Info][0m TTT enabled at 3 layers
+[1;34m[Info][0m   Layer 10 initial w_down norm: 71.4628
+[1;34m[Info][0m   Layer 20 initial w_down norm: 72.8185
+[1;34m[Info][0m   Layer 30 initial w_down norm: 73.8565
+[1;31m[Warn][0m TTT requires batch_size=1, changing from 8 to 1
+[1;34m[Info][0m loading input file /sise/eliyanac-group/ron_al/examples/combined_1595476768245534437_24000hz.wav
+[1;34m[Info][0m TTT enabled at 3 layers
+[1;34m[Info][0m   Layer 10 initial w_down norm: 71.4628
+[1;34m[Info][0m   Layer 20 initial w_down norm: 72.8185
+[1;34m[Info][0m   Layer 30 initial w_down norm: 73.8565
+==================================================
+Job finished at: Fri 14 Nov 2025 10:50:08 IST
+Output saved to: ./out.wav
+==================================================

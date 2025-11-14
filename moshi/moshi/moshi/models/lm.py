@@ -20,6 +20,7 @@ from torch import nn
 from ..conditioners import ConditionFuser, ConditionProvider, ConditionTensors
 from ..modules.streaming import State, StreamingContainer, StreamingModule
 from ..modules.transformer import StreamingTransformer, create_norm_fn
+from ..utils.ttt_monitor import TTTInferenceMonitor
 from ..utils.compile import CUDAGraphed
 from ..utils.quantize import replace_linear_with_qlinear
 from ..utils.sampling import sample_token
@@ -376,6 +377,65 @@ class LMModel(StreamingContainer):
         text_logits_mask &= (codes[:, :1] != self.zero_token_id)
         return LMOutput(logits, logits_mask, text_logits, text_logits_mask)
 
+    def reset_ttt_state(self, *, clear_buffers: bool = True) -> None:
+        """Reset fast weights on every TTT-enabled gating module.
+
+        Args:
+            clear_buffers: Whether to drop any buffered streaming tokens that
+                have not yet formed a full chunk. Keep buffers when we only
+                want to reset weights at a conversation boundary without
+                discarding partially accumulated statistics.
+        """
+
+        for module in self.modules():
+            if module is self:
+                continue
+            reset_fn = getattr(module, "reset_ttt_state", None)
+            if callable(reset_fn):
+                reset_fn(clear_buffers=clear_buffers)
+
+    def attach_ttt_monitor(self, monitor: TTTInferenceMonitor | None) -> None:
+        """Attach a telemetry monitor to every TTT-enabled layer."""
+
+        for idx, layer in enumerate(self.transformer.layers):
+            gating = getattr(layer, "mlp", None) or getattr(layer, "gating", None)
+            if gating is None:
+                continue
+            setter = getattr(gating, "set_ttt_monitor", None)
+            if callable(setter):
+                setter(monitor, layer_name=f"layer_{idx}")
+
+    def reset_streaming(self, reset_mask: torch.Tensor | None = None) -> None:
+        """Reset streaming caches and fast weights together.
+
+        The base StreamingContainer implementation clears cached transformer
+        states when a client signals a new conversation/document. We extend it by
+        also resetting every TTT-enabled gating module so fast weights never leak
+        across independent sequences (Sec. 3.4, boundary handling).
+
+        Args:
+            reset_mask: Optional boolean tensor indicating which batch elements
+                should be reset. Since TTT fast weights are shared across the
+                batch, *any* True entry triggers a global reset.
+        """
+
+        should_reset_ttt = True
+        if reset_mask is not None:
+            if isinstance(reset_mask, torch.Tensor):
+                should_reset_ttt = bool(reset_mask.any().item())
+            else:
+                should_reset_ttt = bool(torch.as_tensor(reset_mask).any().item())
+
+        super().reset_streaming(reset_mask)
+
+        if should_reset_ttt:
+            # During streaming inference, preserve the TTT inference buffers to allow
+            # tokens to accumulate across streaming chunks. Only clear buffers on
+            # explicit conversation boundary resets (which is the original intent).
+            # For single-file inference, we never want to clear mid-stream.
+            logger.info("[TTT] reset_streaming called - preserving inference buffers")
+            self.reset_ttt_state(clear_buffers=False)
+
     def forward_text(
         self,
         sequence: torch.Tensor, sum_condition: torch.Tensor | None = None,
@@ -395,29 +455,25 @@ class LMModel(StreamingContainer):
         text_emb = self.text_emb(input_sequence[:, 0])
 
         input_ = text_emb if input_ is None else input_ + text_emb
+        token_embeddings = input_
         if sum_condition is not None:
             input_ = input_ + sum_condition.to(input_)
         if cross_attention_src is not None:
             cross_attention_src = cross_attention_src.to(input_)
         
-        # For TTT: pass text embeddings to transformer
-        # TTT layers use these to compute LM-aligned reconstruction targets
+        # For TTT: pass the summed token embeddings (text + audio streams) to the transformer
+        # so LM-aligned target generators can reconstruct from the actual token inputs
         transformer_out = self.transformer(
             input_, 
             cross_attention_src=cross_attention_src,
-            token_embeddings=text_emb
+            token_embeddings=token_embeddings
         )
-        # Debug: Check if transformer is being called
-        if hasattr(self.transformer.layers[10].gating if hasattr(self.transformer.layers[10], 'gating') else self.transformer.layers[10].mlp, '_forward_count'):
-            pass  # Count is already incremented
-        else:
-            # First call - initialize counter
-            for layer in self.transformer.layers:
-                mlp = getattr(layer, 'mlp', None) or getattr(layer, 'gating', None)
-                if mlp and hasattr(mlp, 'ttt_enabled') and mlp.ttt_enabled:
-                    if not hasattr(mlp, '_forward_count'):
-                        mlp._forward_count = 0
-                    mlp._forward_count += 1
+        for layer in self.transformer.layers:
+            mlp = getattr(layer, 'mlp', None) or getattr(layer, 'gating', None)
+            if mlp and getattr(mlp, 'ttt_enabled', False):
+                if not hasattr(mlp, '_forward_count'):
+                    mlp._forward_count = 0
+                mlp._forward_count += 1
         if self.out_norm:
             transformer_out = self.out_norm(transformer_out)
         assert isinstance(transformer_out, torch.Tensor)
@@ -589,6 +645,7 @@ class LMGen(StreamingModule[_LMGenState]):
         support_out_of_sync: bool = False,
         cfg_is_masked_until: list[int] | None = None,
         cfg_is_no_text: bool = False,
+        ttt_monitor: TTTInferenceMonitor | None = None,
     ):
         assert not lm_model.training, "generation shouldn't be used in training mode."
         super().__init__()
@@ -615,6 +672,7 @@ class LMGen(StreamingModule[_LMGenState]):
         self.support_out_of_sync = support_out_of_sync
         self.cfg_is_masked_until = cfg_is_masked_until
         self.cfg_is_no_text = cfg_is_no_text
+        self.ttt_monitor = ttt_monitor
         if self.cfg_coef != 1.:
             if not self.cfg_is_no_text and not self.cfg_is_masked_until:
                 assert self.lm_model.fuser is not None, "Model has no fuser, cannot do CFG."
@@ -668,6 +726,8 @@ class LMGen(StreamingModule[_LMGenState]):
             if state.condition_cross is not None:
                 assert state.condition_cross.shape[0] == batch_size, "cfg requires 2x more conditions."
         state.exit_stack.enter_context(self.lm_model.streaming(batch_size))
+        if self.ttt_monitor is not None:
+            self.lm_model.attach_ttt_monitor(self.ttt_monitor)
 
         def _reset_callback(reset_mask: torch.Tensor) -> None:
             if self.cfg_coef != 1.:

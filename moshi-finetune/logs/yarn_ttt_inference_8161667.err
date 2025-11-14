@@ -1,0 +1,77 @@
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:203: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+Info: starting inference, sampling: True, audio temp: 0.8, text temp: 0.7
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/run_inference.py", line 437, in <module>
+    main()
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/run_inference.py", line 419, in main
+    out_items = state.run(in_pcms)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/run_inference.py", line 184, in run
+    tokens = self.lm_gen.step(codes)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/lm.py", line 806, in step
+    out = self._step(input_tokens, depformer_replace_tokens)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/lm.py", line 744, in _step
+    transformer_out, text_logits = state.graphed_main(input_, state.condition_sum, state.condition_cross)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/utils/compile.py", line 275, in __call__
+    return self.func(*args)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/lm.py", line 405, in forward_text
+    transformer_out = self.transformer(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 956, in forward
+    x = layer(x, *args, token_embeddings=token_embeddings, **{k: v for k, v in kwargs.items() if k != 'token_embeddings'})
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 802, in forward
+    x = self._sa_block(x)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 786, in _sa_block
+    update = self.self_attn(x, x, x)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 553, in forward
+    q, k = self.rope(q, k, offset, time_before_heads=False)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/rope.py", line 235, in forward
+    return apply_rope(
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/utils/compile.py", line 52, in _wrapped
+    return fun_compiled(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py", line 574, in _fn
+    return fn(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/rope.py", line 94, in apply_rope
+    @torch_compile_lazy
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_dynamo/eval_frame.py", line 745, in _fn
+    return fn(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_functorch/aot_autograd.py", line 1184, in forward
+    return compiled_fn(full_args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 323, in runtime_wrapper
+    all_outs = call_func_at_runtime_with_args(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/utils.py", line 126, in call_func_at_runtime_with_args
+    out = normalize_as_list(f(args))
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 672, in inner_fn
+    outs = compiled_fn(args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_functorch/_aot_autograd/runtime_wrappers.py", line 490, in wrapper
+    return compiled_fn(runtime_args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_inductor/output_code.py", line 466, in __call__
+    return self.current_callable(inputs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/_inductor/utils.py", line 2128, in run
+    return model(new_inputs)
+  File "/tmp/torchinductor_alufr/vd/cvd232tofv3rloz6dp23joyprehmnd2t7r7lij2q5dbomvdrnydl.py", line 168, in call
+    buf0.copy_(arg8_1, False)
+NotImplementedError: Cannot copy out of meta tensor; no data!

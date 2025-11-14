@@ -1,0 +1,415 @@
+==================================================
+Job started at: Fri 14 Nov 2025 17:00:33 IST
+Running on node: ise-6000-04.auth.ad.bgu.ac.il
+GPU info:
+Fri Nov 14 17:00:33 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:24:00.0 Off |                  Off |
+| 30%   26C    P8             15W /  300W |       2MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+==================================================
+Set CUDA_VISIBLE_DEVICES=0
+Starting YARN + TTT training...
+Context Extension: 4x (3000 -> 12000 tokens)
+TTT Layers: 3 (layers 10, 20, 30)
+Base Model: Frozen (only TTT params trained)
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-14 17:00:42 (IST) - 0:00:05 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-14 17:00:42 (IST) - 0:00:05 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-14 17:00:42 (IST) - 0:00:05 - distributed - INFO - local rank: 0
+2025-11-14 17:00:42 (IST) - 0:00:05 - train - INFO - Going to init comms...
+2025-11-14 17:00:42 (IST) - 0:00:05 - train - INFO - Run dir: /sise/eliyanac-group/ron_al/ttt_training_run2
+2025-11-14 17:00:42 (IST) - 0:00:05 - train - INFO - Removing run dir /sise/eliyanac-group/ron_al/ttt_training_run2...
+2025-11-14 17:00:43 (IST) - 0:00:06 - train - INFO - TrainArgs: {'batch_size': 2,
+ 'ckpt_freq': 100,
+ 'data': {'eval_data': '',
+          'shuffle': False,
+          'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl'},
+ 'do_ckpt': True,
+ 'do_eval': False,
+ 'duration_sec': 150.0,
+ 'eval_freq': 100,
+ 'first_codebook_weight_multiplier': 100.0,
+ 'full_finetuning': False,
+ 'gradient_checkpointing': True,
+ 'log_freq': 1,
+ 'lora': {'enable': False, 'ft_embed': False, 'rank': 64, 'scaling': 2.0},
+ 'max_norm': 1.0,
+ 'max_steps': 2000,
+ 'moshi_paths': {'config_path': None,
+                 'hf_repo_id': 'kyutai/moshiko-pytorch-bf16',
+                 'mimi_path': None,
+                 'moshi_path': None,
+                 'tokenizer_path': None},
+ 'num_ckpt_keep': 3,
+ 'num_microbatches': 1,
+ 'optim': {'lr': 0.01, 'pct_start': 0.05, 'weight_decay': 0.1},
+ 'overwrite_run_dir': True,
+ 'param_dtype': 'bfloat16',
+ 'run_dir': '/sise/eliyanac-group/ron_al/ttt_training_run2',
+ 'save_adapters': True,
+ 'seed': 0,
+ 'text_padding_weight': 0.5,
+ 'ttt': {'chunk_size': 256,
+         'conv_kernel_size': 2,
+         'delta_clip_fro_norm': 100.0,
+         'enabled': True,
+         'layer_frequency': 10,
+         'learning_rate': 0.0001,
+         'start_layer': 10,
+         'unfreeze_ttt_layers': False},
+ 'wandb': {'key': '',
+           'offline': False,
+           'project': 'moshi_in_place',
+           'run_name': 'run2'},
+ 'world_size': 1,
+ 'yarn': {'beta_fast': 32,
+          'beta_slow': 1,
+          'enabled': True,
+          'mscale': 1.0,
+          'mscale_all_dim': 0.0,
+          'original_max_seq_len': 3000,
+          'scale': 4.0}}
+2025-11-14 17:00:43 (IST) - 0:00:06 - metrics_logger - INFO - initializing wandb
+2025-11-14 17:00:45 (IST) - 0:00:08 - train - INFO - Loading Mimi and Moshi...
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Layer frequency: 10
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Start layer: 10
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Learning rate: 0.0001
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - YaRN (Context Window Extension) ENABLED
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Scale: 4.0x
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Original max seq len: 3000
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Beta fast: 32
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   Beta slow: 1
+2025-11-14 17:00:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO - ======================================================================
+[YaRN] Enabled with scale=4.0, original_len=3000
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[YaRN] Initializing RoPE buffers on device=meta
+[YaRN] RoPE buffers initialized successfully
+2025-11-14 17:00:47 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-14 17:00:47 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Initializing TTT w_down from pretrained checkpoint...
+2025-11-14 17:00:47 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ transformer.layers.10.gating.w_down <- transformer.layers.10.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:00:47 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ transformer.layers.20.gating.w_down <- transformer.layers.20.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:00:47 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ transformer.layers.30.gating.w_down <- transformer.layers.30.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:00:47 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Initializing TTT layers ...
+2025-11-14 17:00:48 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:00:48 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:00:48 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.10.gating.w_down_pretrained from w_down
+2025-11-14 17:00:48 (IST) - 0:00:11 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:00:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:00:49 (IST) - 0:00:12 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:00:49 (IST) - 0:00:12 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.20.gating.w_down_pretrained from w_down
+2025-11-14 17:00:49 (IST) - 0:00:12 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:00:50 (IST) - 0:00:12 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.30.gating.w_down_pretrained from w_down
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO - Initializing YaRN RoPE buffers ...
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.rope.inv_freq (shape: torch.Size([64]), scale: 4.0x)
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO - Finished initialization!
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO - TTT ACTIVE: 3 layers enabled
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO - TTT layer indices: [10, 20, 30]
+2025-11-14 17:00:50 (IST) - 0:00:13 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:01:00 (IST) - 0:00:22 - train - INFO - [DocStream] step=1 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=0-1]
+2025-11-14 17:01:00 (IST) - 0:00:22 - train - INFO - [TTT RESET] Document switch detected: None -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav
+2025-11-14 17:01:00 (IST) - 0:00:22 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.980469; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:00 (IST) - 0:00:22 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.982422; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:00 (IST) - 0:00:22 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.980469; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.367013
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.483802
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.794504
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - =========================
+
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - [TTT] Step 1: grad_norm=1.000e+00, param_norm=126.0420, delta_norm=4.697e+00, relative_change=3.7264% (9 params)
+2025-11-14 17:01:08 (IST) - 0:00:31 - train - INFO - step: 000001 - done (%): 0.1 - loss: 3.378 - lr: 4.0e-04 - peak_alloc_mem (GB): 36.0 - alloc_mem (GB): 21.0 - words_per_second: 2151.3 - avg_words_per_second: 2151.3 - ETA: >2025-11-15 01:43:49
+2025-11-14 17:01:09 (IST) - 0:00:31 - train - INFO - [DocStream] step=2 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=2-3]
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.359873
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.551054
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.752882
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   requires_grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   has grad: True
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - =========================
+
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - [TTT] Step 2: grad_norm=1.000e+00, param_norm=126.1541, delta_norm=3.238e+00, relative_change=2.5670% (9 params)
+2025-11-14 17:01:14 (IST) - 0:00:37 - train - INFO - step: 000002 - done (%): 0.1 - loss: 15.218 - lr: 4.0e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5641.3 - avg_words_per_second: 3114.8 - ETA: >2025-11-14 23:02:03
+2025-11-14 17:01:15 (IST) - 0:00:38 - train - INFO - [DocStream] step=3 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=4-5]
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.251355
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.422377
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.870872
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   requires_grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   has grad: True
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - =========================
+
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - [TTT] Step 3: grad_norm=1.000e+00, param_norm=126.2753, delta_norm=2.637e+00, relative_change=2.0879% (9 params)
+2025-11-14 17:01:21 (IST) - 0:00:43 - train - INFO - step: 000003 - done (%): 0.1 - loss: 8.474 - lr: 4.1e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5229.9 - avg_words_per_second: 3600.1 - ETA: >2025-11-14 22:13:22
+2025-11-14 17:01:21 (IST) - 0:00:44 - train - INFO - [DocStream] step=4 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=0-1]
+2025-11-14 17:01:21 (IST) - 0:00:44 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4065.wav
+2025-11-14 17:01:21 (IST) - 0:00:44 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.980469; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:21 (IST) - 0:00:44 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.982422; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:21 (IST) - 0:00:44 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.982422; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.406624
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.474242
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.780865
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   requires_grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   has grad: True
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - =========================
+
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - [TTT] Step 4: grad_norm=1.000e+00, param_norm=126.4255, delta_norm=2.536e+00, relative_change=2.0063% (9 params)
+2025-11-14 17:01:27 (IST) - 0:00:49 - train - INFO - step: 000004 - done (%): 0.2 - loss: 4.810 - lr: 4.2e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5600.6 - avg_words_per_second: 3953.1 - ETA: >2025-11-14 21:45:28
+2025-11-14 17:01:27 (IST) - 0:00:50 - train - INFO - [DocStream] step=5 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=2-3]
+2025-11-14 17:01:33 (IST) - 0:00:55 - train - INFO - [TTT] Step 5: grad_norm=1.000e+00, param_norm=126.5876, delta_norm=2.321e+00, relative_change=1.8334% (9 params)
+2025-11-14 17:01:33 (IST) - 0:00:55 - train - INFO - step: 000005 - done (%): 0.2 - loss: 10.633 - lr: 4.4e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5596.3 - avg_words_per_second: 4199.7 - ETA: >2025-11-14 21:28:45
+2025-11-14 17:01:33 (IST) - 0:00:56 - train - INFO - [DocStream] step=6 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=4-5]
+2025-11-14 17:01:39 (IST) - 0:01:01 - train - INFO - [TTT] Step 6: grad_norm=1.000e+00, param_norm=126.7573, delta_norm=2.276e+00, relative_change=1.7958% (9 params)
+2025-11-14 17:01:39 (IST) - 0:01:01 - train - INFO - step: 000006 - done (%): 0.3 - loss: 5.650 - lr: 4.6e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5570.4 - avg_words_per_second: 4379.3 - ETA: >2025-11-14 21:17:46
+2025-11-14 17:01:39 (IST) - 0:01:02 - train - INFO - [DocStream] step=7 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=6-7]
+2025-11-14 17:01:45 (IST) - 0:01:08 - train - INFO - [TTT] Step 7: grad_norm=1.000e+00, param_norm=126.9434, delta_norm=2.310e+00, relative_change=1.8194% (9 params)
+2025-11-14 17:01:45 (IST) - 0:01:08 - train - INFO - step: 000007 - done (%): 0.3 - loss: 4.174 - lr: 4.9e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5567.8 - avg_words_per_second: 4517.1 - ETA: >2025-11-14 21:09:56
+2025-11-14 17:01:45 (IST) - 0:01:08 - train - INFO - [DocStream] step=8 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=8-9]
+2025-11-14 17:01:51 (IST) - 0:01:14 - train - INFO - [TTT] Step 8: grad_norm=1.000e+00, param_norm=127.1371, delta_norm=2.254e+00, relative_change=1.7732% (9 params)
+2025-11-14 17:01:51 (IST) - 0:01:14 - train - INFO - step: 000008 - done (%): 0.4 - loss: 3.308 - lr: 5.2e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5554.5 - avg_words_per_second: 4625.1 - ETA: >2025-11-14 21:04:07
+2025-11-14 17:01:51 (IST) - 0:01:14 - train - INFO - [DocStream] step=9 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=10-11]
+2025-11-14 17:01:57 (IST) - 0:01:20 - train - INFO - [TTT] Step 9: grad_norm=1.000e+00, param_norm=127.3446, delta_norm=2.289e+00, relative_change=1.7977% (9 params)
+2025-11-14 17:01:57 (IST) - 0:01:20 - train - INFO - step: 000009 - done (%): 0.5 - loss: 2.852 - lr: 5.5e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5536.5 - avg_words_per_second: 4711.2 - ETA: >2025-11-14 20:59:40
+2025-11-14 17:01:57 (IST) - 0:01:20 - train - INFO - [DocStream] step=10 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=0-1]
+2025-11-14 17:01:57 (IST) - 0:01:20 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4065.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4074.wav
+2025-11-14 17:01:57 (IST) - 0:01:20 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.980469; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:57 (IST) - 0:01:20 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.982422; w_down is frozen during training so its norm stays constant
+2025-11-14 17:01:57 (IST) - 0:01:20 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.986328; w_down is frozen during training so its norm stays constant
+2025-11-14 17:02:03 (IST) - 0:01:26 - train - INFO - [TTT] Step 10: grad_norm=1.000e+00, param_norm=127.5962, delta_norm=2.395e+00, relative_change=1.8774% (9 params)
+2025-11-14 17:02:03 (IST) - 0:01:26 - train - INFO - step: 000010 - done (%): 0.5 - loss: 5.038 - lr: 5.9e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5529.9 - avg_words_per_second: 4782.0 - ETA: >2025-11-14 20:56:08
+2025-11-14 17:02:03 (IST) - 0:01:26 - train - INFO - [DocStream] step=11 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=2-3]
+2025-11-14 17:02:09 (IST) - 0:01:32 - train - INFO - [TTT] Step 11: grad_norm=1.000e+00, param_norm=127.8711, delta_norm=2.406e+00, relative_change=1.8818% (9 params)
+2025-11-14 17:02:09 (IST) - 0:01:32 - train - INFO - step: 000011 - done (%): 0.6 - loss: 10.351 - lr: 6.4e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5516.0 - avg_words_per_second: 4840.6 - ETA: >2025-11-14 20:53:17
+2025-11-14 17:02:10 (IST) - 0:01:32 - train - INFO - [DocStream] step=12 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=4-5]
+2025-11-14 17:02:15 (IST) - 0:01:38 - train - INFO - [TTT] Step 12: grad_norm=1.000e+00, param_norm=128.1700, delta_norm=2.411e+00, relative_change=1.8810% (9 params)
+2025-11-14 17:02:15 (IST) - 0:01:38 - train - INFO - step: 000012 - done (%): 0.6 - loss: 3.835 - lr: 6.9e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5507.5 - avg_words_per_second: 4889.9 - ETA: >2025-11-14 20:50:56
+2025-11-14 17:02:16 (IST) - 0:01:38 - train - INFO - [DocStream] step=13 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=6-7]
+2025-11-14 17:02:22 (IST) - 0:01:44 - train - INFO - [TTT] Step 13: grad_norm=1.000e+00, param_norm=128.4958, delta_norm=2.580e+00, relative_change=2.0075% (9 params)
+2025-11-14 17:02:22 (IST) - 0:01:44 - train - INFO - step: 000013 - done (%): 0.7 - loss: 3.661 - lr: 7.4e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5499.8 - avg_words_per_second: 4932.0 - ETA: >2025-11-14 20:48:59
+2025-11-14 17:02:22 (IST) - 0:01:45 - train - INFO - [DocStream] step=14 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=8-9]
+2025-11-14 17:02:28 (IST) - 0:01:50 - train - INFO - [TTT] Step 14: grad_norm=1.000e+00, param_norm=128.8494, delta_norm=2.588e+00, relative_change=2.0088% (9 params)
+2025-11-14 17:02:28 (IST) - 0:01:50 - train - INFO - step: 000014 - done (%): 0.7 - loss: 3.332 - lr: 8.0e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5487.0 - avg_words_per_second: 4967.9 - ETA: >2025-11-14 20:47:20
+2025-11-14 17:02:28 (IST) - 0:01:51 - train - INFO - [DocStream] step=15 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=10-11]
+2025-11-14 17:02:34 (IST) - 0:01:56 - train - INFO - [TTT] Step 15: grad_norm=1.000e+00, param_norm=129.2316, delta_norm=2.662e+00, relative_change=2.0596% (9 params)
+2025-11-14 17:02:34 (IST) - 0:01:57 - train - INFO - step: 000015 - done (%): 0.8 - loss: 3.256 - lr: 8.7e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5479.7 - avg_words_per_second: 4999.0 - ETA: >2025-11-14 20:45:55
+2025-11-14 17:02:34 (IST) - 0:01:57 - train - INFO - [DocStream] step=16 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=0-1]
+2025-11-14 17:02:34 (IST) - 0:01:57 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4074.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4077.wav
+2025-11-14 17:02:34 (IST) - 0:01:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.980469; w_down is frozen during training so its norm stays constant
+2025-11-14 17:02:34 (IST) - 0:01:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.982422; w_down is frozen during training so its norm stays constant
+2025-11-14 17:02:34 (IST) - 0:01:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.988281; w_down is frozen during training so its norm stays constant
+2025-11-14 17:02:40 (IST) - 0:02:03 - train - INFO - [TTT] Step 16: grad_norm=1.000e+00, param_norm=129.6967, delta_norm=2.822e+00, relative_change=2.1761% (9 params)
+2025-11-14 17:02:40 (IST) - 0:02:03 - train - INFO - step: 000016 - done (%): 0.8 - loss: 4.238 - lr: 9.3e-04 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5426.2 - avg_words_per_second: 5023.7 - ETA: >2025-11-14 20:44:49
+2025-11-14 17:02:40 (IST) - 0:02:03 - train - INFO - [DocStream] step=17 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=2-3]
+2025-11-14 17:02:46 (IST) - 0:02:09 - train - INFO - [TTT] Step 17: grad_norm=1.000e+00, param_norm=130.2027, delta_norm=2.919e+00, relative_change=2.2420% (9 params)
+2025-11-14 17:02:46 (IST) - 0:02:09 - train - INFO - step: 000017 - done (%): 0.8 - loss: 9.765 - lr: 1.0e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5477.7 - avg_words_per_second: 5048.3 - ETA: >2025-11-14 20:43:43
+2025-11-14 17:02:47 (IST) - 0:02:09 - train - INFO - [DocStream] step=18 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=4-5]
+2025-11-14 17:02:52 (IST) - 0:02:15 - train - INFO - [TTT] Step 18: grad_norm=1.000e+00, param_norm=130.7469, delta_norm=3.075e+00, relative_change=2.3519% (9 params)
+2025-11-14 17:02:52 (IST) - 0:02:15 - train - INFO - step: 000018 - done (%): 0.9 - loss: 3.444 - lr: 1.1e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5469.1 - avg_words_per_second: 5070.0 - ETA: >2025-11-14 20:42:46
+2025-11-14 17:02:53 (IST) - 0:02:15 - train - INFO - [DocStream] step=19 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=6-7]
+2025-11-14 17:02:59 (IST) - 0:02:21 - train - INFO - [TTT] Step 19: grad_norm=1.000e+00, param_norm=131.3375, delta_norm=3.185e+00, relative_change=2.4250% (9 params)
+2025-11-14 17:02:59 (IST) - 0:02:21 - train - INFO - step: 000019 - done (%): 0.9 - loss: 4.729 - lr: 1.2e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5476.8 - avg_words_per_second: 5089.9 - ETA: >2025-11-14 20:41:54
+2025-11-14 17:02:59 (IST) - 0:02:22 - train - INFO - [DocStream] step=20 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=8-9]
+2025-11-14 17:03:05 (IST) - 0:02:27 - train - INFO - [TTT] Step 20: grad_norm=1.000e+00, param_norm=131.9777, delta_norm=3.222e+00, relative_change=2.4415% (9 params)
+2025-11-14 17:03:05 (IST) - 0:02:27 - train - INFO - step: 000020 - done (%): 1.0 - loss: 4.308 - lr: 1.2e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5456.9 - avg_words_per_second: 5107.1 - ETA: >2025-11-14 20:41:10
+2025-11-14 17:03:05 (IST) - 0:02:28 - train - INFO - [DocStream] step=21 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=10-11]
+2025-11-14 17:03:11 (IST) - 0:02:34 - train - INFO - [TTT] Step 21: grad_norm=1.000e+00, param_norm=132.6728, delta_norm=3.386e+00, relative_change=2.5523% (9 params)
+2025-11-14 17:03:11 (IST) - 0:02:34 - train - INFO - step: 000021 - done (%): 1.1 - loss: 2.833 - lr: 1.3e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5462.5 - avg_words_per_second: 5123.0 - ETA: >2025-11-14 20:40:29
+2025-11-14 17:03:11 (IST) - 0:02:34 - train - INFO - [DocStream] step=22 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=0-1]
+2025-11-14 17:03:11 (IST) - 0:02:34 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4077.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4092.wav
+2025-11-14 17:03:11 (IST) - 0:02:34 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.980469; w_down is frozen during training so its norm stays constant
+2025-11-14 17:03:11 (IST) - 0:02:34 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.982422; w_down is frozen during training so its norm stays constant
+2025-11-14 17:03:11 (IST) - 0:02:34 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.988281; w_down is frozen during training so its norm stays constant
+2025-11-14 17:03:17 (IST) - 0:02:40 - train - INFO - [TTT] Step 22: grad_norm=1.000e+00, param_norm=133.5616, delta_norm=3.743e+00, relative_change=2.8022% (9 params)
+2025-11-14 17:03:17 (IST) - 0:02:40 - train - INFO - step: 000022 - done (%): 1.1 - loss: 3.864 - lr: 1.4e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5445.8 - avg_words_per_second: 5136.8 - ETA: >2025-11-14 20:39:53
+2025-11-14 17:03:17 (IST) - 0:02:40 - train - INFO - [DocStream] step=23 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=2-3]
+2025-11-14 17:03:23 (IST) - 0:02:46 - train - INFO - [TTT] Step 23: grad_norm=1.000e+00, param_norm=134.5279, delta_norm=3.825e+00, relative_change=2.8432% (9 params)
+2025-11-14 17:03:23 (IST) - 0:02:46 - train - INFO - step: 000023 - done (%): 1.1 - loss: 7.852 - lr: 1.5e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5462.1 - avg_words_per_second: 5150.1 - ETA: >2025-11-14 20:39:19
+2025-11-14 17:03:24 (IST) - 0:02:46 - train - INFO - [DocStream] step=24 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=4-5]
+2025-11-14 17:03:29 (IST) - 0:02:52 - train - INFO - [TTT] Step 24: grad_norm=1.000e+00, param_norm=135.5611, delta_norm=4.014e+00, relative_change=2.9608% (9 params)
+2025-11-14 17:03:29 (IST) - 0:02:52 - train - INFO - step: 000024 - done (%): 1.2 - loss: 4.713 - lr: 1.6e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5451.0 - avg_words_per_second: 5162.0 - ETA: >2025-11-14 20:38:49
+2025-11-14 17:03:30 (IST) - 0:02:52 - train - INFO - [DocStream] step=25 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=6-7]
+2025-11-14 17:03:36 (IST) - 0:02:58 - train - INFO - [TTT] Step 25: grad_norm=1.000e+00, param_norm=136.6608, delta_norm=4.315e+00, relative_change=3.1575% (9 params)
+2025-11-14 17:03:36 (IST) - 0:02:58 - train - INFO - step: 000025 - done (%): 1.2 - loss: 3.825 - lr: 1.7e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5460.3 - avg_words_per_second: 5173.3 - ETA: >2025-11-14 20:38:20
+2025-11-14 17:03:36 (IST) - 0:02:59 - train - INFO - [DocStream] step=26 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=8-9]
+2025-11-14 17:03:42 (IST) - 0:03:05 - train - INFO - [TTT] Step 26: grad_norm=1.000e+00, param_norm=137.8401, delta_norm=4.371e+00, relative_change=3.1713% (9 params)
+2025-11-14 17:03:42 (IST) - 0:03:05 - train - INFO - step: 000026 - done (%): 1.3 - loss: 2.841 - lr: 1.8e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5446.6 - avg_words_per_second: 5183.3 - ETA: >2025-11-14 20:37:55
+2025-11-14 17:03:42 (IST) - 0:03:05 - train - INFO - [DocStream] step=27 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=10-11]
+2025-11-14 17:03:48 (IST) - 0:03:11 - train - INFO - [TTT] Step 27: grad_norm=1.000e+00, param_norm=139.0894, delta_norm=4.242e+00, relative_change=3.0501% (9 params)
+2025-11-14 17:03:48 (IST) - 0:03:11 - train - INFO - step: 000027 - done (%): 1.4 - loss: 4.062 - lr: 1.9e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5445.7 - avg_words_per_second: 5192.6 - ETA: >2025-11-14 20:37:32
+2025-11-14 17:03:48 (IST) - 0:03:11 - train - INFO - [DocStream] step=28 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=0-1]
+2025-11-14 17:03:48 (IST) - 0:03:11 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4092.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4104.wav
+2025-11-14 17:03:48 (IST) - 0:03:11 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.980469; w_down is frozen during training so its norm stays constant
+2025-11-14 17:03:48 (IST) - 0:03:11 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.982422; w_down is frozen during training so its norm stays constant
+2025-11-14 17:03:48 (IST) - 0:03:11 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.990234; w_down is frozen during training so its norm stays constant
+2025-11-14 17:03:54 (IST) - 0:03:17 - train - INFO - [TTT] Step 28: grad_norm=1.000e+00, param_norm=140.6781, delta_norm=4.868e+00, relative_change=3.4602% (9 params)
+2025-11-14 17:03:54 (IST) - 0:03:17 - train - INFO - step: 000028 - done (%): 1.4 - loss: 3.957 - lr: 2.1e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5422.6 - avg_words_per_second: 5200.5 - ETA: >2025-11-14 20:37:12
+2025-11-14 17:03:55 (IST) - 0:03:17 - train - INFO - [DocStream] step=29 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=2-3]
+2025-11-14 17:04:00 (IST) - 0:03:23 - train - INFO - [TTT] Step 29: grad_norm=1.000e+00, param_norm=142.3713, delta_norm=5.042e+00, relative_change=3.5414% (9 params)
+2025-11-14 17:04:01 (IST) - 0:03:23 - train - INFO - step: 000029 - done (%): 1.4 - loss: 8.232 - lr: 2.2e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5444.8 - avg_words_per_second: 5208.5 - ETA: >2025-11-14 20:36:52
+2025-11-14 17:04:01 (IST) - 0:03:23 - train - INFO - [DocStream] step=30 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=4-5]
+2025-11-14 17:04:07 (IST) - 0:03:29 - train - INFO - [TTT] Step 30: grad_norm=1.000e+00, param_norm=144.1696, delta_norm=5.346e+00, relative_change=3.7079% (9 params)
+2025-11-14 17:04:07 (IST) - 0:03:29 - train - INFO - step: 000030 - done (%): 1.5 - loss: 3.493 - lr: 2.3e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5462.6 - avg_words_per_second: 5216.6 - ETA: >2025-11-14 20:36:32
+2025-11-14 17:04:07 (IST) - 0:03:30 - train - INFO - [DocStream] step=31 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=6-7]
+2025-11-14 17:04:13 (IST) - 0:03:36 - train - INFO - [TTT] Step 31: grad_norm=7.202e-01, param_norm=146.0759, delta_norm=5.441e+00, relative_change=3.7245% (9 params)
+2025-11-14 17:04:13 (IST) - 0:03:36 - train - INFO - step: 000031 - done (%): 1.6 - loss: 3.312 - lr: 2.4e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5445.4 - avg_words_per_second: 5223.7 - ETA: >2025-11-14 20:36:15
+2025-11-14 17:04:13 (IST) - 0:03:36 - train - INFO - [DocStream] step=32 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=8-9]

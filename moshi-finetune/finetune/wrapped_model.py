@@ -445,10 +445,12 @@ def get_fsdp_model(
                 else:
                     param.requires_grad = False
         else:
-            # TTT-only fine-tuning: train only TTT target_generator parameters
-            # Freeze all pretrained Moshi parameters (as paper describes)
+            # TTT-only fine-tuning: train target_generator + w_down (fast weights)
+            # The paper trains target_generator (slow weights that produce V_hat) plus
+            # w_down (which starts as linear_out and learns via backprop during training,
+            # then gets test-time updates via the delta rule during inference).
             for name, param in model.named_parameters():
-                if "target_generator" in name:
+                if "target_generator" in name or "w_down" in name:
                     param.requires_grad = True
                 else:
                     param.requires_grad = False

@@ -18,6 +18,7 @@ import torch
 from .client_utils import AnyPrinter, Printer, RawPrinter, log
 from .conditioners import ConditionAttributes, ConditionTensors
 from .models import LMGen, LMModel, MimiModel, loaders
+from .utils.ttt_monitor import TTTInferenceMonitor
 
 
 def seed_all(seed):
@@ -72,6 +73,7 @@ class InferenceState:
         batch_size: int,
         cfg_coef: float,
         device: str | torch.device,
+        ttt_monitor: TTTInferenceMonitor | None = None,
         **kwargs,
     ):
         self.checkpoint_info = checkpoint_info
@@ -81,8 +83,13 @@ class InferenceState:
         self.text_tokenizer = text_tokenizer
         condition_tensors = get_condition_tensors(model_type, lm, batch_size, cfg_coef)
         self.lm_gen = LMGen(
-            lm, cfg_coef=cfg_coef, condition_tensors=condition_tensors, **kwargs
+            lm,
+            cfg_coef=cfg_coef,
+            condition_tensors=condition_tensors,
+            ttt_monitor=ttt_monitor,
+            **kwargs,
         )
+        self.ttt_monitor = ttt_monitor
         self.device = device
         self.frame_size = int(self.mimi.sample_rate / self.mimi.frame_rate)
         self.batch_size = batch_size
@@ -223,6 +230,13 @@ class InferenceState:
             f"processed {ntokens} steps in {dt:.0f}s, {1000 * dt / ntokens:.2f}ms/step",
         )
         
+        if ttt_layers:
+            for idx, _ in ttt_layers:
+                mlp = getattr(self.lm_gen.lm_model.transformer.layers[idx], 'mlp', None) or \
+                      getattr(self.lm_gen.lm_model.transformer.layers[idx], 'gating', None)
+                if hasattr(mlp, 'flush_ttt_buffers'):
+                    mlp.flush_ttt_buffers()
+
         # Log final TTT state to show adaptation
         if ttt_layers:
             log("info", "TTT final state after inference:")
@@ -234,6 +248,11 @@ class InferenceState:
                 update_count = getattr(mlp, '_update_count', 0)
                 # Show more precision to see if weights are actually changing
                 log("info", f"  Layer {idx} final w_down norm: {final_norm:.6f} (change: {change:.6f}, updates: {update_count})")
+        if self.ttt_monitor is not None:
+            artifacts = self.ttt_monitor.finalize()
+            log("info", f"TTT telemetry saved to {artifacts['json']}")
+            if artifacts.get("plots"):
+                log("info", f"TTT plots: {[p.name for p in artifacts['plots']]}")
         if self.lm_gen.lm_model.dep_q > 0:
             out = [
                 (torch.cat(one_texts, dim=0), torch.cat(one_pcms, dim=1))
@@ -291,6 +310,18 @@ def main():
         type=str,
         help="Path to LoRA weights (e.g., for TTT-trained model).",
     )
+    parser.add_argument(
+        "--ttt-monitor-dir",
+        type=str,
+        default="",
+        help="Directory to save TTT telemetry (JSON + plots). Leave empty to disable.",
+    )
+    parser.add_argument(
+        "--ttt-chunk-size",
+        type=int,
+        default=0,
+        help="Override TTT chunk size during inference (<=0 keeps checkpoint value).",
+    )
     parser.add_argument("--cfg-coef", type=float, default=1.0, help="CFG coefficient.")
     parser.add_argument("infile", type=str, help="Input audio file.")
     parser.add_argument(
@@ -303,6 +334,18 @@ def main():
 
     args = parser.parse_args()
     seed_all(4242)
+
+    monitor: TTTInferenceMonitor | None = None
+    if getattr(args, "ttt_monitor_dir", ""):
+        monitor = TTTInferenceMonitor(
+            args.ttt_monitor_dir,
+            run_label=f"{Path(args.infile).stem}_{int(time.time())}",
+        )
+        monitor.add_metadata(input_file=args.infile)
+        if args.lora_weights:
+            monitor.add_metadata(lora_weights=args.lora_weights)
+        else:
+            monitor.add_metadata(hf_repo=args.hf_repo)
 
     log("info", "retrieving checkpoint")
     checkpoint_info = loaders.CheckpointInfo.from_hf_repo(
@@ -364,13 +407,18 @@ def main():
             if 'yarn_config' in ckpt_config:
                 yarn_cfg = ckpt_config['yarn_config']
                 if yarn_cfg.get('enabled', False):
-                    lm_kwargs_overrides['yarn_scale'] = yarn_cfg.get('scale', 1.0)
-                    lm_kwargs_overrides['original_max_seq_len'] = yarn_cfg.get('original_max_seq_len', 3000)
-                    lm_kwargs_overrides['yarn_beta_fast'] = yarn_cfg.get('beta_fast', 32)
-                    lm_kwargs_overrides['yarn_beta_slow'] = yarn_cfg.get('beta_slow', 1)
-                    lm_kwargs_overrides['yarn_mscale'] = yarn_cfg.get('mscale', 1.0)
-                    lm_kwargs_overrides['yarn_mscale_all_dim'] = yarn_cfg.get('mscale_all_dim', 0.0)
-                    log("info", f"Loaded YARN config from checkpoint: scale={yarn_cfg['scale']}x, original_len={yarn_cfg['original_max_seq_len']}")
+                    # Pass YARN config as a dict (will be processed in loaders.py)
+                    lm_kwargs_overrides['yarn_config'] = yarn_cfg
+                    
+                    # CRITICAL: Scale the context length for KV cache capacity
+                    # YARN extends context by scale factor, so KV cache must be larger
+                    yarn_scale = yarn_cfg['scale']
+                    original_context = ckpt_config.get('context', 3000)
+                    extended_context = int(original_context * yarn_scale)
+                    lm_kwargs_overrides['context'] = extended_context
+                    
+                    log("info", f"Loaded YARN config from checkpoint: scale={yarn_scale}x, original_len={yarn_cfg['original_max_seq_len']}")
+                    log("info", f"Extended KV cache context: {original_context} -> {extended_context} tokens")
         else:
             log("warning", f"No config.json found at {config_file}, using default settings")
             lm_kwargs_overrides['lora'] = True
@@ -383,6 +431,17 @@ def main():
                 'learning_rate': 0.001,
                 'conv_kernel_size': 2,
             }
+    # Apply explicit chunk-size override if requested
+    ttt_chunk_override = getattr(args, "ttt_chunk_size", 0)
+    if ttt_chunk_override and ttt_chunk_override > 0:
+        ttt_cfg = lm_kwargs_overrides.setdefault('ttt_config', {})
+        prev_value = ttt_cfg.get('chunk_size')
+        ttt_cfg['chunk_size'] = ttt_chunk_override
+        log(
+            "info",
+            f"Overriding TTT chunk size: {prev_value if prev_value is not None else 'default'} -> {ttt_chunk_override}",
+        )
+
     lm = checkpoint_info.get_moshi(device=args.device, dtype=args.dtype, lm_kwargs_overrides=lm_kwargs_overrides)
     log("info", "moshi loaded")
     if lm.dep_q == 0:
@@ -404,6 +463,16 @@ def main():
         if args.batch_size != 1:
             log("warning", f"TTT requires batch_size=1, changing from {args.batch_size} to 1")
             args.batch_size = 1
+        if monitor is not None:
+            mlp0 = getattr(lm.transformer.layers[ttt_enabled_layers[0]], 'mlp', None) or \
+                   getattr(lm.transformer.layers[ttt_enabled_layers[0]], 'gating', None)
+            monitor.add_metadata(ttt_layers=len(ttt_enabled_layers))
+            if mlp0 is not None:
+                monitor.add_metadata(
+                    chunk_size=getattr(mlp0, 'chunk_size', None),
+                    ttt_learning_rate=getattr(mlp0, 'ttt_lr', None),
+                )
+            monitor.add_metadata(batch_size=args.batch_size, dtype=str(args.dtype), cfg_coef=args.cfg_coef)
 
     log("info", f"loading input file {args.infile}")
     in_pcms, _ = sphn.read(args.infile, sample_rate=mimi.sample_rate)
@@ -418,6 +487,7 @@ def main():
         args.batch_size,
         args.cfg_coef,
         args.device,
+        ttt_monitor=monitor,
         **checkpoint_info.lm_gen_config,
     )
     out_items = state.run(in_pcms)

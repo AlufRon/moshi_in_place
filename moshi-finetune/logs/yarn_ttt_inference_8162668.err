@@ -1,0 +1,20 @@
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:204: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/run_inference.py", line 494, in <module>
+    main()
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/run_inference.py", line 428, in main
+    lm = checkpoint_info.get_moshi(device=args.device, dtype=args.dtype, lm_kwargs_overrides=lm_kwargs_overrides)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py", line 300, in get_moshi
+    model = get_moshi_lm(
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py", line 521, in get_moshi_lm
+    model = get_lora_moshi(
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py", line 622, in get_lora_moshi
+    lora_state_dict = load_file(lora_weights, device=str(device))
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/safetensors/torch.py", line 313, in load_file
+    with safe_open(filename, framework="pt", device=device) as f:
+FileNotFoundError: No such file or directory: "/sise/eliyanac-group/ron_al/ttt_training_run2/checkpoints/checkpoint_000500/consolidated/lora.safetensors"

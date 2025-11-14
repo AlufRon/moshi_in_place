@@ -7,11 +7,20 @@ compatible with models that don't enable TTT.
 """
 from __future__ import annotations
 
+import logging
 import math
 import typing as tp
+from typing import TYPE_CHECKING
+
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+
+if TYPE_CHECKING:
+    from ..utils.ttt_monitor import TTTInferenceMonitor
+
+
+logger = logging.getLogger(__name__)
 
 
 class CausalConv1D(nn.Module):
@@ -99,6 +108,9 @@ class TTTGating(nn.Module):
         self.linear_out = nn.Linear(hidden, dim, bias=False, **factory_kwargs)
 
         self.activation = activation
+        self._ttt_monitor = None
+        self._ttt_monitor_layer = None
+        self._ttt_chunk_counter = 0
 
         # TTT-specific config
         self.ttt_config = {} if ttt_config is None else dict(ttt_config)
@@ -106,6 +118,12 @@ class TTTGating(nn.Module):
         self.chunk_size = int(self.ttt_config.get("chunk_size", 256))
         self.ttt_lr = float(self.ttt_config.get("learning_rate", 1e-3))
         self.conv_kernel_size = int(self.ttt_config.get("conv_kernel_size", 2))
+        self.delta_clip_fro_norm: float | None = self.ttt_config.get("delta_clip_fro_norm", 1e-5)
+        if self.delta_clip_fro_norm is not None:
+            self.delta_clip_fro_norm = float(self.delta_clip_fro_norm)
+            if self.delta_clip_fro_norm <= 0:
+                self.delta_clip_fro_norm = None
+        self.delta_clip_epsilon = float(self.ttt_config.get("delta_clip_epsilon", 1e-12))
 
         # TTT fast weights - these are the "test-time trainable" parameters
         # w_down: [dim, hidden] - projection down from hidden to dim (final projection)
@@ -118,6 +136,9 @@ class TTTGating(nn.Module):
             # Store pretrained weights for optional reset (e.g., conversation boundaries)
             # Keep pretrained in float32 for precision (matches w_down precision)
             self.register_buffer('w_down_pretrained', torch.empty(dim, hidden, dtype=torch.float32))
+            self.register_buffer('ttt_clip_event_counter', torch.zeros(1, dtype=torch.float32), persistent=False)
+            self._inference_z_buffer = None
+            self._inference_v_buffer = None
             print(f"[TTT] Enabled TTT gating: chunk_size={self.chunk_size}, lr={self.ttt_lr}, dim={dim}, hidden={hidden}")
 
         # target generator (slow weights)
@@ -132,6 +153,20 @@ class TTTGating(nn.Module):
                 print(f"[TTT WARNING] TTT enabled but token_embeddings is None - falling back to standard gating")
             return self._standard_forward(x)
         return self._ttt_forward(x, token_embeddings)
+
+    def set_ttt_monitor(self, monitor: "TTTInferenceMonitor" | None, layer_name: str | None = None) -> None:
+        """Register a monitor that consumes chunk-level TTT statistics."""
+
+        self._ttt_monitor = monitor
+        self._ttt_monitor_layer = layer_name or self.__class__.__name__
+        if monitor is not None:
+            metadata = {
+                "chunk_size": self.chunk_size,
+                "learning_rate": self.ttt_lr,
+                "hidden_dim": self.linear_out.in_features,
+                "output_dim": self.linear_out.out_features,
+            }
+            monitor.register_layer(self._ttt_monitor_layer, metadata)
 
     def _standard_forward(self, x: torch.Tensor) -> torch.Tensor:
         h = F.linear(x, self.linear_in.weight)
@@ -161,8 +196,109 @@ class TTTGating(nn.Module):
             # X^(i)_0 means token embeddings for chunk i only (not full sequence)
             V_hat = self._apply_conv1d_per_chunk(token_embeddings)  # [B, T, dim]
 
-        # chunk-wise parallel update
-        return self._parallel_ttt_update(Z, V_hat)
+        if self.training:
+            return self._parallel_ttt_update(Z, V_hat)
+        return self._ttt_forward_inference(Z, V_hat, input_dtype=x.dtype)
+
+    def _ttt_forward_inference(self, Z: torch.Tensor, V_hat: torch.Tensor, input_dtype: torch.dtype) -> torch.Tensor:
+        """Inference path that buffers tokens until a full chunk is ready.
+
+        We must emit activations one token at a time for streaming, but the paper's
+        chunk-wise rule requires applying fast-weight updates only after seeing a
+        complete chunk. We therefore:
+          1. Produce the current output using the latest fast weights without
+             mutating them (identical to the "apply" step).
+          2. Append the token's statistics (Z, V_hat) to a buffer.
+          3. Once the buffer accumulates >= chunk_size tokens, replay that chunk
+             through `_parallel_ttt_update` to perform the "update" step. The
+             replayed outputs are discarded—the real-time outputs have already
+             been emitted—but the fast weights now include the chunk delta.
+        """
+
+        if not self.ttt_enabled:
+            return self._standard_forward(Z)
+
+        if Z.dtype != torch.float32:
+            Z_fp32 = Z.to(torch.float32)
+        else:
+            Z_fp32 = Z
+
+        if V_hat.dtype != torch.float32:
+            V_fp32 = V_hat.to(torch.float32)
+        else:
+            V_fp32 = V_hat
+
+        out = torch.matmul(Z_fp32, self.w_down.t())
+        if out.dtype != input_dtype:
+            out = out.to(input_dtype)
+
+        self._append_inference_buffers(Z_fp32, V_fp32)
+        self._flush_inference_buffers(force=False)
+
+        return out
+
+    def _append_inference_buffers(self, Z: torch.Tensor, V_hat: torch.Tensor) -> None:
+        if self._inference_z_buffer is None:
+            self._inference_z_buffer = Z.detach().clone()
+            self._inference_v_buffer = V_hat.detach().clone()
+            return
+        self._inference_z_buffer = torch.cat([self._inference_z_buffer, Z.detach()], dim=1)
+        self._inference_v_buffer = torch.cat([self._inference_v_buffer, V_hat.detach()], dim=1)
+
+    def _flush_inference_buffers(self, force: bool) -> None:
+        if not self.ttt_enabled or self._inference_z_buffer is None:
+            return
+        buffer_len = self._inference_z_buffer.shape[1]
+        if buffer_len < self.chunk_size and not force:
+            return
+
+        flush_len = buffer_len if force else (buffer_len // self.chunk_size) * self.chunk_size
+        if flush_len == 0:
+            return
+
+        Z_chunk = self._inference_z_buffer[:, :flush_len, :]
+        V_chunk = self._inference_v_buffer[:, :flush_len, :]
+        # Replay chunk through the full update path (outputs discarded).
+        _ = self._parallel_ttt_update(Z_chunk, V_chunk)
+
+        if flush_len == buffer_len:
+            self._inference_z_buffer = None
+            self._inference_v_buffer = None
+        else:
+            self._inference_z_buffer = self._inference_z_buffer[:, flush_len:, :].detach()
+            self._inference_v_buffer = self._inference_v_buffer[:, flush_len:, :].detach()
+
+    def _record_ttt_monitor_events(
+        self,
+        deltas: torch.Tensor,
+        w_eff: torch.Tensor,
+        scales: torch.Tensor,
+        effective_chunk_size: int,
+    ) -> None:
+        if self._ttt_monitor is None or self.training:
+            return
+        chunk_count, batch = deltas.shape[:2]
+        for chunk_idx in range(chunk_count):
+            for batch_idx in range(batch):
+                self._ttt_chunk_counter += 1
+                delta = deltas[chunk_idx, batch_idx]
+                pre = w_eff[chunk_idx, batch_idx]
+                post = pre + self.ttt_lr * delta
+                delta_norm = torch.linalg.vector_norm(delta).item()
+                pre_norm = torch.linalg.vector_norm(pre).item()
+                post_norm = torch.linalg.vector_norm(post).item()
+                scale_val = scales[chunk_idx, batch_idx].item()
+                event = {
+                    "chunk_index": self._ttt_chunk_counter,
+                    "tokens": effective_chunk_size,
+                    "delta_norm": float(delta_norm),
+                    "pre_norm": float(pre_norm),
+                    "post_norm": float(post_norm),
+                    "relative_delta": float(delta_norm / (pre_norm + self.delta_clip_epsilon)),
+                    "clip_applied": bool(scale_val < 0.9999),
+                    "lr": float(self.ttt_lr),
+                }
+                self._ttt_monitor.record_event(self._ttt_monitor_layer or "ttt_layer", event)
 
     def _apply_conv1d_per_chunk(self, token_embeddings: torch.Tensor) -> torch.Tensor:
         """Apply Conv1D per-chunk to maintain causality at chunk boundaries.
@@ -258,6 +394,18 @@ class TTTGating(nn.Module):
         # einsum to reorder directly
         deltas = torch.einsum('b n t d, b n t h -> n b d h', Vc, Zc)
 
+        if self.delta_clip_fro_norm is not None:
+            max_norm = deltas.new_tensor(self.delta_clip_fro_norm)
+            eps = deltas.new_tensor(self.delta_clip_epsilon)
+            delta_norms = torch.linalg.vector_norm(deltas.reshape(num_chunks, B, -1), dim=-1)
+            scales = (max_norm / (delta_norms + eps)).clamp(max=1.0)
+            deltas = deltas * scales.view(num_chunks, B, 1, 1)
+            if hasattr(self, 'ttt_clip_event_counter'):
+                clip_events = (scales < (1.0 - 1e-6)).to(deltas.dtype)
+                self.ttt_clip_event_counter.add_(clip_events.reshape(-1).sum())
+        else:
+            scales = torch.ones((num_chunks, B), dtype=deltas.dtype, device=deltas.device)
+
         # prefix sum across chunks (causal): S_i = sum_{j=0..i-1} deltas_j
         cumsum = torch.cumsum(deltas, dim=0)
         zero = torch.zeros_like(cumsum[0:1])
@@ -271,6 +419,8 @@ class TTTGating(nn.Module):
 
         # effective weights per chunk
         W_eff = W_init_bc + self.ttt_lr * S
+
+        self._record_ttt_monitor_events(deltas, W_eff, scales, effective_chunk_size)
 
         # prepare Z for matmul: want [num_chunks, B, effective_chunk_size, hidden]
         Z_chunks = Zc.permute(1, 0, 2, 3)
@@ -318,11 +468,65 @@ class TTTGating(nn.Module):
             return O.to(input_dtype)
         return O
 
-    def reset_ttt_state(self):
+    def flush_ttt_buffers(self):
+        """Force flush any remaining tokens in TTT inference buffers.
+
+        This should be called at the end of inference to ensure all buffered
+        tokens are processed and contribute to TTT updates.
+        """
+        if self.ttt_enabled:
+            self._flush_inference_buffers(force=True)
+
+    def reset_ttt_state(self, clear_buffers: bool = True):
         """Reset TTT fast weights to pretrained state (e.g., at conversation boundaries).
-        
+
         This is useful for inference when starting a new conversation or document
         to prevent context leakage from previous inputs.
+
+        Args:
+            clear_buffers: If True, also clear inference buffers. Set to False during
+                streaming resets to preserve accumulated tokens for the next update.
         """
         if self.ttt_enabled and hasattr(self, 'w_down_pretrained'):
+            def _safe_norm(tensor: torch.Tensor):
+                if getattr(tensor, "is_meta", False):
+                    return None
+                return torch.linalg.norm(tensor).item()
+
+            def _target_generator_norm():
+                total = 0.0
+                counted = 0
+                for param in self.target_generator.parameters():
+                    if getattr(param, "is_meta", False):
+                        continue
+                    total += torch.linalg.norm(param).item()
+                    counted += 1
+                return total if counted > 0 else None
+
+            norm_before = _safe_norm(self.w_down.data)
+
             self.w_down.data.copy_(self.w_down_pretrained)
+            if clear_buffers:
+                self._inference_z_buffer = None
+                self._inference_v_buffer = None
+                self._ttt_chunk_counter = 0
+
+            norm_after = _safe_norm(self.w_down.data)
+
+            if self.training:
+                tg_norm = _target_generator_norm()
+                if tg_norm is not None:
+                    logger.info(
+                        f"[TTT RESET][train] target_generator total norm {tg_norm:.6f}; "
+                        "w_down is frozen during training so its norm stays constant"
+                    )
+                else:
+                    logger.info("[TTT RESET][train] target_generator parameters on meta device (norm unavailable)")
+                return
+
+            if norm_before is not None and norm_after is not None:
+                logger.info(
+                    f"[TTT RESET] Layer reset: w_down norm {norm_before:.6f} -> {norm_after:.6f}"
+                )
+            else:
+                logger.info("[TTT RESET] Layer reset on meta device (norm unavailable)")

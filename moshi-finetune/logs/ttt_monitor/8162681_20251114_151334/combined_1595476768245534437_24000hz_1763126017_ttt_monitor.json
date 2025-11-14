@@ -1,0 +1,97 @@
+{
+  "run_label": "combined_1595476768245534437_24000hz_1763126017",
+  "metadata": {
+    "input_file": "/sise/eliyanac-group/ron_al/examples/combined_1595476768245534437_24000hz.wav",
+    "lora_weights": "/sise/eliyanac-group/ron_al/ttt_training_run2/checkpoints/checkpoint_001000/consolidated/lora.safetensors",
+    "ttt_layers": 3,
+    "chunk_size": 256,
+    "ttt_learning_rate": 0.0001,
+    "batch_size": 1,
+    "dtype": "torch.bfloat16",
+    "cfg_coef": 1.0
+  },
+  "layers": {
+    "layer_10": {
+      "chunk_size": 256,
+      "learning_rate": 0.0001,
+      "hidden_dim": 11264,
+      "output_dim": 4096
+    },
+    "layer_20": {
+      "chunk_size": 256,
+      "learning_rate": 0.0001,
+      "hidden_dim": 11264,
+      "output_dim": 4096
+    },
+    "layer_30": {
+      "chunk_size": 256,
+      "learning_rate": 0.0001,
+      "hidden_dim": 11264,
+      "output_dim": 4096
+    }
+  },
+  "events": {
+    "layer_10": [
+      {
+        "chunk_index": 1,
+        "tokens": 2,
+        "delta_norm": 1.0000000656873453e-05,
+        "pre_norm": 71.46282196044922,
+        "post_norm": 71.46282196044922,
+        "relative_delta": 1.3993291032374526e-07,
+        "clip_applied": true,
+        "lr": 0.0001,
+        "elapsed_ms": 916592.1473503113
+      }
+    ],
+    "layer_20": [
+      {
+        "chunk_index": 1,
+        "tokens": 2,
+        "delta_norm": 9.999999747378752e-06,
+        "pre_norm": 72.81852722167969,
+        "post_norm": 72.81852722167969,
+        "relative_delta": 1.373276847104564e-07,
+        "clip_applied": true,
+        "lr": 0.0001,
+        "elapsed_ms": 916598.794221878
+      }
+    ],
+    "layer_30": [
+      {
+        "chunk_index": 1,
+        "tokens": 2,
+        "delta_norm": 9.999999747378752e-06,
+        "pre_norm": 73.85646057128906,
+        "post_norm": 73.85646057128906,
+        "relative_delta": 1.3539776574760494e-07,
+        "clip_applied": true,
+        "lr": 0.0001,
+        "elapsed_ms": 916605.3354740143
+      }
+    ]
+  },
+  "summary": {
+    "layer_10": {
+      "updates": 1,
+      "total_tokens": 2.0,
+      "max_relative_delta": 1.3993291032374526e-07,
+      "clip_events": 1,
+      "final_post_norm": 71.46282196044922
+    },
+    "layer_20": {
+      "updates": 1,
+      "total_tokens": 2.0,
+      "max_relative_delta": 1.373276847104564e-07,
+      "clip_events": 1,
+      "final_post_norm": 72.81852722167969
+    },
+    "layer_30": {
+      "updates": 1,
+      "total_tokens": 2.0,
+      "max_relative_delta": 1.3539776574760494e-07,
+      "clip_events": 1,
+      "final_post_norm": 73.85646057128906
+    }
+  }
+}

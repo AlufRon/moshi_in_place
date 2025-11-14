@@ -1,0 +1,4 @@
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:203: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+Info: starting inference, sampling: True, audio temp: 0.8, text temp: 0.7
+[2025-11-14T10:48:12.845] error: *** JOB 8161647 ON ise-cpu256-30 CANCELLED AT 2025-11-14T10:48:12 DUE to SIGNAL Terminated ***

@@ -22,6 +22,7 @@ from .compression import MimiModel
 from ..conditioners import BaseConditioner, ConditionProvider, ConditionFuser
 from .lm import LMModel
 from ..modules import SEANetEncoder, SEANetDecoder, transformer
+from ..modules.rope import _compute_yarn_parameters
 from ..quantization import SplitResidualVectorQuantizer
 from ..modules.lora import replace_all_linear_with_lora, replace_lora_with_linear
 
@@ -402,15 +403,19 @@ def get_moshi_lm(
     # YaRN params - extract if present, otherwise use defaults
     yarn_config = lm_kwargs.pop("yarn_config", {})
     if yarn_config.get('enabled', False):
+        # Store context for later use in RoPE initialization
+        yarn_original_context = lm_kwargs.get('context', 3000)
         # Add YaRN parameters with 'yarn_' prefix for StreamingTransformer
         lm_kwargs['yarn_scale'] = yarn_config.get('scale', 1.0)
-        lm_kwargs['original_max_seq_len'] = yarn_config.get('original_max_seq_len', lm_kwargs.get('context', 3000))
+        lm_kwargs['original_max_seq_len'] = yarn_config.get('original_max_seq_len', yarn_original_context)
         lm_kwargs['yarn_beta_fast'] = yarn_config.get('beta_fast', 32)
         lm_kwargs['yarn_beta_slow'] = yarn_config.get('beta_slow', 1)
         lm_kwargs['yarn_mscale'] = yarn_config.get('mscale', 1.0)
         lm_kwargs['yarn_mscale_all_dim'] = yarn_config.get('mscale_all_dim', 0.0)
         print(f"[YaRN] Enabled with scale={yarn_config.get('scale', 1.0)}, "
               f"original_len={lm_kwargs['original_max_seq_len']}")
+    else:
+        yarn_original_context = None
 
     init_device = device
     if filename is not None:
@@ -522,6 +527,42 @@ def get_moshi_lm(
             dtype=dtype,
             fuse_lora=fuse_lora,
         )
+    
+    # Initialize YaRN RoPE buffers after model load (fixes meta tensor issue)
+    if yarn_config.get('enabled', False):
+        print(f"[YaRN] Initializing RoPE buffers on device={device}")
+        yarn_scale = yarn_config.get('scale', 1.0)
+        original_max_seq_len = yarn_config.get('original_max_seq_len', yarn_original_context or 3000)
+        beta_fast = yarn_config.get('beta_fast', 32)
+        beta_slow = yarn_config.get('beta_slow', 1)
+        mscale = yarn_config.get('mscale', 1.0)
+        mscale_all_dim = yarn_config.get('mscale_all_dim', 0.0)
+        
+        for layer in model.transformer.layers:
+            if hasattr(layer, 'self_attn') and hasattr(layer.self_attn, 'rope'):
+                rope = layer.self_attn.rope
+                if hasattr(rope, 'inv_freq') and rope.inv_freq.is_meta:
+                    # Recompute inv_freq using YARN parameters
+                    dim = rope.dim
+                    max_period = rope.max_period
+                    
+                    inv_freq, attention_factor = _compute_yarn_parameters(
+                        dim=dim,
+                        max_period=max_period,
+                        scale=yarn_scale,
+                        original_max_seq_len=original_max_seq_len,
+                        beta_fast=beta_fast,
+                        beta_slow=beta_slow,
+                        mscale=mscale,
+                        mscale_all_dim=mscale_all_dim,
+                        device=device
+                    )
+                    
+                    # Replace meta tensor with actual tensor
+                    rope.register_buffer('inv_freq', inv_freq, persistent=False)
+        
+        print(f"[YaRN] RoPE buffers initialized successfully")
+    
     model.eval()
     return model
 

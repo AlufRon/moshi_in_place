@@ -1,0 +1,143 @@
+[rank0]:[W1114 16:09:54.762318667 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+wandb: Currently logged in as: alufr (alufr-ben-gurion-university-of-the-negev) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_160955-3ksn3im2
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run run2
+wandb: ⭐️ View project at https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place
+wandb: 🚀 View run at https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place/runs/3ksn3im2
+wandb: WARNING Calling wandb.login() after wandb.init() has no effect.
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:204: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+2025-11-14 16:09:59 (IST) - 0:00:09 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 16:09:59 (IST) - 0:00:10 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 16:10:00 (IST) - 0:00:11 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+wandb: uploading summary, console lines 2-60
+wandb:                                                                                
+wandb: 🚀 View run run2 at: https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place/runs/3ksn3im2
+wandb: ⭐️ View project at: https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_160955-3ksn3im2/logs
+Traceback (most recent call last):
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 533, in <module>
+    fire.Fire(train)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 135, in Fire
+    component_trace = _Fire(component, args, parsed_flag_args, context, name)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 468, in _Fire
+    component, remaining_args = _CallAndUpdateTrace(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+    component = fn(*varargs, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 118, in train
+    _train(args, exit_stack)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 346, in _train
+    output = model(codes=codes, condition_tensors=condition_tensors)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/lm.py", line 364, in forward
+    transformer_out, text_logits = self.forward_text(delayed_codes[:, :, :-1], sum_condition, cross_attention_src)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/lm.py", line 466, in forward_text
+    transformer_out = self.transformer(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 956, in forward
+    x = layer(x, *args, token_embeddings=token_embeddings, **{k: v for k, v in kwargs.items() if k != 'token_embeddings'})
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 808, in forward
+    x = self._ff_block(x, token_embeddings)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 776, in _ff_block
+    update = self.gating(x, token_embeddings)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/ttt_module.py", line 155, in forward
+    return self._ttt_forward(x, token_embeddings)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/ttt_module.py", line 200, in _ttt_forward
+    return self._parallel_ttt_update(Z, V_hat)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/ttt_module.py", line 412, in _parallel_ttt_update
+    S = torch.cat([zero, cumsum[:-1]], dim=0)  # [num_chunks, B, dim, hidden]
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.75 GiB. GPU 0 has a total capacity of 47.40 GiB of which 1.77 GiB is free. Including non-PyTorch memory, this process has 45.62 GiB memory in use. Of the allocated memory 44.54 GiB is allocated by PyTorch, and 268.04 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 533, in <module>
+[rank0]:     fire.Fire(train)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 135, in Fire
+[rank0]:     component_trace = _Fire(component, args, parsed_flag_args, context, name)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 468, in _Fire
+[rank0]:     component, remaining_args = _CallAndUpdateTrace(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+[rank0]:     component = fn(*varargs, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 118, in train
+[rank0]:     _train(args, exit_stack)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 346, in _train
+[rank0]:     output = model(codes=codes, condition_tensors=condition_tensors)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/lm.py", line 364, in forward
+[rank0]:     transformer_out, text_logits = self.forward_text(delayed_codes[:, :, :-1], sum_condition, cross_attention_src)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/lm.py", line 466, in forward_text
+[rank0]:     transformer_out = self.transformer(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 956, in forward
+[rank0]:     x = layer(x, *args, token_embeddings=token_embeddings, **{k: v for k, v in kwargs.items() if k != 'token_embeddings'})
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 808, in forward
+[rank0]:     x = self._ff_block(x, token_embeddings)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/transformer.py", line 776, in _ff_block
+[rank0]:     update = self.gating(x, token_embeddings)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/ttt_module.py", line 155, in forward
+[rank0]:     return self._ttt_forward(x, token_embeddings)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/ttt_module.py", line 200, in _ttt_forward
+[rank0]:     return self._parallel_ttt_update(Z, V_hat)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/modules/ttt_module.py", line 412, in _parallel_ttt_update
+[rank0]:     S = torch.cat([zero, cumsum[:-1]], dim=0)  # [num_chunks, B, dim, hidden]
+[rank0]: torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 2.75 GiB. GPU 0 has a total capacity of 47.40 GiB of which 1.77 GiB is free. Including non-PyTorch memory, this process has 45.62 GiB memory in use. Of the allocated memory 44.54 GiB is allocated by PyTorch, and 268.04 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)
+[rank0]:[W1114 16:10:13.280346051 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+E1114 16:10:15.381000 3066885 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 0 (pid: 3066894) of binary: /home/alufr/.conda/envs/moshi_ttt_fixed/bin/python3.10
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-11-14_16:10:15
+  host      : cs-6000-03.auth.ad.bgu.ac.il
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 3066894)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

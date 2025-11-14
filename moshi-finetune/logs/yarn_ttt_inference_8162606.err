@@ -1,0 +1,4 @@
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:204: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+Info: starting inference, sampling: True, audio temp: 0.8, text temp: 0.7
+Info: processed 22756 steps in 916s, 40.26ms/step

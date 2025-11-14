@@ -1,0 +1,61 @@
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/simple_parsing/helpers/serialization/serializable.py", line 897, in from_dict
+    instance = cls(**init_args)  # type: ignore
+TypeError: TTTArgs.__init__() got an unexpected keyword argument 'delta_clip_fro_norm'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 515, in <module>
+    fire.Fire(train)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 135, in Fire
+    component_trace = _Fire(component, args, parsed_flag_args, context, name)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 468, in _Fire
+    component, remaining_args = _CallAndUpdateTrace(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+    component = fn(*varargs, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 114, in train
+    args: TrainArgs = TrainArgs.load(config, drop_extra_fields=False)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/simple_parsing/helpers/serialization/serializable.py", line 309, in load
+    return load(cls, path=path, drop_extra_fields=drop_extra_fields, load_fn=load_fn, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/simple_parsing/helpers/serialization/serializable.py", line 543, in load
+    return from_dict(cls, d, drop_extra_fields=drop_extra_fields)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/simple_parsing/helpers/serialization/serializable.py", line 847, in from_dict
+    field_value = decode_field(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/simple_parsing/helpers/serialization/decoding.py", line 149, in decode_field
+    decoded_value = decoding_function(raw_value, drop_extra_fields=drop_extra_fields)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/simple_parsing/helpers/serialization/serializable.py", line 254, in from_dict
+    return from_dict(cls, obj, drop_extra_fields=drop_extra_fields)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/simple_parsing/helpers/serialization/serializable.py", line 900, in from_dict
+    raise RuntimeError(
+RuntimeError: Couldn't instantiate class <class 'finetune.args.TTTArgs'> using init args dict_keys(['enabled', 'layer_frequency', 'start_layer', 'chunk_size', 'learning_rate', 'conv_kernel_size', 'delta_clip_fro_norm']): TTTArgs.__init__() got an unexpected keyword argument 'delta_clip_fro_norm'
+E1114 15:42:47.502000 600857 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 0 (pid: 600873) of binary: /home/alufr/.conda/envs/moshi_ttt_fixed/bin/python3.10
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-11-14_15:42:47
+  host      : cs-6000-01.auth.ad.bgu.ac.il
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 600873)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

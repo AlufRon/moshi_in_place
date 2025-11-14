@@ -18,19 +18,33 @@ TokenizedAlignment = tuple[list[int], tuple[float, float], str]
 class Sample:
     codes: torch.Tensor
     condition_attributes: ConditionAttributes | None = None
+    doc_id: str | None = None
+    segment_index: int | None = None
 
 
 @dataclass
 class Batch:
     codes: torch.Tensor
     condition_attributes: list[ConditionAttributes] | None = None
+    doc_ids: list[str] | None = None
+    segment_indices: list[int] | None = None
 
     @classmethod
     def collate(cls, batch: list[Sample]) -> "Batch":
         codes = torch.cat([b.codes for b in batch])
-        if batch[0].condition_attributes is None:
-            return Batch(codes)
-        return Batch(codes, [b.condition_attributes for b in batch])
+        cond_attrs = None
+        if batch[0].condition_attributes is not None:
+            cond_attrs = [b.condition_attributes for b in batch]
+
+        doc_ids = None
+        if batch[0].doc_id is not None:
+            doc_ids = [b.doc_id for b in batch]
+
+        segment_indices = None
+        if batch[0].segment_index is not None:
+            segment_indices = [b.segment_index for b in batch]
+
+        return Batch(codes, cond_attrs, doc_ids, segment_indices)
 
 
 def tokenize(
@@ -286,4 +300,12 @@ class InterleavedTokenizer:
             )
 
             codes = torch.cat([text_tokens, audio_tokens], dim=1)
-            return Sample(codes, data.get("text_conditions", None))
+            segment_index: int | None = None
+            if self.duration_sec > 0:
+                segment_index = int(start_sec // self.duration_sec)
+            return Sample(
+                codes,
+                data.get("text_conditions", None),
+                doc_id=path,
+                segment_index=segment_index,
+            )

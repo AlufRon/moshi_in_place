@@ -1,0 +1,40 @@
+==================================================
+Job started at: Fri 14 Nov 2025 13:24:17 IST
+Running on node: ise-6000-04.auth.ad.bgu.ac.il
+GPU info:
+Fri Nov 14 13:24:17 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:24:00.0 Off |                  Off |
+| 30%   27C    P8             16W /  300W |       2MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+==================================================
+Set CUDA_VISIBLE_DEVICES=0
+Starting YARN + TTT training...
+Context Extension: 4x (3000 -> 12000 tokens)
+TTT Layers: 3 (layers 10, 20, 30)
+Base Model: Frozen (only TTT params trained)
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-14 13:24:25 (IST) - 0:00:04 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-14 13:24:25 (IST) - 0:00:04 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-14 13:24:25 (IST) - 0:00:04 - distributed - INFO - local rank: 0
+2025-11-14 13:24:25 (IST) - 0:00:04 - train - INFO - Going to init comms...
+2025-11-14 13:24:25 (IST) - 0:00:04 - train - INFO - Run dir: /sise/eliyanac-group/ron_al/ttt_training_run2
+2025-11-14 13:24:25 (IST) - 0:00:04 - train - INFO - Removing run dir /sise/eliyanac-group/ron_al/ttt_training_run2...
+==================================================
+Job finished at: Fri 14 Nov 2025 13:24:26 IST
+==================================================

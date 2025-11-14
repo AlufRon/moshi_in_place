@@ -1,6 +1,7 @@
 import logging
 import os
 from dataclasses import dataclass, field
+from typing import Optional
 
 from simple_parsing.helpers import Serializable
 
@@ -36,6 +37,7 @@ class TTTArgs(Serializable):
     chunk_size: int = 256  # Tokens per TTT update
     learning_rate: float = 1e-3  # TTT update learning rate
     conv_kernel_size: int = 2  # Kernel size for causal conv
+    delta_clip_fro_norm: Optional[float] = 1e-5  # Clip delta Frobenius norm (None to disable)
     unfreeze_ttt_layers: bool = False  # Unfreeze entire layers with TTT (attention + MLP)
 
 
@@ -65,10 +67,10 @@ class YaRNArgs(Serializable):
 
 @dataclass
 class WandbArgs(Serializable):
-    project: str | None = None  # Fill this argument to use wandb.
+    project: Optional[str] = None  # Fill this argument to use wandb.
     offline: bool = False
-    key: str | None = None
-    run_name: str | None = None
+    key: Optional[str] = None
+    run_name: Optional[str] = None
 
     def __post_init__(self) -> None:
         if self.project is not None:
@@ -85,11 +87,11 @@ class WandbArgs(Serializable):
 
 @dataclass
 class ModelPaths(Serializable):
-    hf_repo_id: str | None = "kyutai/moshiko-pytorch-bf16"
-    mimi_path: str | None = None
-    moshi_path: str | None = None
-    tokenizer_path: str | None = None
-    config_path: str | None = None
+    hf_repo_id: Optional[str] = "kyutai/moshiko-pytorch-bf16"
+    mimi_path: Optional[str] = None
+    moshi_path: Optional[str] = None
+    tokenizer_path: Optional[str] = None
+    config_path: Optional[str] = None
 
     def __post_init__(self) -> None:
         if self.hf_repo_id is not None and self.config_path is None:
