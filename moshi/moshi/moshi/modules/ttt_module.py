@@ -420,11 +420,18 @@ class TTTGating(nn.Module):
         zero = torch.zeros_like(cumsum[0:1])
         S_prefix = torch.cat([zero, cumsum[:-1]], dim=0)  # [num_chunks, B, dim, hidden]
 
-        # Paper-compliant: chunk i uses only updates from chunks 0 to i-1
-        # Per Algorithm 1 line 11: W^(i-1)_down ← W^(0)_down + ηS_i
-        # With improved target_generator initialization (std=1e-2), this provides
-        # sufficient gradient signal without deviating from the paper's algorithm
-        S_apply = S_prefix
+        # Training vs Inference behavior:
+        # - Training (short docs): expose current chunk delta for gradient flow
+        #   Paper assumes long docs (32k tokens = 125 chunks) where last chunk gradient
+        #   is negligible. With short docs (1.8k tokens = 7 chunks), last chunk gets
+        #   ZERO gradient without exposure. Full delta exposure provides direct gradient
+        #   path: Loss[i] → O[i] → deltas[i] → V̂[i] → target_generator.
+        # - Inference (streaming): strict paper compliance, no delta exposure
+        #   Maintains perfect causality for real-time processing.
+        if self.training:
+            S_apply = S_prefix + deltas  # Full exposure for gradient flow
+        else:
+            S_apply = S_prefix  # Paper Algorithm 1 line 11 (strict causality)
 
         # broadcast W_down_init to [num_chunks, B, dim, hidden]
         W_init_bc = W_down_init.unsqueeze(0).unsqueeze(0).expand(num_chunks, B, -1, -1)
