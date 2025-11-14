@@ -518,7 +518,7 @@ class TTTGating(nn.Module):
                 w_down_norm = _safe_norm(self.w_down.data)
                 if tg_norm is not None and w_down_norm is not None:
                     logger.info(
-                        f"[TTT RESET][train] target_generator norm {tg_norm:.6f}, w_down norm {w_down_norm:.6f}; "
+                        f"[TTT RESET][train] target_generator norm {tg_norm:.6f}, w_down norm {w_down_norm:.6f} (dtype: {self.w_down.dtype}); "
                         "both learn via backprop during training"
                     )
                 else:
