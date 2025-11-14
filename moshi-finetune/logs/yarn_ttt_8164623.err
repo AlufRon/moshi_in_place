@@ -1,0 +1,186 @@
+[rank0]:[W1114 17:18:41.116257428 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+wandb: Currently logged in as: alufr (alufr-ben-gurion-university-of-the-negev) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_171842-8caiy1at
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run run2
+wandb: ⭐️ View project at https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place
+wandb: 🚀 View run at https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place/runs/8caiy1at
+wandb: WARNING Calling wandb.login() after wandb.init() has no effect.
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:204: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+2025-11-14 17:18:46 (IST) - 0:00:09 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:18:47 (IST) - 0:00:10 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:18:48 (IST) - 0:00:11 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 244, in run
+    self._run()
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 275, in _run
+    self._record_writer.write(data)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/record_writer.py", line 40, in write
+    self._writer.write(header + header_crc + data + footer_crc)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 775, in write
+    self.fs.append(self.filename, file_content, self.binary_mode)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 167, in append
+    self._write(filename, file_content, "ab" if binary_mode else "a")
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 171, in _write
+    with io.open(filename, mode, encoding=encoding) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b'/sise/eliyanac-group/ron_al/ttt_training_run2/tb/events.out.tfevents.1763133521.ise-6000-03.auth.ad.bgu.ac.il.818017.0.train'
+wandb: uploading history steps 22-24, summary, console lines 305-330
+wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:           train/allocated_mem ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                 train/avg_wps ▁▄▅▆▆▇▇▇▇▇███████████████
+wandb:          train/eta_in_seconds █▄▃▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:                    train/loss ▄▆▄▇█▄▃▂▂█▇▃▄▃▃▆▅▂▅▄▁▅▅▂▂
+wandb:                      train/lr ▁▁▁▁▁▁▁▂▂▂▂▃▃▃▃▄▄▅▅▅▆▆▇▇█
+wandb:      train/peak_allocated_mem ▁████████████████████████
+wandb:            train/percent_done ▁▁▂▂▂▂▃▃▃▄▄▄▄▅▅▅▆▆▆▇▇▇▇██
+wandb:        train/prob_real_tokens ██▁██████████████████████
+wandb:          train/ttt/delta_norm ▅▃▂▁▁▁▁▁▁▁▂▂▂▃▃▄▄▄▄▅▆▆▇▇█
+wandb:           train/ttt/grad_norm ▇▇▅▅▅▄▃▁▁▄▃▁▇▇▃█▆▄▂▂▃▇▇▅▁
+wandb:         train/ttt/param_count ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train/ttt/param_norm ▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▂▂▃▃▄▅▆▇█
+wandb: train/ttt/relative_change_pct ▅▃▂▁▁▁▁▁▁▁▂▂▂▃▃▄▄▄▄▅▆▆▇▇█
+wandb:                     train/wps ▁█▇██████▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇
+wandb: 
+wandb: Run summary:
+wandb:           train/allocated_mem 20.95441
+wandb:                 train/avg_wps 5070.21743
+wandb:          train/eta_in_seconds 13146.62556
+wandb:                    train/loss 2.45049
+wandb:                      train/lr 2e-05
+wandb:      train/peak_allocated_mem 39.27134
+wandb:            train/percent_done 1.25
+wandb:        train/prob_real_tokens 0.99959
+wandb:          train/ttt/delta_norm 0.0594
+wandb:           train/ttt/grad_norm 1.0
+wandb:         train/ttt/param_count 9
+wandb:          train/ttt/param_norm 125.95959
+wandb: train/ttt/relative_change_pct 0.04716
+wandb:                     train/wps 5164.15909
+wandb: 
+wandb: 🚀 View run run2 at: https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place/runs/8caiy1at
+wandb: ⭐️ View project at: https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: /sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_171842-8caiy1at/logs
+2025-11-14 17:21:45 (IST) - 0:03:08 - utils - ERROR - Error while closing metrics_logger!
+Traceback (most recent call last):
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 539, in <module>
+    fire.Fire(train)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 135, in Fire
+    component_trace = _Fire(component, args, parsed_flag_args, context, name)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 468, in _Fire
+    component, remaining_args = _CallAndUpdateTrace(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+    component = fn(*varargs, **kwargs)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 124, in train
+    _train(args, exit_stack)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 524, in _train
+    metrics_logger.log(train_logs, step=state.step)
+  File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/finetune/monitoring/metrics_logger.py", line 173, in log
+    self.summary_writer.add_scalar(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/tensorboard/writer.py", line 381, in add_scalar
+    self._get_file_writer().add_summary(summary, global_step, walltime)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/tensorboard/writer.py", line 115, in add_summary
+    self.add_event(event, global_step, walltime)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/tensorboard/writer.py", line 99, in add_event
+    self.event_writer.add_event(event)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 117, in add_event
+    self._async_writer.write(event.SerializeToString())
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 171, in write
+    self._check_worker_status()
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 212, in _check_worker_status
+    raise exception
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 244, in run
+    self._run()
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 275, in _run
+    self._record_writer.write(data)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/record_writer.py", line 40, in write
+    self._writer.write(header + header_crc + data + footer_crc)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 775, in write
+    self.fs.append(self.filename, file_content, self.binary_mode)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 167, in append
+    self._write(filename, file_content, "ab" if binary_mode else "a")
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 171, in _write
+    with io.open(filename, mode, encoding=encoding) as f:
+FileNotFoundError: [Errno 2] No such file or directory: b'/sise/eliyanac-group/ron_al/ttt_training_run2/tb/events.out.tfevents.1763133521.ise-6000-03.auth.ad.bgu.ac.il.818017.0.train'
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 539, in <module>
+[rank0]:     fire.Fire(train)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 135, in Fire
+[rank0]:     component_trace = _Fire(component, args, parsed_flag_args, context, name)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 468, in _Fire
+[rank0]:     component, remaining_args = _CallAndUpdateTrace(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+[rank0]:     component = fn(*varargs, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 124, in train
+[rank0]:     _train(args, exit_stack)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 524, in _train
+[rank0]:     metrics_logger.log(train_logs, step=state.step)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/finetune/monitoring/metrics_logger.py", line 173, in log
+[rank0]:     self.summary_writer.add_scalar(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/tensorboard/writer.py", line 381, in add_scalar
+[rank0]:     self._get_file_writer().add_summary(summary, global_step, walltime)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/tensorboard/writer.py", line 115, in add_summary
+[rank0]:     self.add_event(event, global_step, walltime)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/utils/tensorboard/writer.py", line 99, in add_event
+[rank0]:     self.event_writer.add_event(event)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 117, in add_event
+[rank0]:     self._async_writer.write(event.SerializeToString())
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 171, in write
+[rank0]:     self._check_worker_status()
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 212, in _check_worker_status
+[rank0]:     raise exception
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+[rank0]:     self.run()
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 244, in run
+[rank0]:     self._run()
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/event_file_writer.py", line 275, in _run
+[rank0]:     self._record_writer.write(data)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/summary/writer/record_writer.py", line 40, in write
+[rank0]:     self._writer.write(header + header_crc + data + footer_crc)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 775, in write
+[rank0]:     self.fs.append(self.filename, file_content, self.binary_mode)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 167, in append
+[rank0]:     self._write(filename, file_content, "ab" if binary_mode else "a")
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/tensorboard/compat/tensorflow_stub/io/gfile.py", line 171, in _write
+[rank0]:     with io.open(filename, mode, encoding=encoding) as f:
+[rank0]: FileNotFoundError: [Errno 2] No such file or directory: b'/sise/eliyanac-group/ron_al/ttt_training_run2/tb/events.out.tfevents.1763133521.ise-6000-03.auth.ad.bgu.ac.il.818017.0.train'
+[rank0]:[W1114 17:21:46.903752903 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+E1114 17:21:47.924000 818008 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 0 (pid: 818017) of binary: /home/alufr/.conda/envs/moshi_ttt_fixed/bin/python3.10
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-11-14_17:21:47
+  host      : ise-6000-03.auth.ad.bgu.ac.il
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 818017)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

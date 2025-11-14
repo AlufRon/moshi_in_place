@@ -378,6 +378,15 @@ class TTTGating(nn.Module):
         effective_chunk_size = min(T, self.chunk_size)
         num_chunks = (T + effective_chunk_size - 1) // effective_chunk_size
         pad_size = num_chunks * effective_chunk_size - T
+
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.debug(
+                "[TTT][parallel_update] seq_len=%d effective_chunk_size=%d num_chunks=%d (configured_chunk_size=%d)",
+                orig_T,
+                effective_chunk_size,
+                num_chunks,
+                self.chunk_size,
+            )
         
         if pad_size != 0:
             Z = F.pad(Z, (0, 0, 0, pad_size))
@@ -409,7 +418,15 @@ class TTTGating(nn.Module):
         # prefix sum across chunks (causal): S_i = sum_{j=0..i-1} deltas_j
         cumsum = torch.cumsum(deltas, dim=0)
         zero = torch.zeros_like(cumsum[0:1])
-        S = torch.cat([zero, cumsum[:-1]], dim=0)  # [num_chunks, B, dim, hidden]
+        S_prefix = torch.cat([zero, cumsum[:-1]], dim=0)  # [num_chunks, B, dim, hidden]
+
+        # When training we expose half of the current chunk's delta to its outputs to
+        # generate a usable gradient signal for the target generator (otherwise only
+        # later chunks receive the update and short documents yield near-zero grads).
+        if self.training:
+            S_apply = S_prefix + 0.5 * deltas
+        else:
+            S_apply = S_prefix
 
         # broadcast W_down_init to [num_chunks, B, dim, hidden]
         W_init_bc = W_down_init.unsqueeze(0).unsqueeze(0).expand(num_chunks, B, -1, -1)
@@ -417,16 +434,16 @@ class TTTGating(nn.Module):
         device = W_down_init.device
         dtype = W_down_init.dtype
 
-        # effective weights per chunk
-        W_eff = W_init_bc + self.ttt_lr * S
+        # effective weights per chunk used for the forward pass
+        W_eff_apply = W_init_bc + self.ttt_lr * S_apply
 
-        self._record_ttt_monitor_events(deltas, W_eff, scales, effective_chunk_size)
+        self._record_ttt_monitor_events(deltas, W_eff_apply, scales, effective_chunk_size)
 
         # prepare Z for matmul: want [num_chunks, B, effective_chunk_size, hidden]
         Z_chunks = Zc.permute(1, 0, 2, 3)
 
         # W_eff: [num_chunks, B, dim, hidden] -> transpose last two
-        W_eff_T = W_eff.transpose(-2, -1)  # [num_chunks, B, hidden, dim]
+        W_eff_T = W_eff_apply.transpose(-2, -1)  # [num_chunks, B, hidden, dim]
 
         # batch matmul per chunk
         O_chunks = torch.matmul(Z_chunks, W_eff_T)  # [num_chunks, B, effective_chunk_size, dim]
@@ -452,7 +469,8 @@ class TTTGating(nn.Module):
             # W_eff[-1] only has prefix sum up to (but not including) the last chunk
             # So we need to add the delta from the last chunk: W_final = W_eff[-1] + lr * deltas[-1]
             # Shape: W_eff[-1, 0] is [dim, hidden], deltas[-1, 0] is [dim, hidden]
-            final_state = W_eff[-1, 0] + self.ttt_lr * deltas[-1, 0]  # [dim, hidden]
+            total_delta = cumsum[-1, 0]
+            final_state = W_down_init + self.ttt_lr * total_delta  # [dim, hidden]
 
             # Store update count for debugging (no .item() calls - breaks CUDA graphs)
             if not hasattr(self, '_update_count'):

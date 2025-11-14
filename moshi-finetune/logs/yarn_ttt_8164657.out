@@ -1,0 +1,365 @@
+==================================================
+Job started at: Fri 14 Nov 2025 17:53:00 IST
+Running on node: ise-6000-04.auth.ad.bgu.ac.il
+GPU info:
+Fri Nov 14 17:53:00 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:24:00.0 Off |                  Off |
+| 30%   27C    P8             16W /  300W |       2MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+==================================================
+Set CUDA_VISIBLE_DEVICES=0
+Starting YARN + TTT training...
+Context Extension: 4x (3000 -> 12000 tokens)
+TTT Layers: 3 (layers 10, 20, 30)
+Base Model: Frozen (only TTT params trained)
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-14 17:53:10 (IST) - 0:00:06 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-14 17:53:10 (IST) - 0:00:06 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-14 17:53:10 (IST) - 0:00:06 - distributed - INFO - local rank: 0
+2025-11-14 17:53:10 (IST) - 0:00:06 - train - INFO - Going to init comms...
+2025-11-14 17:53:10 (IST) - 0:00:06 - train - INFO - Run dir: /sise/eliyanac-group/ron_al/ttt_training_run2
+2025-11-14 17:53:10 (IST) - 0:00:06 - train - INFO - Removing run dir /sise/eliyanac-group/ron_al/ttt_training_run2...
+2025-11-14 17:53:10 (IST) - 0:00:07 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field data: {'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl', 'shuffle': False, 'eval_data': ''}
+2025-11-14 17:53:10 (IST) - 0:00:07 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field moshi_paths: {'hf_repo_id': 'kyutai/moshiko-pytorch-bf16', 'mimi_path': None, 'moshi_path': None, 'tokenizer_path': None, 'config_path': None}
+2025-11-14 17:53:10 (IST) - 0:00:07 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field optim: {'lr': 0.0001, 'weight_decay': 0.1, 'pct_start': 0.05}
+2025-11-14 17:53:10 (IST) - 0:00:07 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field wandb: {'project': 'moshi_in_place', 'offline': False, 'key': '', 'run_name': 'run2'}
+2025-11-14 17:53:10 (IST) - 0:00:07 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field lora: {'enable': False, 'rank': 64, 'scaling': 2.0, 'ft_embed': False}
+2025-11-14 17:53:10 (IST) - 0:00:07 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field ttt: {'enabled': True, 'layer_frequency': 10, 'start_layer': 10, 'chunk_size': 256, 'learning_rate': 0.0001, 'conv_kernel_size': 2, 'delta_clip_fro_norm': 100.0, 'unfreeze_ttt_layers': False}
+2025-11-14 17:53:10 (IST) - 0:00:07 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field yarn: {'enabled': True, 'scale': 4.0, 'original_max_seq_len': 3000, 'beta_fast': 32, 'beta_slow': 1, 'mscale': 1.0, 'mscale_all_dim': 0.0}
+2025-11-14 17:53:11 (IST) - 0:00:07 - train - INFO - TrainArgs: {'batch_size': 2,
+ 'ckpt_freq': 100,
+ 'data': {'eval_data': '',
+          'shuffle': False,
+          'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl'},
+ 'do_ckpt': True,
+ 'do_eval': False,
+ 'duration_sec': 150.0,
+ 'eval_freq': 100,
+ 'first_codebook_weight_multiplier': 100.0,
+ 'full_finetuning': False,
+ 'gradient_checkpointing': True,
+ 'log_freq': 1,
+ 'lora': {'enable': False, 'ft_embed': False, 'rank': 64, 'scaling': 2.0},
+ 'max_norm': 1.0,
+ 'max_steps': 2000,
+ 'moshi_paths': {'config_path': None,
+                 'hf_repo_id': 'kyutai/moshiko-pytorch-bf16',
+                 'mimi_path': None,
+                 'moshi_path': None,
+                 'tokenizer_path': None},
+ 'num_ckpt_keep': 3,
+ 'num_microbatches': 1,
+ 'optim': {'lr': 0.0001, 'pct_start': 0.05, 'weight_decay': 0.1},
+ 'overwrite_run_dir': True,
+ 'param_dtype': 'bfloat16',
+ 'run_dir': '/sise/eliyanac-group/ron_al/ttt_training_run2',
+ 'save_adapters': True,
+ 'seed': 0,
+ 'text_padding_weight': 0.5,
+ 'ttt': {'chunk_size': 256,
+         'conv_kernel_size': 2,
+         'delta_clip_fro_norm': 100.0,
+         'enabled': True,
+         'layer_frequency': 10,
+         'learning_rate': 0.0001,
+         'start_layer': 10,
+         'unfreeze_ttt_layers': False},
+ 'wandb': {'key': '',
+           'offline': False,
+           'project': 'moshi_in_place',
+           'run_name': 'run2'},
+ 'world_size': 1,
+ 'yarn': {'beta_fast': 32,
+          'beta_slow': 1,
+          'enabled': True,
+          'mscale': 1.0,
+          'mscale_all_dim': 0.0,
+          'original_max_seq_len': 3000,
+          'scale': 4.0}}
+2025-11-14 17:53:11 (IST) - 0:00:07 - git.util - DEBUG - sys.platform='linux', git_executable='git'
+2025-11-14 17:53:11 (IST) - 0:00:07 - git.cmd - DEBUG - Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/home/alufr/moshi_in_place_ttt/moshi_in_place, stdin=None, shell=False, universal_newlines=False)
+2025-11-14 17:53:11 (IST) - 0:00:07 - metrics_logger - INFO - initializing wandb
+2025-11-14 17:53:11 (IST) - 0:00:07 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.wandb.ai:443
+2025-11-14 17:53:11 (IST) - 0:00:07 - urllib3.connectionpool - DEBUG - https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 None
+2025-11-14 17:53:11 (IST) - 0:00:07 - urllib3.connectionpool - DEBUG - https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 395
+2025-11-14 17:53:11 (IST) - 0:00:08 - git.util - DEBUG - sys.platform='linux', git_executable='git'
+2025-11-14 17:53:11 (IST) - 0:00:08 - git.cmd - DEBUG - Popen(['git', 'cat-file', '--batch-check'], cwd=/home/alufr/moshi_in_place_ttt/moshi_in_place, stdin=<valid stream>, shell=False, universal_newlines=False)
+2025-11-14 17:53:13 (IST) - 0:00:09 - train - INFO - Loading Mimi and Moshi...
+2025-11-14 17:53:13 (IST) - 0:00:09 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): huggingface.co:443
+2025-11-14 17:53:13 (IST) - 0:00:09 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/config.json HTTP/1.1" 404 0
+2025-11-14 17:53:13 (IST) - 0:00:09 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/model.safetensors HTTP/1.1" 302 0
+2025-11-14 17:53:13 (IST) - 0:00:09 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/tokenizer-e351c8d8-checkpoint125.safetensors HTTP/1.1" 302 0
+2025-11-14 17:53:13 (IST) - 0:00:10 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/tokenizer_spm_32k_3.model HTTP/1.1" 302 0
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Layer frequency: 10
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Start layer: 10
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Learning rate: 0.0001
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - YaRN (Context Window Extension) ENABLED
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Scale: 4.0x
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Original max seq len: 3000
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Beta fast: 32
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   Beta slow: 1
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+[YaRN] Enabled with scale=4.0, original_len=3000
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[YaRN] Initializing RoPE buffers on device=meta
+[YaRN] RoPE buffers initialized successfully
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Initializing TTT w_down from pretrained checkpoint...
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ transformer.layers.10.gating.w_down <- transformer.layers.10.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ transformer.layers.20.gating.w_down <- transformer.layers.20.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ transformer.layers.30.gating.w_down <- transformer.layers.30.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:53:14 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Initializing TTT layers ...
+2025-11-14 17:53:15 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:53:15 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:53:15 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.10.gating.w_down_pretrained from w_down
+2025-11-14 17:53:15 (IST) - 0:00:11 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:53:16 (IST) - 0:00:12 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:53:16 (IST) - 0:00:13 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:53:16 (IST) - 0:00:13 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.20.gating.w_down_pretrained from w_down
+2025-11-14 17:53:16 (IST) - 0:00:13 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:53:17 (IST) - 0:00:13 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:53:17 (IST) - 0:00:14 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:53:17 (IST) - 0:00:14 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.30.gating.w_down_pretrained from w_down
+2025-11-14 17:53:17 (IST) - 0:00:14 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:53:17 (IST) - 0:00:14 - finetune.wrapped_model - INFO - Initializing YaRN RoPE buffers ...
+2025-11-14 17:53:18 (IST) - 0:00:14 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.rope.inv_freq (shape: torch.Size([64]), scale: 4.0x)
+2025-11-14 17:53:18 (IST) - 0:00:14 - finetune.wrapped_model - INFO - Pinned 3 w_down parameters to float32 for TTT precision
+2025-11-14 17:53:18 (IST) - 0:00:14 - finetune.wrapped_model - INFO - Finished initialization!
+2025-11-14 17:53:18 (IST) - 0:00:14 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:53:18 (IST) - 0:00:14 - finetune.wrapped_model - INFO - TTT ACTIVE: 3 layers enabled
+2025-11-14 17:53:18 (IST) - 0:00:14 - finetune.wrapped_model - INFO - TTT layer indices: [10, 20, 30]
+2025-11-14 17:53:18 (IST) - 0:00:14 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:53:27 (IST) - 0:00:23 - train - INFO - [DocStream] step=1 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=0-1]
+2025-11-14 17:53:27 (IST) - 0:00:23 - train - INFO - [TTT RESET] Document switch detected: None -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav
+2025-11-14 17:53:27 (IST) - 0:00:23 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:27 (IST) - 0:00:23 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:27 (IST) - 0:00:23 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:28 (IST) - 0:00:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:30 (IST) - 0:00:26 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:30 (IST) - 0:00:26 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:34 (IST) - 0:00:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:34 (IST) - 0:00:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:35 (IST) - 0:00:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.366932
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.483723
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.794590
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   requires_grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   has grad: True
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - =========================
+
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - [TTT] Step 1: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=4.697e-02, relative_change=0.0373% (9 params)
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - step: 000001 - done (%): 0.1 - loss: 3.378 - lr: 4.0e-06 - peak_alloc_mem (GB): 38.4 - alloc_mem (GB): 21.0 - words_per_second: 2198.3 - avg_words_per_second: 2198.3 - ETA: >2025-11-15 02:25:06
+2025-11-14 17:53:36 (IST) - 0:00:32 - train - INFO - [DocStream] step=2 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=2-3]
+2025-11-14 17:53:36 (IST) - 0:00:32 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:37 (IST) - 0:00:33 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:37 (IST) - 0:00:33 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:40 (IST) - 0:00:36 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:41 (IST) - 0:00:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:41 (IST) - 0:00:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.383163
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.496725
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.778749
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - =========================
+
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - [TTT] Step 2: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.879e-02, relative_change=0.0308% (9 params)
+2025-11-14 17:53:42 (IST) - 0:00:38 - train - INFO - step: 000002 - done (%): 0.1 - loss: 3.896 - lr: 4.0e-06 - peak_alloc_mem (GB): 41.6 - alloc_mem (GB): 21.0 - words_per_second: 5137.1 - avg_words_per_second: 3079.0 - ETA: >2025-11-14 23:58:43
+2025-11-14 17:53:43 (IST) - 0:00:39 - train - INFO - [DocStream] step=3 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=4-5]
+2025-11-14 17:53:43 (IST) - 0:00:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:43 (IST) - 0:00:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:43 (IST) - 0:00:40 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:46 (IST) - 0:00:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:47 (IST) - 0:00:43 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:48 (IST) - 0:00:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.423990
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.515830
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.744412
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - =========================
+
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - [TTT] Step 3: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.488e-02, relative_change=0.0277% (9 params)
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - step: 000003 - done (%): 0.1 - loss: 3.315 - lr: 4.1e-06 - peak_alloc_mem (GB): 41.6 - alloc_mem (GB): 21.0 - words_per_second: 5054.6 - avg_words_per_second: 3540.2 - ETA: >2025-11-14 23:11:07
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - [DocStream] step=4 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=0-1]
+2025-11-14 17:53:49 (IST) - 0:00:45 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4065.wav
+2025-11-14 17:53:49 (IST) - 0:00:45 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:49 (IST) - 0:00:45 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:49 (IST) - 0:00:45 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:49 (IST) - 0:00:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:49 (IST) - 0:00:46 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:50 (IST) - 0:00:46 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:53 (IST) - 0:00:49 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:54 (IST) - 0:00:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:54 (IST) - 0:00:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.406520
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.474161
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.780969
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   requires_grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   has grad: True
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - =========================
+
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - [TTT] Step 4: grad_norm=1.000e+00, param_norm=125.9593, delta_norm=3.275e-02, relative_change=0.0260% (9 params)
+2025-11-14 17:53:55 (IST) - 0:00:51 - train - INFO - step: 000004 - done (%): 0.2 - loss: 4.810 - lr: 4.2e-06 - peak_alloc_mem (GB): 41.6 - alloc_mem (GB): 21.0 - words_per_second: 5404.8 - avg_words_per_second: 3874.4 - ETA: >2025-11-14 22:43:42
+2025-11-14 17:53:55 (IST) - 0:00:52 - train - INFO - [DocStream] step=5 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=2-3]
+2025-11-14 17:53:55 (IST) - 0:00:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:56 (IST) - 0:00:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:56 (IST) - 0:00:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)

@@ -118,7 +118,7 @@ def reset_ttt_on_doc_switch(model, doc_ids: list[str], last_doc_id: str | None) 
 
 def train(config: str):
     args: TrainArgs = TrainArgs.load(config, drop_extra_fields=False)
-    set_logger(logging.INFO)
+    set_logger(logging.DEBUG)
 
     with ExitStack() as exit_stack:
         _train(args, exit_stack)

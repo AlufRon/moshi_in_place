@@ -1,0 +1,67 @@
+[rank0]:[W1114 17:46:35.147244582 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+wandb: Currently logged in as: alufr (alufr-ben-gurion-university-of-the-negev) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 539, in <module>
+[rank0]:     fire.Fire(train)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 135, in Fire
+[rank0]:     component_trace = _Fire(component, args, parsed_flag_args, context, name)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 468, in _Fire
+[rank0]:     component, remaining_args = _CallAndUpdateTrace(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+[rank0]:     component = fn(*varargs, **kwargs)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 124, in train
+[rank0]:     _train(args, exit_stack)
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/train.py", line 174, in _train
+[rank0]:     metrics_logger: MetricsLogger = MetricsLogger(
+[rank0]:   File "/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi-finetune/finetune/monitoring/metrics_logger.py", line 152, in __init__
+[rank0]:     wandb.init(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/wandb/sdk/wandb_init.py", line 1620, in init
+[rank0]:     wandb._sentry.reraise(e)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/wandb/analytics/sentry.py", line 157, in reraise
+[rank0]:     raise exc.with_traceback(sys.exc_info()[2])
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/wandb/sdk/wandb_init.py", line 1588, in init
+[rank0]:     exit_stack.enter_context(wi.setup_run_log_directory(run_settings))
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/contextlib.py", line 492, in enter_context
+[rank0]:     result = _cm_type.__enter__(cm)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/contextlib.py", line 135, in __enter__
+[rank0]:     return next(self.gen)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/wandb/sdk/wandb_init.py", line 676, in setup_run_log_directory
+[rank0]:     handler = wb_logging.add_file_handler(
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/wandb/sdk/lib/wb_logging.py", line 124, in add_file_handler
+[rank0]:     handler = logging.FileHandler(filepath)
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/logging/__init__.py", line 1169, in __init__
+[rank0]:     StreamHandler.__init__(self, self._open())
+[rank0]:   File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/logging/__init__.py", line 1201, in _open
+[rank0]:     return open_func(self.baseFilename, self.mode,
+[rank0]: FileNotFoundError: [Errno 2] No such file or directory: '/sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_174636-h1ye7jay/logs/debug.log'
+[rank0]:[W1114 17:46:36.234260320 ProcessGroupNCCL.cpp:1496] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+E1114 17:46:37.870000 2190710 site-packages/torch/distributed/elastic/multiprocessing/api.py:869] failed (exitcode: 1) local_rank: 0 (pid: 2190722) of binary: /home/alufr/.conda/envs/moshi_ttt_fixed/bin/python3.10
+Traceback (most recent call last):
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/bin/torchrun", line 7, in <module>
+    sys.exit(main())
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 355, in wrapper
+    return f(*args, **kwargs)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 918, in main
+    run(args)
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/run.py", line 909, in run
+    elastic_launch(
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 138, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/home/alufr/.conda/envs/moshi_ttt_fixed/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 269, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-11-14_17:46:37
+  host      : ise-6000-06.auth.ad.bgu.ac.il
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 2190722)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================

@@ -1,0 +1,15 @@
+[rank0]:[W1114 17:40:36.706070845 ProcessGroupNCCL.cpp:4561] [PG ID 0 PG GUID 0 Rank 0]  using GPU 0 to perform barrier as devices used by this process are currently unknown. This can potentially cause a hang if this rank to GPU mapping is incorrect. Specify device_ids in barrier() to force use of a particular device, or call init_process_group() with a device_id.
+wandb: Currently logged in as: alufr (alufr-ben-gurion-university-of-the-negev) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Tracking run with wandb version 0.21.0
+wandb: Run data is saved locally in /sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_174037-d4n6ijej
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run run2
+wandb: ⭐️ View project at https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place
+wandb: 🚀 View run at https://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place/runs/d4n6ijej
+wandb: WARNING Calling wandb.login() after wandb.init() has no effect.
+/home/alufr/moshi_in_place_ttt/moshi_in_place/moshi/moshi/moshi/models/loaders.py:204: UserWarning: Repository kyutai/moshiko-pytorch-bf16 contains no config.json. Assuming this is a Moshi 7B. Support for such repository might be removed in the future.
+  warnings.warn(
+2025-11-14 17:40:41 (IST) - 0:00:10 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:40:42 (IST) - 0:00:11 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:40:43 (IST) - 0:00:12 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+[2025-11-14T17:46:02.818] error: *** JOB 8164645 ON ise-6000-01 CANCELLED AT 2025-11-14T17:46:02 DUE to SIGNAL Terminated ***

@@ -1,0 +1,852 @@
+==================================================
+Job started at: Fri 14 Nov 2025 17:47:29 IST
+Running on node: cs-6000-01.auth.ad.bgu.ac.il
+GPU info:
+Fri Nov 14 17:47:29 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:A1:00.0 Off |                  Off |
+| 30%   44C    P8             25W /  300W |       2MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+==================================================
+Set CUDA_VISIBLE_DEVICES=0
+Starting YARN + TTT training...
+Context Extension: 4x (3000 -> 12000 tokens)
+TTT Layers: 3 (layers 10, 20, 30)
+Base Model: Frozen (only TTT params trained)
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-14 17:47:36 (IST) - 0:00:03 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-14 17:47:36 (IST) - 0:00:03 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-14 17:47:36 (IST) - 0:00:03 - distributed - INFO - local rank: 0
+2025-11-14 17:47:36 (IST) - 0:00:03 - train - INFO - Going to init comms...
+2025-11-14 17:47:36 (IST) - 0:00:03 - train - INFO - Run dir: /sise/eliyanac-group/ron_al/ttt_training_run2
+2025-11-14 17:47:36 (IST) - 0:00:03 - train - INFO - Removing run dir /sise/eliyanac-group/ron_al/ttt_training_run2...
+2025-11-14 17:47:36 (IST) - 0:00:04 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field data: {'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl', 'shuffle': False, 'eval_data': ''}
+2025-11-14 17:47:36 (IST) - 0:00:04 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field moshi_paths: {'hf_repo_id': 'kyutai/moshiko-pytorch-bf16', 'mimi_path': None, 'moshi_path': None, 'tokenizer_path': None, 'config_path': None}
+2025-11-14 17:47:36 (IST) - 0:00:04 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field optim: {'lr': 0.0001, 'weight_decay': 0.1, 'pct_start': 0.05}
+2025-11-14 17:47:36 (IST) - 0:00:04 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field wandb: {'project': 'moshi_in_place', 'offline': False, 'key': '', 'run_name': 'run2'}
+2025-11-14 17:47:36 (IST) - 0:00:04 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field lora: {'enable': False, 'rank': 64, 'scaling': 2.0, 'ft_embed': False}
+2025-11-14 17:47:36 (IST) - 0:00:04 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field ttt: {'enabled': True, 'layer_frequency': 10, 'start_layer': 10, 'chunk_size': 256, 'learning_rate': 0.0001, 'conv_kernel_size': 2, 'delta_clip_fro_norm': 100.0, 'unfreeze_ttt_layers': False}
+2025-11-14 17:47:36 (IST) - 0:00:04 - simple_parsing.helpers.serialization.serializable - DEBUG - Encoded dataclass field yarn: {'enabled': True, 'scale': 4.0, 'original_max_seq_len': 3000, 'beta_fast': 32, 'beta_slow': 1, 'mscale': 1.0, 'mscale_all_dim': 0.0}
+2025-11-14 17:47:36 (IST) - 0:00:04 - train - INFO - TrainArgs: {'batch_size': 2,
+ 'ckpt_freq': 100,
+ 'data': {'eval_data': '',
+          'shuffle': False,
+          'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl'},
+ 'do_ckpt': True,
+ 'do_eval': False,
+ 'duration_sec': 150.0,
+ 'eval_freq': 100,
+ 'first_codebook_weight_multiplier': 100.0,
+ 'full_finetuning': False,
+ 'gradient_checkpointing': True,
+ 'log_freq': 1,
+ 'lora': {'enable': False, 'ft_embed': False, 'rank': 64, 'scaling': 2.0},
+ 'max_norm': 1.0,
+ 'max_steps': 2000,
+ 'moshi_paths': {'config_path': None,
+                 'hf_repo_id': 'kyutai/moshiko-pytorch-bf16',
+                 'mimi_path': None,
+                 'moshi_path': None,
+                 'tokenizer_path': None},
+ 'num_ckpt_keep': 3,
+ 'num_microbatches': 1,
+ 'optim': {'lr': 0.0001, 'pct_start': 0.05, 'weight_decay': 0.1},
+ 'overwrite_run_dir': True,
+ 'param_dtype': 'bfloat16',
+ 'run_dir': '/sise/eliyanac-group/ron_al/ttt_training_run2',
+ 'save_adapters': True,
+ 'seed': 0,
+ 'text_padding_weight': 0.5,
+ 'ttt': {'chunk_size': 256,
+         'conv_kernel_size': 2,
+         'delta_clip_fro_norm': 100.0,
+         'enabled': True,
+         'layer_frequency': 10,
+         'learning_rate': 0.0001,
+         'start_layer': 10,
+         'unfreeze_ttt_layers': False},
+ 'wandb': {'key': '',
+           'offline': False,
+           'project': 'moshi_in_place',
+           'run_name': 'run2'},
+ 'world_size': 1,
+ 'yarn': {'beta_fast': 32,
+          'beta_slow': 1,
+          'enabled': True,
+          'mscale': 1.0,
+          'mscale_all_dim': 0.0,
+          'original_max_seq_len': 3000,
+          'scale': 4.0}}
+2025-11-14 17:47:36 (IST) - 0:00:04 - git.util - DEBUG - sys.platform='linux', git_executable='git'
+2025-11-14 17:47:36 (IST) - 0:00:04 - git.cmd - DEBUG - Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/home/alufr/moshi_in_place_ttt/moshi_in_place, stdin=None, shell=False, universal_newlines=False)
+2025-11-14 17:47:36 (IST) - 0:00:04 - metrics_logger - INFO - initializing wandb
+2025-11-14 17:47:36 (IST) - 0:00:04 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.wandb.ai:443
+2025-11-14 17:47:37 (IST) - 0:00:04 - urllib3.connectionpool - DEBUG - https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 None
+2025-11-14 17:47:37 (IST) - 0:00:04 - urllib3.connectionpool - DEBUG - https://api.wandb.ai:443 "POST /graphql HTTP/1.1" 200 395
+2025-11-14 17:47:37 (IST) - 0:00:05 - git.util - DEBUG - sys.platform='linux', git_executable='git'
+2025-11-14 17:47:37 (IST) - 0:00:05 - git.cmd - DEBUG - Popen(['git', 'cat-file', '--batch-check'], cwd=/home/alufr/moshi_in_place_ttt/moshi_in_place, stdin=<valid stream>, shell=False, universal_newlines=False)
+2025-11-14 17:47:38 (IST) - 0:00:06 - train - INFO - Loading Mimi and Moshi...
+2025-11-14 17:47:38 (IST) - 0:00:06 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): huggingface.co:443
+2025-11-14 17:47:39 (IST) - 0:00:06 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/config.json HTTP/1.1" 404 0
+2025-11-14 17:47:39 (IST) - 0:00:06 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/model.safetensors HTTP/1.1" 302 0
+2025-11-14 17:47:39 (IST) - 0:00:06 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/tokenizer-e351c8d8-checkpoint125.safetensors HTTP/1.1" 302 0
+2025-11-14 17:47:39 (IST) - 0:00:07 - urllib3.connectionpool - DEBUG - https://huggingface.co:443 "HEAD /kyutai/moshiko-pytorch-bf16/resolve/main/tokenizer_spm_32k_3.model HTTP/1.1" 302 0
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Layer frequency: 10
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Start layer: 10
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Learning rate: 0.0001
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - YaRN (Context Window Extension) ENABLED
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Scale: 4.0x
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Original max seq len: 3000
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Beta fast: 32
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   Beta slow: 1
+2025-11-14 17:47:39 (IST) - 0:00:07 - finetune.wrapped_model - INFO - ======================================================================
+[YaRN] Enabled with scale=4.0, original_len=3000
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[YaRN] Initializing RoPE buffers on device=meta
+[YaRN] RoPE buffers initialized successfully
+2025-11-14 17:47:40 (IST) - 0:00:07 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-14 17:47:40 (IST) - 0:00:07 - finetune.wrapped_model - INFO - Initializing TTT w_down from pretrained checkpoint...
+2025-11-14 17:47:40 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   ✓ transformer.layers.10.gating.w_down <- transformer.layers.10.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:47:40 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   ✓ transformer.layers.20.gating.w_down <- transformer.layers.20.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:47:40 (IST) - 0:00:07 - finetune.wrapped_model - INFO -   ✓ transformer.layers.30.gating.w_down <- transformer.layers.30.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:47:40 (IST) - 0:00:07 - finetune.wrapped_model - INFO - Initializing TTT layers ...
+2025-11-14 17:47:40 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:47:41 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:47:41 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.10.gating.w_down_pretrained from w_down
+2025-11-14 17:47:41 (IST) - 0:00:08 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:47:41 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:47:42 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:47:42 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.20.gating.w_down_pretrained from w_down
+2025-11-14 17:47:42 (IST) - 0:00:09 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:47:42 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.30.gating.w_down_pretrained from w_down
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Initializing YaRN RoPE buffers ...
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.rope.inv_freq (shape: torch.Size([64]), scale: 4.0x)
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Pinned 3 w_down parameters to float32 for TTT precision
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO - Finished initialization!
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO - TTT ACTIVE: 3 layers enabled
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO - TTT layer indices: [10, 20, 30]
+2025-11-14 17:47:43 (IST) - 0:00:10 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:47:49 (IST) - 0:00:17 - train - INFO - [DocStream] step=1 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=0-1]
+2025-11-14 17:47:49 (IST) - 0:00:17 - train - INFO - [TTT RESET] Document switch detected: None -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav
+2025-11-14 17:47:49 (IST) - 0:00:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:47:49 (IST) - 0:00:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:47:49 (IST) - 0:00:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:47:50 (IST) - 0:00:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:52 (IST) - 0:00:19 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:52 (IST) - 0:00:19 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:56 (IST) - 0:00:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:56 (IST) - 0:00:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:57 (IST) - 0:00:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.367049
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.483810
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.794482
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   requires_grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   has grad: True
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - =========================
+
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - [TTT] Step 1: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=4.697e-02, relative_change=0.0373% (9 params)
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - step: 000001 - done (%): 0.1 - loss: 3.378 - lr: 4.0e-06 - peak_alloc_mem (GB): 35.6 - alloc_mem (GB): 21.0 - words_per_second: 2891.3 - avg_words_per_second: 2891.3 - ETA: >2025-11-15 00:16:52
+2025-11-14 17:47:58 (IST) - 0:00:25 - train - INFO - [DocStream] step=2 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=2-3]
+2025-11-14 17:47:58 (IST) - 0:00:26 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:58 (IST) - 0:00:26 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:47:58 (IST) - 0:00:26 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:01 (IST) - 0:00:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:03 (IST) - 0:00:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:03 (IST) - 0:00:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.382941
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.496678
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.778888
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   requires_grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   has grad: True
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - =========================
+
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - [TTT] Step 2: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.879e-02, relative_change=0.0308% (9 params)
+2025-11-14 17:48:04 (IST) - 0:00:31 - train - INFO - step: 000002 - done (%): 0.1 - loss: 3.897 - lr: 4.0e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5380.0 - avg_words_per_second: 3761.2 - ETA: >2025-11-14 22:46:52
+2025-11-14 17:48:05 (IST) - 0:00:32 - train - INFO - [DocStream] step=3 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=4-5]
+2025-11-14 17:48:05 (IST) - 0:00:32 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:05 (IST) - 0:00:32 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:05 (IST) - 0:00:33 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:08 (IST) - 0:00:36 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:09 (IST) - 0:00:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:10 (IST) - 0:00:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.424123
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.515947
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.744256
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   requires_grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   has grad: True
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - =========================
+
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - [TTT] Step 3: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.488e-02, relative_change=0.0277% (9 params)
+2025-11-14 17:48:11 (IST) - 0:00:38 - train - INFO - step: 000003 - done (%): 0.1 - loss: 3.315 - lr: 4.1e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 4999.9 - avg_words_per_second: 4099.8 - ETA: >2025-11-14 22:22:10
+2025-11-14 17:48:11 (IST) - 0:00:39 - train - INFO - [DocStream] step=4 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=0-1]
+2025-11-14 17:48:11 (IST) - 0:00:39 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4065.wav
+2025-11-14 17:48:11 (IST) - 0:00:39 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:48:11 (IST) - 0:00:39 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:48:11 (IST) - 0:00:39 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:48:11 (IST) - 0:00:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:11 (IST) - 0:00:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:11 (IST) - 0:00:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:15 (IST) - 0:00:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:16 (IST) - 0:00:43 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:16 (IST) - 0:00:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - 
+=== TTT Parameter Debug ===
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.10.gating.w_down:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.406499
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.10.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.10.gating.target_generator.W_target.weight:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.20.gating.w_down:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.474149
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.20.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.20.gating.target_generator.W_target.weight:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.30.gating.w_down:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.780987
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.30.gating.target_generator.conv1d.conv.weight:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - transformer.layers.30.gating.target_generator.W_target.weight:
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   requires_grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   has grad: True
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO -   grad norm: 0.000000
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - =========================
+
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - [TTT] Step 4: grad_norm=1.000e+00, param_norm=125.9593, delta_norm=3.275e-02, relative_change=0.0260% (9 params)
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - step: 000004 - done (%): 0.2 - loss: 4.809 - lr: 4.2e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5305.9 - avg_words_per_second: 4346.8 - ETA: >2025-11-14 22:06:35
+2025-11-14 17:48:17 (IST) - 0:00:45 - train - INFO - [DocStream] step=5 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=2-3]
+2025-11-14 17:48:17 (IST) - 0:00:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:18 (IST) - 0:00:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:18 (IST) - 0:00:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:21 (IST) - 0:00:48 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:22 (IST) - 0:00:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:23 (IST) - 0:00:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:23 (IST) - 0:00:51 - train - INFO - [TTT] Step 5: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.221e-02, relative_change=0.0256% (9 params)
+2025-11-14 17:48:23 (IST) - 0:00:51 - train - INFO - step: 000005 - done (%): 0.2 - loss: 4.922 - lr: 4.4e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5276.3 - avg_words_per_second: 4505.6 - ETA: >2025-11-14 21:57:27
+2025-11-14 17:48:24 (IST) - 0:00:51 - train - INFO - [DocStream] step=6 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=4-5]
+2025-11-14 17:48:24 (IST) - 0:00:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:24 (IST) - 0:00:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:24 (IST) - 0:00:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:27 (IST) - 0:00:55 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:28 (IST) - 0:00:56 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:29 (IST) - 0:00:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:30 (IST) - 0:00:57 - train - INFO - [TTT] Step 6: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.271e-02, relative_change=0.0260% (9 params)
+2025-11-14 17:48:30 (IST) - 0:00:57 - train - INFO - step: 000006 - done (%): 0.3 - loss: 3.318 - lr: 4.6e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5240.6 - avg_words_per_second: 4613.4 - ETA: >2025-11-14 21:51:37
+2025-11-14 17:48:30 (IST) - 0:00:58 - train - INFO - [DocStream] step=7 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=6-7]
+2025-11-14 17:48:30 (IST) - 0:00:58 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:30 (IST) - 0:00:58 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:31 (IST) - 0:00:58 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:34 (IST) - 0:01:01 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:35 (IST) - 0:01:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:35 (IST) - 0:01:03 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:36 (IST) - 0:01:04 - train - INFO - [TTT] Step 7: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.191e-02, relative_change=0.0253% (9 params)
+2025-11-14 17:48:36 (IST) - 0:01:04 - train - INFO - step: 000007 - done (%): 0.3 - loss: 2.587 - lr: 4.9e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5220.8 - avg_words_per_second: 4691.4 - ETA: >2025-11-14 21:47:34
+2025-11-14 17:48:37 (IST) - 0:01:04 - train - INFO - [DocStream] step=8 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=8-9]
+2025-11-14 17:48:37 (IST) - 0:01:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:37 (IST) - 0:01:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:37 (IST) - 0:01:05 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:40 (IST) - 0:01:08 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:41 (IST) - 0:01:09 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:42 (IST) - 0:01:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:43 (IST) - 0:01:10 - train - INFO - [TTT] Step 8: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=3.219e-02, relative_change=0.0256% (9 params)
+2025-11-14 17:48:43 (IST) - 0:01:10 - train - INFO - step: 000008 - done (%): 0.4 - loss: 2.286 - lr: 5.2e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5186.5 - avg_words_per_second: 4748.0 - ETA: >2025-11-14 21:44:42
+2025-11-14 17:48:43 (IST) - 0:01:11 - train - INFO - [DocStream] step=9 microbatch=0 samples=2 unique_docs=1 runs=4065.wav[segments=10-11]
+2025-11-14 17:48:43 (IST) - 0:01:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:43 (IST) - 0:01:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:44 (IST) - 0:01:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:47 (IST) - 0:01:14 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:48 (IST) - 0:01:15 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:49 (IST) - 0:01:16 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:49 (IST) - 0:01:17 - train - INFO - [TTT] Step 9: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=3.274e-02, relative_change=0.0260% (9 params)
+2025-11-14 17:48:49 (IST) - 0:01:17 - train - INFO - step: 000009 - done (%): 0.5 - loss: 2.287 - lr: 5.5e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5176.6 - avg_words_per_second: 4792.1 - ETA: >2025-11-14 21:42:32
+2025-11-14 17:48:50 (IST) - 0:01:17 - train - INFO - [DocStream] step=10 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=0-1]
+2025-11-14 17:48:50 (IST) - 0:01:17 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4065.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4074.wav
+2025-11-14 17:48:50 (IST) - 0:01:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:48:50 (IST) - 0:01:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:48:50 (IST) - 0:01:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:48:50 (IST) - 0:01:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:50 (IST) - 0:01:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:50 (IST) - 0:01:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:53 (IST) - 0:01:21 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:54 (IST) - 0:01:22 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:55 (IST) - 0:01:23 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:56 (IST) - 0:01:23 - train - INFO - [TTT] Step 10: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.360e-02, relative_change=0.0267% (9 params)
+2025-11-14 17:48:56 (IST) - 0:01:23 - train - INFO - step: 000010 - done (%): 0.5 - loss: 5.038 - lr: 5.9e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5162.2 - avg_words_per_second: 4826.7 - ETA: >2025-11-14 21:40:51
+2025-11-14 17:48:56 (IST) - 0:01:24 - train - INFO - [DocStream] step=11 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=2-3]
+2025-11-14 17:48:56 (IST) - 0:01:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:56 (IST) - 0:01:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:48:57 (IST) - 0:01:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:00 (IST) - 0:01:27 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:01 (IST) - 0:01:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:02 (IST) - 0:01:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:02 (IST) - 0:01:30 - train - INFO - [TTT] Step 11: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=3.495e-02, relative_change=0.0277% (9 params)
+2025-11-14 17:49:02 (IST) - 0:01:30 - train - INFO - step: 000011 - done (%): 0.6 - loss: 4.568 - lr: 6.4e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5131.8 - avg_words_per_second: 4852.9 - ETA: >2025-11-14 21:39:35
+2025-11-14 17:49:03 (IST) - 0:01:30 - train - INFO - [DocStream] step=12 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=4-5]
+2025-11-14 17:49:03 (IST) - 0:01:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:03 (IST) - 0:01:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:03 (IST) - 0:01:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:07 (IST) - 0:01:34 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:08 (IST) - 0:01:35 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:08 (IST) - 0:01:36 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:09 (IST) - 0:01:37 - train - INFO - [TTT] Step 12: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=3.656e-02, relative_change=0.0290% (9 params)
+2025-11-14 17:49:09 (IST) - 0:01:37 - train - INFO - step: 000012 - done (%): 0.6 - loss: 2.697 - lr: 6.9e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5131.9 - avg_words_per_second: 4875.0 - ETA: >2025-11-14 21:38:32
+2025-11-14 17:49:09 (IST) - 0:01:37 - train - INFO - [DocStream] step=13 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=6-7]
+2025-11-14 17:49:09 (IST) - 0:01:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:10 (IST) - 0:01:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:10 (IST) - 0:01:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:13 (IST) - 0:01:41 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:14 (IST) - 0:01:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:15 (IST) - 0:01:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:16 (IST) - 0:01:43 - train - INFO - [TTT] Step 13: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=3.768e-02, relative_change=0.0299% (9 params)
+2025-11-14 17:49:16 (IST) - 0:01:43 - train - INFO - step: 000013 - done (%): 0.7 - loss: 3.040 - lr: 7.4e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5118.2 - avg_words_per_second: 4892.9 - ETA: >2025-11-14 21:37:41
+2025-11-14 17:49:16 (IST) - 0:01:44 - train - INFO - [DocStream] step=14 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=8-9]
+2025-11-14 17:49:16 (IST) - 0:01:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:16 (IST) - 0:01:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:16 (IST) - 0:01:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:20 (IST) - 0:01:47 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:21 (IST) - 0:01:48 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:21 (IST) - 0:01:49 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:22 (IST) - 0:01:50 - train - INFO - [TTT] Step 14: grad_norm=1.000e+00, param_norm=125.9590, delta_norm=3.952e-02, relative_change=0.0314% (9 params)
+2025-11-14 17:49:22 (IST) - 0:01:50 - train - INFO - step: 000014 - done (%): 0.7 - loss: 2.850 - lr: 8.0e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5099.6 - avg_words_per_second: 4907.1 - ETA: >2025-11-14 21:37:01
+2025-11-14 17:49:23 (IST) - 0:01:50 - train - INFO - [DocStream] step=15 microbatch=0 samples=2 unique_docs=1 runs=4074.wav[segments=10-11]
+2025-11-14 17:49:23 (IST) - 0:01:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:23 (IST) - 0:01:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:23 (IST) - 0:01:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:26 (IST) - 0:01:54 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:27 (IST) - 0:01:55 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:28 (IST) - 0:01:56 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:29 (IST) - 0:01:56 - train - INFO - [TTT] Step 15: grad_norm=1.000e+00, param_norm=125.9590, delta_norm=4.244e-02, relative_change=0.0337% (9 params)
+2025-11-14 17:49:29 (IST) - 0:01:56 - train - INFO - step: 000015 - done (%): 0.8 - loss: 2.746 - lr: 8.7e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5098.7 - avg_words_per_second: 4919.4 - ETA: >2025-11-14 21:36:27
+2025-11-14 17:49:29 (IST) - 0:01:57 - train - INFO - [DocStream] step=16 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=0-1]
+2025-11-14 17:49:29 (IST) - 0:01:57 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4074.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4077.wav
+2025-11-14 17:49:29 (IST) - 0:01:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:49:29 (IST) - 0:01:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:49:29 (IST) - 0:01:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:49:29 (IST) - 0:01:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:30 (IST) - 0:01:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:30 (IST) - 0:01:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:33 (IST) - 0:02:01 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:34 (IST) - 0:02:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:35 (IST) - 0:02:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:36 (IST) - 0:02:03 - train - INFO - [TTT] Step 16: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=4.425e-02, relative_change=0.0351% (9 params)
+2025-11-14 17:49:36 (IST) - 0:02:03 - train - INFO - step: 000016 - done (%): 0.8 - loss: 4.238 - lr: 9.3e-06 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5013.3 - avg_words_per_second: 4925.2 - ETA: >2025-11-14 21:36:11
+2025-11-14 17:49:36 (IST) - 0:02:04 - train - INFO - [DocStream] step=17 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=2-3]
+2025-11-14 17:49:36 (IST) - 0:02:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:36 (IST) - 0:02:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:36 (IST) - 0:02:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:40 (IST) - 0:02:07 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:41 (IST) - 0:02:08 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:41 (IST) - 0:02:09 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:42 (IST) - 0:02:10 - train - INFO - [TTT] Step 17: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=4.680e-02, relative_change=0.0372% (9 params)
+2025-11-14 17:49:42 (IST) - 0:02:10 - train - INFO - step: 000017 - done (%): 0.8 - loss: 3.980 - lr: 1.0e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5073.8 - avg_words_per_second: 4933.7 - ETA: >2025-11-14 21:35:47
+2025-11-14 17:49:43 (IST) - 0:02:10 - train - INFO - [DocStream] step=18 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=4-5]
+2025-11-14 17:49:43 (IST) - 0:02:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:43 (IST) - 0:02:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:43 (IST) - 0:02:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:46 (IST) - 0:02:14 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:47 (IST) - 0:02:15 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:48 (IST) - 0:02:16 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:49 (IST) - 0:02:16 - train - INFO - [TTT] Step 18: grad_norm=1.000e+00, param_norm=125.9590, delta_norm=4.926e-02, relative_change=0.0391% (9 params)
+2025-11-14 17:49:49 (IST) - 0:02:16 - train - INFO - step: 000018 - done (%): 0.9 - loss: 2.508 - lr: 1.1e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5063.8 - avg_words_per_second: 4940.8 - ETA: >2025-11-14 21:35:28
+2025-11-14 17:49:49 (IST) - 0:02:17 - train - INFO - [DocStream] step=19 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=6-7]
+2025-11-14 17:49:49 (IST) - 0:02:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:49 (IST) - 0:02:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:50 (IST) - 0:02:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:53 (IST) - 0:02:21 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:54 (IST) - 0:02:22 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:55 (IST) - 0:02:22 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:56 (IST) - 0:02:23 - train - INFO - [TTT] Step 19: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=5.192e-02, relative_change=0.0412% (9 params)
+2025-11-14 17:49:56 (IST) - 0:02:23 - train - INFO - step: 000019 - done (%): 0.9 - loss: 3.825 - lr: 1.2e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5069.6 - avg_words_per_second: 4947.4 - ETA: >2025-11-14 21:35:10
+2025-11-14 17:49:56 (IST) - 0:02:23 - train - INFO - [DocStream] step=20 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=8-9]
+2025-11-14 17:49:56 (IST) - 0:02:23 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:56 (IST) - 0:02:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:49:56 (IST) - 0:02:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:00 (IST) - 0:02:27 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:01 (IST) - 0:02:28 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:01 (IST) - 0:02:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:02 (IST) - 0:02:30 - train - INFO - [TTT] Step 20: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=5.549e-02, relative_change=0.0441% (9 params)
+2025-11-14 17:50:02 (IST) - 0:02:30 - train - INFO - step: 000020 - done (%): 1.0 - loss: 3.386 - lr: 1.2e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5057.1 - avg_words_per_second: 4952.7 - ETA: >2025-11-14 21:34:55
+2025-11-14 17:50:03 (IST) - 0:02:30 - train - INFO - [DocStream] step=21 microbatch=0 samples=2 unique_docs=1 runs=4077.wav[segments=10-11]
+2025-11-14 17:50:03 (IST) - 0:02:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:03 (IST) - 0:02:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:03 (IST) - 0:02:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:06 (IST) - 0:02:34 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:07 (IST) - 0:02:35 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:08 (IST) - 0:02:36 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:09 (IST) - 0:02:37 - train - INFO - [TTT] Step 21: grad_norm=9.057e-01, param_norm=125.9588, delta_norm=5.799e-02, relative_change=0.0460% (9 params)
+2025-11-14 17:50:09 (IST) - 0:02:37 - train - INFO - step: 000021 - done (%): 1.1 - loss: 1.924 - lr: 1.3e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5054.7 - avg_words_per_second: 4957.5 - ETA: >2025-11-14 21:34:42
+2025-11-14 17:50:09 (IST) - 0:02:37 - train - INFO - [DocStream] step=22 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=0-1]
+2025-11-14 17:50:09 (IST) - 0:02:37 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4077.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4092.wav
+2025-11-14 17:50:09 (IST) - 0:02:37 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:50:09 (IST) - 0:02:37 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:50:09 (IST) - 0:02:37 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:50:09 (IST) - 0:02:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:10 (IST) - 0:02:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:10 (IST) - 0:02:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:13 (IST) - 0:02:41 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:14 (IST) - 0:02:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:15 (IST) - 0:02:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:16 (IST) - 0:02:43 - train - INFO - [TTT] Step 22: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=6.222e-02, relative_change=0.0494% (9 params)
+2025-11-14 17:50:16 (IST) - 0:02:43 - train - INFO - step: 000022 - done (%): 1.1 - loss: 3.864 - lr: 1.4e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5055.5 - avg_words_per_second: 4961.9 - ETA: >2025-11-14 21:34:30
+2025-11-14 17:50:16 (IST) - 0:02:44 - train - INFO - [DocStream] step=23 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=2-3]
+2025-11-14 17:50:16 (IST) - 0:02:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:16 (IST) - 0:02:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:16 (IST) - 0:02:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:20 (IST) - 0:02:47 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:21 (IST) - 0:02:48 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:21 (IST) - 0:02:49 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:22 (IST) - 0:02:50 - train - INFO - [TTT] Step 23: grad_norm=1.000e+00, param_norm=125.9590, delta_norm=6.682e-02, relative_change=0.0530% (9 params)
+2025-11-14 17:50:22 (IST) - 0:02:50 - train - INFO - step: 000023 - done (%): 1.1 - loss: 3.712 - lr: 1.5e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5038.1 - avg_words_per_second: 4965.1 - ETA: >2025-11-14 21:34:21
+2025-11-14 17:50:23 (IST) - 0:02:50 - train - INFO - [DocStream] step=24 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=4-5]
+2025-11-14 17:50:23 (IST) - 0:02:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:23 (IST) - 0:02:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:23 (IST) - 0:02:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:26 (IST) - 0:02:54 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:28 (IST) - 0:02:55 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:28 (IST) - 0:02:56 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:29 (IST) - 0:02:57 - train - INFO - [TTT] Step 24: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=7.160e-02, relative_change=0.0568% (9 params)
+2025-11-14 17:50:29 (IST) - 0:02:57 - train - INFO - step: 000024 - done (%): 1.2 - loss: 2.495 - lr: 1.6e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5041.9 - avg_words_per_second: 4968.3 - ETA: >2025-11-14 21:34:12
+2025-11-14 17:50:29 (IST) - 0:02:57 - train - INFO - [DocStream] step=25 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=6-7]
+2025-11-14 17:50:29 (IST) - 0:02:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:30 (IST) - 0:02:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:30 (IST) - 0:02:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:33 (IST) - 0:03:01 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:34 (IST) - 0:03:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:35 (IST) - 0:03:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:36 (IST) - 0:03:03 - train - INFO - [TTT] Step 25: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=7.577e-02, relative_change=0.0602% (9 params)
+2025-11-14 17:50:36 (IST) - 0:03:03 - train - INFO - step: 000025 - done (%): 1.2 - loss: 2.506 - lr: 1.7e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5025.5 - avg_words_per_second: 4970.6 - ETA: >2025-11-14 21:34:06
+2025-11-14 17:50:36 (IST) - 0:03:04 - train - INFO - [DocStream] step=26 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=8-9]
+2025-11-14 17:50:36 (IST) - 0:03:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:36 (IST) - 0:03:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:37 (IST) - 0:03:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:40 (IST) - 0:03:07 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:41 (IST) - 0:03:09 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:42 (IST) - 0:03:09 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:42 (IST) - 0:03:10 - train - INFO - [TTT] Step 26: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=7.803e-02, relative_change=0.0619% (9 params)
+2025-11-14 17:50:42 (IST) - 0:03:10 - train - INFO - step: 000026 - done (%): 1.3 - loss: 1.750 - lr: 1.8e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5033.8 - avg_words_per_second: 4973.0 - ETA: >2025-11-14 21:33:59
+2025-11-14 17:50:43 (IST) - 0:03:10 - train - INFO - [DocStream] step=27 microbatch=0 samples=2 unique_docs=1 runs=4092.wav[segments=10-11]
+2025-11-14 17:50:43 (IST) - 0:03:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:43 (IST) - 0:03:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:43 (IST) - 0:03:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:47 (IST) - 0:03:14 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:48 (IST) - 0:03:15 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:48 (IST) - 0:03:16 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:49 (IST) - 0:03:17 - train - INFO - [TTT] Step 27: grad_norm=8.357e-01, param_norm=125.9588, delta_norm=8.100e-02, relative_change=0.0643% (9 params)
+2025-11-14 17:50:49 (IST) - 0:03:17 - train - INFO - step: 000027 - done (%): 1.4 - loss: 2.361 - lr: 1.9e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5032.9 - avg_words_per_second: 4975.2 - ETA: >2025-11-14 21:33:53
+2025-11-14 17:50:50 (IST) - 0:03:17 - train - INFO - [DocStream] step=28 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=0-1]
+2025-11-14 17:50:50 (IST) - 0:03:17 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4092.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4104.wav
+2025-11-14 17:50:50 (IST) - 0:03:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:50:50 (IST) - 0:03:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:50:50 (IST) - 0:03:17 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:50:50 (IST) - 0:03:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:50 (IST) - 0:03:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:50 (IST) - 0:03:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:53 (IST) - 0:03:21 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:54 (IST) - 0:03:22 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:55 (IST) - 0:03:23 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:56 (IST) - 0:03:23 - train - INFO - [TTT] Step 28: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=8.629e-02, relative_change=0.0685% (9 params)
+2025-11-14 17:50:56 (IST) - 0:03:23 - train - INFO - step: 000028 - done (%): 1.4 - loss: 3.956 - lr: 2.1e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5032.6 - avg_words_per_second: 4977.2 - ETA: >2025-11-14 21:33:48
+2025-11-14 17:50:56 (IST) - 0:03:24 - train - INFO - [DocStream] step=29 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=2-3]
+2025-11-14 17:50:56 (IST) - 0:03:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:56 (IST) - 0:03:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:50:57 (IST) - 0:03:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:00 (IST) - 0:03:28 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:01 (IST) - 0:03:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:02 (IST) - 0:03:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:03 (IST) - 0:03:30 - train - INFO - [TTT] Step 29: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=9.261e-02, relative_change=0.0735% (9 params)
+2025-11-14 17:51:03 (IST) - 0:03:30 - train - INFO - step: 000029 - done (%): 1.4 - loss: 3.924 - lr: 2.2e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5025.5 - avg_words_per_second: 4978.8 - ETA: >2025-11-14 21:33:43
+2025-11-14 17:51:03 (IST) - 0:03:30 - train - INFO - [DocStream] step=30 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=4-5]
+2025-11-14 17:51:03 (IST) - 0:03:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:03 (IST) - 0:03:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:03 (IST) - 0:03:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:07 (IST) - 0:03:34 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:08 (IST) - 0:03:35 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:08 (IST) - 0:03:36 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:09 (IST) - 0:03:37 - train - INFO - [TTT] Step 30: grad_norm=9.191e-01, param_norm=125.9588, delta_norm=9.695e-02, relative_change=0.0770% (9 params)
+2025-11-14 17:51:09 (IST) - 0:03:37 - train - INFO - step: 000030 - done (%): 1.5 - loss: 1.921 - lr: 2.3e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5019.1 - avg_words_per_second: 4980.2 - ETA: >2025-11-14 21:33:40
+2025-11-14 17:51:10 (IST) - 0:03:37 - train - INFO - [DocStream] step=31 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=6-7]
+2025-11-14 17:51:10 (IST) - 0:03:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:10 (IST) - 0:03:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:10 (IST) - 0:03:38 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:13 (IST) - 0:03:41 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:15 (IST) - 0:03:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:15 (IST) - 0:03:43 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:16 (IST) - 0:03:44 - train - INFO - [TTT] Step 31: grad_norm=8.390e-01, param_norm=125.9588, delta_norm=1.019e-01, relative_change=0.0809% (9 params)
+2025-11-14 17:51:16 (IST) - 0:03:44 - train - INFO - step: 000031 - done (%): 1.6 - loss: 2.196 - lr: 2.4e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5017.2 - avg_words_per_second: 4981.4 - ETA: >2025-11-14 21:33:37
+2025-11-14 17:51:16 (IST) - 0:03:44 - train - INFO - [DocStream] step=32 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=8-9]
+2025-11-14 17:51:16 (IST) - 0:03:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:17 (IST) - 0:03:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:17 (IST) - 0:03:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:20 (IST) - 0:03:48 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:21 (IST) - 0:03:49 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:22 (IST) - 0:03:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:23 (IST) - 0:03:50 - train - INFO - [TTT] Step 32: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=1.033e-01, relative_change=0.0820% (9 params)
+2025-11-14 17:51:23 (IST) - 0:03:50 - train - INFO - step: 000032 - done (%): 1.6 - loss: 1.998 - lr: 2.5e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 4974.8 - avg_words_per_second: 4981.2 - ETA: >2025-11-14 21:33:37
+2025-11-14 17:51:23 (IST) - 0:03:51 - train - INFO - [DocStream] step=33 microbatch=0 samples=2 unique_docs=1 runs=4104.wav[segments=10-11]
+2025-11-14 17:51:23 (IST) - 0:03:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:23 (IST) - 0:03:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:24 (IST) - 0:03:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:27 (IST) - 0:03:55 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:28 (IST) - 0:03:56 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:29 (IST) - 0:03:56 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:30 (IST) - 0:03:57 - train - INFO - [TTT] Step 33: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=1.070e-01, relative_change=0.0850% (9 params)
+2025-11-14 17:51:30 (IST) - 0:03:57 - train - INFO - step: 000033 - done (%): 1.6 - loss: 1.840 - lr: 2.7e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5017.4 - avg_words_per_second: 4982.2 - ETA: >2025-11-14 21:33:34
+2025-11-14 17:51:30 (IST) - 0:03:57 - train - INFO - [DocStream] step=34 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=0-1]
+2025-11-14 17:51:30 (IST) - 0:03:57 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4104.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4112.wav
+2025-11-14 17:51:30 (IST) - 0:03:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:51:30 (IST) - 0:03:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:51:30 (IST) - 0:03:57 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:51:30 (IST) - 0:03:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:30 (IST) - 0:03:58 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:30 (IST) - 0:03:58 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:34 (IST) - 0:04:01 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:35 (IST) - 0:04:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:35 (IST) - 0:04:03 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:36 (IST) - 0:04:04 - train - INFO - [TTT] Step 34: grad_norm=1.000e+00, param_norm=125.9590, delta_norm=1.114e-01, relative_change=0.0885% (9 params)
+2025-11-14 17:51:36 (IST) - 0:04:04 - train - INFO - step: 000034 - done (%): 1.7 - loss: 4.182 - lr: 2.8e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5014.8 - avg_words_per_second: 4983.2 - ETA: >2025-11-14 21:33:32
+2025-11-14 17:51:37 (IST) - 0:04:04 - train - INFO - [DocStream] step=35 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=2-3]
+2025-11-14 17:51:37 (IST) - 0:04:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:37 (IST) - 0:04:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:37 (IST) - 0:04:05 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:40 (IST) - 0:04:08 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:42 (IST) - 0:04:09 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:42 (IST) - 0:04:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:43 (IST) - 0:04:11 - train - INFO - [TTT] Step 35: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=1.184e-01, relative_change=0.0940% (9 params)
+2025-11-14 17:51:43 (IST) - 0:04:11 - train - INFO - step: 000035 - done (%): 1.8 - loss: 3.352 - lr: 2.9e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5020.4 - avg_words_per_second: 4984.2 - ETA: >2025-11-14 21:33:29
+2025-11-14 17:51:43 (IST) - 0:04:11 - train - INFO - [DocStream] step=36 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=4-5]
+2025-11-14 17:51:43 (IST) - 0:04:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:44 (IST) - 0:04:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:44 (IST) - 0:04:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:47 (IST) - 0:04:15 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:48 (IST) - 0:04:16 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:49 (IST) - 0:04:16 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:50 (IST) - 0:04:17 - train - INFO - [TTT] Step 36: grad_norm=1.000e+00, param_norm=125.9587, delta_norm=1.235e-01, relative_change=0.0981% (9 params)
+2025-11-14 17:51:50 (IST) - 0:04:17 - train - INFO - step: 000036 - done (%): 1.8 - loss: 2.837 - lr: 3.1e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5010.2 - avg_words_per_second: 4985.0 - ETA: >2025-11-14 21:33:27
+2025-11-14 17:51:50 (IST) - 0:04:18 - train - INFO - [DocStream] step=37 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=6-7]
+2025-11-14 17:51:50 (IST) - 0:04:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:50 (IST) - 0:04:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:51 (IST) - 0:04:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:54 (IST) - 0:04:21 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:55 (IST) - 0:04:23 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:56 (IST) - 0:04:23 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:57 (IST) - 0:04:24 - train - INFO - [TTT] Step 37: grad_norm=9.853e-01, param_norm=125.9588, delta_norm=1.305e-01, relative_change=0.1036% (9 params)
+2025-11-14 17:51:57 (IST) - 0:04:24 - train - INFO - step: 000037 - done (%): 1.9 - loss: 2.548 - lr: 3.2e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5009.4 - avg_words_per_second: 4985.6 - ETA: >2025-11-14 21:33:25
+2025-11-14 17:51:57 (IST) - 0:04:24 - train - INFO - [DocStream] step=38 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=8-9]
+2025-11-14 17:51:57 (IST) - 0:04:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:57 (IST) - 0:04:25 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:51:57 (IST) - 0:04:25 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:01 (IST) - 0:04:28 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:02 (IST) - 0:04:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:02 (IST) - 0:04:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:03 (IST) - 0:04:31 - train - INFO - [TTT] Step 38: grad_norm=7.918e-01, param_norm=125.9589, delta_norm=1.349e-01, relative_change=0.1071% (9 params)
+2025-11-14 17:52:03 (IST) - 0:04:31 - train - INFO - step: 000038 - done (%): 1.9 - loss: 2.290 - lr: 3.3e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5013.5 - avg_words_per_second: 4986.4 - ETA: >2025-11-14 21:33:23
+2025-11-14 17:52:04 (IST) - 0:04:31 - train - INFO - [DocStream] step=39 microbatch=0 samples=2 unique_docs=1 runs=4112.wav[segments=10-11]
+2025-11-14 17:52:04 (IST) - 0:04:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:04 (IST) - 0:04:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:04 (IST) - 0:04:32 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:07 (IST) - 0:04:35 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:08 (IST) - 0:04:36 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:09 (IST) - 0:04:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:10 (IST) - 0:04:38 - train - INFO - [TTT] Step 39: grad_norm=7.944e-01, param_norm=125.9592, delta_norm=1.387e-01, relative_change=0.1101% (9 params)
+2025-11-14 17:52:10 (IST) - 0:04:38 - train - INFO - step: 000039 - done (%): 1.9 - loss: 1.914 - lr: 3.5e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5011.2 - avg_words_per_second: 4987.0 - ETA: >2025-11-14 21:33:21
+2025-11-14 17:52:10 (IST) - 0:04:38 - train - INFO - [DocStream] step=40 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=0-1]
+2025-11-14 17:52:10 (IST) - 0:04:38 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4112.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4145.wav
+2025-11-14 17:52:10 (IST) - 0:04:38 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:52:10 (IST) - 0:04:38 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:52:10 (IST) - 0:04:38 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:52:10 (IST) - 0:04:38 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:11 (IST) - 0:04:38 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:11 (IST) - 0:04:38 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:14 (IST) - 0:04:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:15 (IST) - 0:04:43 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:16 (IST) - 0:04:43 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:17 (IST) - 0:04:44 - train - INFO - [TTT] Step 40: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=1.450e-01, relative_change=0.1151% (9 params)
+2025-11-14 17:52:17 (IST) - 0:04:44 - train - INFO - step: 000040 - done (%): 2.0 - loss: 4.980 - lr: 3.6e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5023.7 - avg_words_per_second: 4987.9 - ETA: >2025-11-14 21:33:19
+2025-11-14 17:52:17 (IST) - 0:04:45 - train - INFO - [DocStream] step=41 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=2-3]
+2025-11-14 17:52:17 (IST) - 0:04:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:17 (IST) - 0:04:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:18 (IST) - 0:04:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:21 (IST) - 0:04:48 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:22 (IST) - 0:04:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:23 (IST) - 0:04:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:23 (IST) - 0:04:51 - train - INFO - [TTT] Step 41: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=1.514e-01, relative_change=0.1202% (9 params)
+2025-11-14 17:52:23 (IST) - 0:04:51 - train - INFO - step: 000041 - done (%): 2.0 - loss: 3.762 - lr: 3.8e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5009.2 - avg_words_per_second: 4988.4 - ETA: >2025-11-14 21:33:17
+2025-11-14 17:52:24 (IST) - 0:04:51 - train - INFO - [DocStream] step=42 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=4-5]
+2025-11-14 17:52:24 (IST) - 0:04:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:24 (IST) - 0:04:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:24 (IST) - 0:04:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:28 (IST) - 0:04:55 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:29 (IST) - 0:04:56 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:29 (IST) - 0:04:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:30 (IST) - 0:04:58 - train - INFO - [TTT] Step 42: grad_norm=1.000e+00, param_norm=125.9587, delta_norm=1.577e-01, relative_change=0.1252% (9 params)
+2025-11-14 17:52:30 (IST) - 0:04:58 - train - INFO - step: 000042 - done (%): 2.1 - loss: 3.610 - lr: 3.9e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 4998.9 - avg_words_per_second: 4988.7 - ETA: >2025-11-14 21:33:17
+2025-11-14 17:52:31 (IST) - 0:04:58 - train - INFO - [DocStream] step=43 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=6-7]
+2025-11-14 17:52:31 (IST) - 0:04:58 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:31 (IST) - 0:04:58 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:31 (IST) - 0:04:59 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:34 (IST) - 0:05:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:35 (IST) - 0:05:03 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:36 (IST) - 0:05:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:37 (IST) - 0:05:04 - train - INFO - [TTT] Step 43: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=1.632e-01, relative_change=0.1296% (9 params)
+2025-11-14 17:52:37 (IST) - 0:05:04 - train - INFO - step: 000043 - done (%): 2.1 - loss: 1.781 - lr: 4.1e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5009.5 - avg_words_per_second: 4989.1 - ETA: >2025-11-14 21:33:15
+2025-11-14 17:52:37 (IST) - 0:05:05 - train - INFO - [DocStream] step=44 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=8-9]
+2025-11-14 17:52:37 (IST) - 0:05:05 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:37 (IST) - 0:05:05 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:38 (IST) - 0:05:05 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:41 (IST) - 0:05:09 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:42 (IST) - 0:05:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:43 (IST) - 0:05:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:44 (IST) - 0:05:11 - train - INFO - [TTT] Step 44: grad_norm=1.000e+00, param_norm=125.9592, delta_norm=1.644e-01, relative_change=0.1305% (9 params)
+2025-11-14 17:52:44 (IST) - 0:05:11 - train - INFO - step: 000044 - done (%): 2.2 - loss: 2.461 - lr: 4.2e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5011.5 - avg_words_per_second: 4989.7 - ETA: >2025-11-14 21:33:14
+2025-11-14 17:52:44 (IST) - 0:05:12 - train - INFO - [DocStream] step=45 microbatch=0 samples=2 unique_docs=1 runs=4145.wav[segments=10-11]
+2025-11-14 17:52:44 (IST) - 0:05:12 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:44 (IST) - 0:05:12 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:44 (IST) - 0:05:12 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:48 (IST) - 0:05:15 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:49 (IST) - 0:05:16 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:50 (IST) - 0:05:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:50 (IST) - 0:05:18 - train - INFO - [TTT] Step 45: grad_norm=9.027e-01, param_norm=125.9597, delta_norm=1.690e-01, relative_change=0.1342% (9 params)
+2025-11-14 17:52:50 (IST) - 0:05:18 - train - INFO - step: 000045 - done (%): 2.2 - loss: 2.109 - lr: 4.4e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5010.2 - avg_words_per_second: 4990.1 - ETA: >2025-11-14 21:33:13
+2025-11-14 17:52:51 (IST) - 0:05:18 - train - INFO - [DocStream] step=46 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=0-1]
+2025-11-14 17:52:51 (IST) - 0:05:18 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4145.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4156.wav
+2025-11-14 17:52:51 (IST) - 0:05:18 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:52:51 (IST) - 0:05:18 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:52:51 (IST) - 0:05:18 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:52:51 (IST) - 0:05:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:51 (IST) - 0:05:19 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:51 (IST) - 0:05:19 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:55 (IST) - 0:05:22 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:56 (IST) - 0:05:23 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:56 (IST) - 0:05:24 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:57 (IST) - 0:05:25 - train - INFO - [TTT] Step 46: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=1.758e-01, relative_change=0.1395% (9 params)
+2025-11-14 17:52:57 (IST) - 0:05:25 - train - INFO - step: 000046 - done (%): 2.3 - loss: 4.402 - lr: 4.5e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 4951.7 - avg_words_per_second: 4989.3 - ETA: >2025-11-14 21:33:15
+2025-11-14 17:52:58 (IST) - 0:05:25 - train - INFO - [DocStream] step=47 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=2-3]
+2025-11-14 17:52:58 (IST) - 0:05:25 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:58 (IST) - 0:05:25 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:52:58 (IST) - 0:05:26 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:01 (IST) - 0:05:29 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:02 (IST) - 0:05:30 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:03 (IST) - 0:05:31 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:04 (IST) - 0:05:32 - train - INFO - [TTT] Step 47: grad_norm=1.000e+00, param_norm=125.9587, delta_norm=1.864e-01, relative_change=0.1480% (9 params)
+2025-11-14 17:53:04 (IST) - 0:05:32 - train - INFO - step: 000047 - done (%): 2.4 - loss: 4.593 - lr: 4.7e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5002.7 - avg_words_per_second: 4989.6 - ETA: >2025-11-14 21:33:14
+2025-11-14 17:53:04 (IST) - 0:05:32 - train - INFO - [DocStream] step=48 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=4-5]
+2025-11-14 17:53:04 (IST) - 0:05:32 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:05 (IST) - 0:05:32 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:05 (IST) - 0:05:32 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:08 (IST) - 0:05:36 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:09 (IST) - 0:05:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:10 (IST) - 0:05:37 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:11 (IST) - 0:05:38 - train - INFO - [TTT] Step 48: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=1.941e-01, relative_change=0.1541% (9 params)
+2025-11-14 17:53:11 (IST) - 0:05:38 - train - INFO - step: 000048 - done (%): 2.4 - loss: 4.696 - lr: 4.8e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5009.3 - avg_words_per_second: 4990.0 - ETA: >2025-11-14 21:33:13
+2025-11-14 17:53:11 (IST) - 0:05:39 - train - INFO - [DocStream] step=49 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=6-7]
+2025-11-14 17:53:11 (IST) - 0:05:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:11 (IST) - 0:05:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:12 (IST) - 0:05:39 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:15 (IST) - 0:05:42 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:16 (IST) - 0:05:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:17 (IST) - 0:05:44 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:17 (IST) - 0:05:45 - train - INFO - [TTT] Step 49: grad_norm=1.000e+00, param_norm=125.9591, delta_norm=1.948e-01, relative_change=0.1546% (9 params)
+2025-11-14 17:53:17 (IST) - 0:05:45 - train - INFO - step: 000049 - done (%): 2.5 - loss: 4.832 - lr: 5.0e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5011.3 - avg_words_per_second: 4990.4 - ETA: >2025-11-14 21:33:12
+2025-11-14 17:53:18 (IST) - 0:05:45 - train - INFO - [DocStream] step=50 microbatch=0 samples=2 unique_docs=1 runs=4156.wav[segments=8-9]
+2025-11-14 17:53:18 (IST) - 0:05:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:18 (IST) - 0:05:45 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:18 (IST) - 0:05:46 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:22 (IST) - 0:05:49 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:23 (IST) - 0:05:50 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:23 (IST) - 0:05:51 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:24 (IST) - 0:05:52 - train - INFO - [TTT] Step 50: grad_norm=1.000e+00, param_norm=125.9597, delta_norm=1.911e-01, relative_change=0.1517% (9 params)
+2025-11-14 17:53:24 (IST) - 0:05:52 - train - INFO - step: 000050 - done (%): 2.5 - loss: 4.405 - lr: 5.1e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5088.6 - avg_words_per_second: 4992.3 - ETA: >2025-11-14 21:33:07
+2025-11-14 17:53:24 (IST) - 0:05:52 - train - INFO - [DocStream] step=51 microbatch=0 samples=2 unique_docs=1 runs=4157.wav[segments=0-1]
+2025-11-14 17:53:24 (IST) - 0:05:52 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4156.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4157.wav
+2025-11-14 17:53:24 (IST) - 0:05:52 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:24 (IST) - 0:05:52 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:24 (IST) - 0:05:52 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:24 (IST) - 0:05:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:25 (IST) - 0:05:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:25 (IST) - 0:05:52 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:28 (IST) - 0:05:56 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:29 (IST) - 0:05:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:30 (IST) - 0:05:57 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:31 (IST) - 0:05:58 - train - INFO - [TTT] Step 51: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=2.028e-01, relative_change=0.1610% (9 params)
+2025-11-14 17:53:31 (IST) - 0:05:58 - train - INFO - step: 000051 - done (%): 2.5 - loss: 4.901 - lr: 5.3e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5038.6 - avg_words_per_second: 4993.2 - ETA: >2025-11-14 21:33:04
+2025-11-14 17:53:31 (IST) - 0:05:59 - train - INFO - [DocStream] step=52 microbatch=0 samples=2 unique_docs=1 runs=4157.wav[segments=2-3]
+2025-11-14 17:53:31 (IST) - 0:05:59 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:31 (IST) - 0:05:59 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:32 (IST) - 0:05:59 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:35 (IST) - 0:06:02 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:36 (IST) - 0:06:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:37 (IST) - 0:06:04 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:38 (IST) - 0:06:05 - train - INFO - [TTT] Step 52: grad_norm=1.000e+00, param_norm=125.9588, delta_norm=2.177e-01, relative_change=0.1728% (9 params)
+2025-11-14 17:53:38 (IST) - 0:06:05 - train - INFO - step: 000052 - done (%): 2.6 - loss: 4.192 - lr: 5.4e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5010.5 - avg_words_per_second: 4993.6 - ETA: >2025-11-14 21:33:04
+2025-11-14 17:53:38 (IST) - 0:06:05 - train - INFO - [DocStream] step=53 microbatch=0 samples=2 unique_docs=1 runs=4157.wav[segments=4-5]
+2025-11-14 17:53:38 (IST) - 0:06:05 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:38 (IST) - 0:06:06 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:38 (IST) - 0:06:06 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:42 (IST) - 0:06:09 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:43 (IST) - 0:06:10 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:43 (IST) - 0:06:11 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:44 (IST) - 0:06:12 - train - INFO - [TTT] Step 53: grad_norm=1.000e+00, param_norm=125.9590, delta_norm=2.239e-01, relative_change=0.1778% (9 params)
+2025-11-14 17:53:44 (IST) - 0:06:12 - train - INFO - step: 000053 - done (%): 2.6 - loss: 3.762 - lr: 5.6e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5114.1 - avg_words_per_second: 4995.8 - ETA: >2025-11-14 21:32:57
+2025-11-14 17:53:44 (IST) - 0:06:12 - train - INFO - [DocStream] step=54 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=0-1]
+2025-11-14 17:53:44 (IST) - 0:06:12 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4157.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4170.wav
+2025-11-14 17:53:44 (IST) - 0:06:12 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.462822 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:44 (IST) - 0:06:12 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 72.818527 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:44 (IST) - 0:06:12 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 73.856461 (dtype: torch.float32); both learn via backprop during training
+2025-11-14 17:53:44 (IST) - 0:06:12 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:45 (IST) - 0:06:12 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:45 (IST) - 0:06:12 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:48 (IST) - 0:06:16 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:49 (IST) - 0:06:17 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:50 (IST) - 0:06:18 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:51 (IST) - 0:06:18 - train - INFO - [TTT] Step 54: grad_norm=1.000e+00, param_norm=125.9589, delta_norm=2.384e-01, relative_change=0.1893% (9 params)
+2025-11-14 17:53:51 (IST) - 0:06:18 - train - INFO - step: 000054 - done (%): 2.7 - loss: 4.466 - lr: 5.7e-05 - peak_alloc_mem (GB): 38.8 - alloc_mem (GB): 21.0 - words_per_second: 5017.1 - avg_words_per_second: 4996.2 - ETA: >2025-11-14 21:32:56
+2025-11-14 17:53:51 (IST) - 0:06:19 - train - INFO - [DocStream] step=55 microbatch=0 samples=2 unique_docs=1 runs=4170.wav[segments=2-3]
+2025-11-14 17:53:51 (IST) - 0:06:19 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:51 (IST) - 0:06:19 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:52 (IST) - 0:06:19 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
+2025-11-14 17:53:55 (IST) - 0:06:23 - moshi.modules.ttt_module - DEBUG - [TTT][parallel_update] seq_len=1875 effective_chunk_size=256 num_chunks=8 (configured_chunk_size=256)
