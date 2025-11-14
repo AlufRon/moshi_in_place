@@ -274,15 +274,14 @@ def get_fsdp_model(
         logger.info(f"Converting model to dtype {param_dtype} ...")
 
         for k, v in model_state_dict.items():
-            # Keep w_down in float32 for TTT precision during training and inference
-            # All other parameters use param_dtype (typically bfloat16)
-            if "w_down" in k and "w_down_pretrained" not in k:
+            if "w_down_pretrained" in k:
+                # Keep pretrained buffer in float32 to mirror fast weight precision
                 model_state_dict[k] = v.to(torch.float32)
             else:
                 model_state_dict[k] = v.to(param_dtype)
 
-        # Initialize TTT w_down from checkpoint BEFORE load_state_dict
-        # because assign=True keeps meta tensors as meta
+        # Initialize TTT w_down from checkpoint: add w_down keys in float32 to state_dict
+        # BEFORE load_state_dict so assign=True will use float32 tensors
         if args.ttt and args.ttt.enabled:
             logger.info("Initializing TTT w_down from pretrained checkpoint...")
             for m_name, module in model.named_modules():
@@ -290,10 +289,11 @@ def get_fsdp_model(
                     # Find the corresponding checkpoint key
                     ckpt_key = f"{m_name}.linear_out.weight"
                     if ckpt_key in model_state_dict:
-                        # Copy from checkpoint dict directly and convert to float32 for TTT precision
+                        # Add w_down key to state_dict in float32 (not bfloat16)
+                        w_down_key = f"{m_name}.w_down"
                         pretrained_weight = model_state_dict[ckpt_key].clone().to(torch.float32)
-                        module._parameters['w_down'] = torch.nn.Parameter(pretrained_weight)
-                        logger.info(f"  ✓ {m_name}.w_down <- {ckpt_key} (shape: {pretrained_weight.shape}, dtype: float32)")
+                        model_state_dict[w_down_key] = pretrained_weight
+                        logger.info(f"  ✓ {w_down_key} <- {ckpt_key} (shape: {pretrained_weight.shape}, dtype: float32)")
                     else:
                         logger.warning(f"  ✗ Checkpoint key {ckpt_key} not found!")
 
@@ -355,6 +355,21 @@ def get_fsdp_model(
             "All buffers should be initialized by now"
         )
         
+        # Ensure TTT fast weights stay in float32 and opt-out from mixed precision casting
+        if args.ttt and args.ttt.enabled:
+            ttt_fp32_params = 0
+            for m_name, module in model.named_modules():
+                if hasattr(module, "w_down"):
+                    module.w_down.data = module.w_down.data.to(torch.float32)
+                    setattr(module.w_down, "_ttt_keep_fp32", True)
+                    ttt_fp32_params += 1
+                    if hasattr(module, "w_down_pretrained"):
+                        module.w_down_pretrained.data = module.w_down_pretrained.data.to(torch.float32)
+            if ttt_fp32_params > 0:
+                logger.info(
+                    f"Pinned {ttt_fp32_params} w_down parameters to float32 for TTT precision"
+                )
+
         # Check dtype, but allow w_down to be float32 for TTT precision
         non_compliant = []
         for name, p in model.named_parameters():

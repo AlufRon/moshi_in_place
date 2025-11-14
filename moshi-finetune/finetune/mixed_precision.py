@@ -11,6 +11,14 @@ def prepare_mixed_precision(
     """Appends a freshly allocated fp32 tensor copy of all params to parameters that can be updated."""
     with torch.no_grad():
         for p in params:
+            if getattr(p, "_ttt_keep_fp32", False):
+                # Leave TTT fast weights in float32 for numerical stability
+                if p.requires_grad:
+                    p._mp_param = None  # type: ignore[attr-defined]
+                if p.dtype != torch.float32:
+                    p.data = p.data.to(torch.float32)
+                continue
+
             if p.requires_grad:
                 # Mixed precision: let's save a fp32 param tensor to each params that require a grad
                 p._mp_param = torch.empty_like(p, dtype=optim_dtype)  # type: ignore
@@ -28,6 +36,8 @@ def upcast_mixed_precision(
     """
     with torch.no_grad():
         for p in params:
+            if getattr(p, "_ttt_keep_fp32", False):
+                continue
             if p.requires_grad and p.grad is not None:
                 # store original tensor in p._temp
                 p._temp = p.data  # type: ignore
@@ -45,6 +55,10 @@ def downcast_mixed_precision(
     """
     with torch.no_grad():
         for p in params:
+            if getattr(p, "_ttt_keep_fp32", False):
+                if p.requires_grad and p.grad is not None:
+                    p.grad = p.grad.to(torch.float32)
+                continue
             if p.requires_grad and p.grad is not None:
                 # copy fp32 weights into bfloat16 tensor
                 p._temp.copy_(p.data)  # type: ignore
