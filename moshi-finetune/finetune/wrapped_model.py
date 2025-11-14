@@ -274,7 +274,12 @@ def get_fsdp_model(
         logger.info(f"Converting model to dtype {param_dtype} ...")
 
         for k, v in model_state_dict.items():
-            model_state_dict[k] = v.to(param_dtype)
+            # Keep w_down in float32 for TTT precision during training and inference
+            # All other parameters use param_dtype (typically bfloat16)
+            if "w_down" in k and "w_down_pretrained" not in k:
+                model_state_dict[k] = v.to(torch.float32)
+            else:
+                model_state_dict[k] = v.to(param_dtype)
 
         # Initialize TTT w_down from checkpoint BEFORE load_state_dict
         # because assign=True keeps meta tensors as meta

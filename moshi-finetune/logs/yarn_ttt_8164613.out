@@ -1,0 +1,142 @@
+==================================================
+Job started at: Fri 14 Nov 2025 17:13:34 IST
+Running on node: ise-6000-01.auth.ad.bgu.ac.il
+GPU info:
+Fri Nov 14 17:13:34 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX 6000 Ada Gene...    On  |   00000000:E1:00.0 Off |                  Off |
+| 30%   27C    P8             25W /  300W |       2MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+==================================================
+Set CUDA_VISIBLE_DEVICES=0
+Starting YARN + TTT training...
+Context Extension: 4x (3000 -> 12000 tokens)
+TTT Layers: 3 (layers 10, 20, 30)
+Base Model: Frozen (only TTT params trained)
+Warning: `hf_repo_id` is set but `config_path` is None. This will load default models.
+2025-11-14 17:13:42 (IST) - 0:00:04 - distributed - INFO - torch.cuda.device_count: 1
+2025-11-14 17:13:42 (IST) - 0:00:04 - distributed - INFO - CUDA_VISIBLE_DEVICES: 0
+2025-11-14 17:13:42 (IST) - 0:00:04 - distributed - INFO - local rank: 0
+2025-11-14 17:13:42 (IST) - 0:00:04 - train - INFO - Going to init comms...
+2025-11-14 17:13:42 (IST) - 0:00:04 - train - INFO - Run dir: /sise/eliyanac-group/ron_al/ttt_training_run2
+2025-11-14 17:13:42 (IST) - 0:00:04 - train - INFO - Removing run dir /sise/eliyanac-group/ron_al/ttt_training_run2...
+2025-11-14 17:13:42 (IST) - 0:00:05 - train - INFO - TrainArgs: {'batch_size': 2,
+ 'ckpt_freq': 100,
+ 'data': {'eval_data': '',
+          'shuffle': False,
+          'train_data': '/sise/eliyanac-group/ron_al/talkbank_callhome_english/talkbank.jsonl'},
+ 'do_ckpt': True,
+ 'do_eval': False,
+ 'duration_sec': 150.0,
+ 'eval_freq': 100,
+ 'first_codebook_weight_multiplier': 100.0,
+ 'full_finetuning': False,
+ 'gradient_checkpointing': True,
+ 'log_freq': 1,
+ 'lora': {'enable': False, 'ft_embed': False, 'rank': 64, 'scaling': 2.0},
+ 'max_norm': 1.0,
+ 'max_steps': 2000,
+ 'moshi_paths': {'config_path': None,
+                 'hf_repo_id': 'kyutai/moshiko-pytorch-bf16',
+                 'mimi_path': None,
+                 'moshi_path': None,
+                 'tokenizer_path': None},
+ 'num_ckpt_keep': 3,
+ 'num_microbatches': 1,
+ 'optim': {'lr': 0.0001, 'pct_start': 0.05, 'weight_decay': 0.1},
+ 'overwrite_run_dir': True,
+ 'param_dtype': 'bfloat16',
+ 'run_dir': '/sise/eliyanac-group/ron_al/ttt_training_run2',
+ 'save_adapters': True,
+ 'seed': 0,
+ 'text_padding_weight': 0.5,
+ 'ttt': {'chunk_size': 256,
+         'conv_kernel_size': 2,
+         'delta_clip_fro_norm': 100.0,
+         'enabled': True,
+         'layer_frequency': 10,
+         'learning_rate': 0.0001,
+         'start_layer': 10,
+         'unfreeze_ttt_layers': False},
+ 'wandb': {'key': '',
+           'offline': False,
+           'project': 'moshi_in_place',
+           'run_name': 'run2'},
+ 'world_size': 1,
+ 'yarn': {'beta_fast': 32,
+          'beta_slow': 1,
+          'enabled': True,
+          'mscale': 1.0,
+          'mscale_all_dim': 0.0,
+          'original_max_seq_len': 3000,
+          'scale': 4.0}}
+2025-11-14 17:13:42 (IST) - 0:00:05 - metrics_logger - INFO - initializing wandb
+2025-11-14 17:13:44 (IST) - 0:00:07 - train - INFO - Loading Mimi and Moshi...
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - TTT (Test-Time Training) ENABLED
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Layer frequency: 10
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Start layer: 10
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Chunk size: 256
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Learning rate: 0.0001
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Conv kernel: 2
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - YaRN (Context Window Extension) ENABLED
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Scale: 4.0x
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Original max seq len: 3000
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Beta fast: 32
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   Beta slow: 1
+2025-11-14 17:13:45 (IST) - 0:00:08 - finetune.wrapped_model - INFO - ======================================================================
+[YaRN] Enabled with scale=4.0, original_len=3000
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[TTT] Enabled TTT gating: chunk_size=256, lr=0.0001, dim=4096, hidden=11264
+[YaRN] Initializing RoPE buffers on device=meta
+[YaRN] RoPE buffers initialized successfully
+2025-11-14 17:13:46 (IST) - 0:00:08 - finetune.wrapped_model - INFO - Converting model to dtype torch.bfloat16 ...
+2025-11-14 17:13:46 (IST) - 0:00:08 - finetune.wrapped_model - INFO - Initializing TTT w_down from pretrained checkpoint...
+2025-11-14 17:13:46 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ transformer.layers.10.gating.w_down <- transformer.layers.10.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:13:46 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ transformer.layers.20.gating.w_down <- transformer.layers.20.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:13:46 (IST) - 0:00:08 - finetune.wrapped_model - INFO -   ✓ transformer.layers.30.gating.w_down <- transformer.layers.30.gating.linear_out.weight (shape: torch.Size([4096, 11264]), dtype: float32)
+2025-11-14 17:13:46 (IST) - 0:00:08 - finetune.wrapped_model - INFO - Initializing TTT layers ...
+2025-11-14 17:13:46 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:13:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.10.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:13:47 (IST) - 0:00:09 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.10.gating.w_down_pretrained from w_down
+2025-11-14 17:13:47 (IST) - 0:00:09 - finetune.wrapped_model - WARNING - Buffer transformer.layers.10.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:13:47 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:13:48 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.20.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:13:48 (IST) - 0:00:10 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.20.gating.w_down_pretrained from w_down
+2025-11-14 17:13:48 (IST) - 0:00:10 - finetune.wrapped_model - WARNING - Buffer transformer.layers.20.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:13:48 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.conv1d.conv.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Small-random-initialized transformer.layers.30.gating.target_generator.W_target.weight (std=1e-4) for warm-start with gradient flow
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.layers.30.gating.w_down_pretrained from w_down
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - WARNING - Buffer transformer.layers.30.gating.ttt_clip_event_counter still meta - initializing as zeros
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO - Initializing YaRN RoPE buffers ...
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO -   ✓ Initialized transformer.rope.inv_freq (shape: torch.Size([64]), scale: 4.0x)
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO - Finished initialization!
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO - TTT ACTIVE: 3 layers enabled
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO - TTT layer indices: [10, 20, 30]
+2025-11-14 17:13:49 (IST) - 0:00:11 - finetune.wrapped_model - INFO - ======================================================================
+2025-11-14 17:13:55 (IST) - 0:00:18 - train - INFO - [DocStream] step=1 microbatch=0 samples=2 unique_docs=1 runs=0638.wav[segments=0-1]
+2025-11-14 17:13:55 (IST) - 0:00:18 - train - INFO - [TTT RESET] Document switch detected: None -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/0638.wav
+2025-11-14 17:13:55 (IST) - 0:00:18 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 71.500000; both learn via backprop during training
+2025-11-14 17:13:55 (IST) - 0:00:18 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.982422, w_down norm 73.000000; both learn via backprop during training
+2025-11-14 17:13:55 (IST) - 0:00:18 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator norm 0.980469, w_down norm 74.000000; both learn via backprop during training

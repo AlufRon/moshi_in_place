@@ -615,3 +615,40 @@ Warning: `hf_repo_id` is set but `config_path` is None. This will load default m
 2025-11-14 17:09:48 (IST) - 0:09:11 - train - INFO - [TTT] Step 85: grad_norm=1.843e-01, param_norm=629.7472, delta_norm=2.314e+01, relative_change=3.6746% (9 params)
 2025-11-14 17:09:48 (IST) - 0:09:11 - train - INFO - step: 000085 - done (%): 4.2 - loss: 4.251 - lr: 9.5e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5432.6 - avg_words_per_second: 5356.1 - ETA: >2025-11-14 20:30:55
 2025-11-14 17:09:49 (IST) - 0:09:11 - train - INFO - [DocStream] step=86 microbatch=0 samples=2 unique_docs=1 runs=4247.wav[segments=7-8]
+2025-11-14 17:09:55 (IST) - 0:09:17 - train - INFO - [TTT] Step 86: grad_norm=3.484e-01, param_norm=642.7195, delta_norm=2.145e+01, relative_change=3.3373% (9 params)
+2025-11-14 17:09:55 (IST) - 0:09:17 - train - INFO - step: 000086 - done (%): 4.3 - loss: 4.890 - lr: 9.5e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5430.0 - avg_words_per_second: 5356.9 - ETA: >2025-11-14 20:30:53
+2025-11-14 17:09:55 (IST) - 0:09:18 - train - INFO - [DocStream] step=87 microbatch=0 samples=2 unique_docs=1 runs=4247.wav[segments=9-10]
+2025-11-14 17:10:01 (IST) - 0:09:23 - train - INFO - [TTT] Step 87: grad_norm=2.496e-01, param_norm=654.4667, delta_norm=1.859e+01, relative_change=2.8408% (9 params)
+2025-11-14 17:10:01 (IST) - 0:09:23 - train - INFO - step: 000087 - done (%): 4.3 - loss: 4.812 - lr: 9.6e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5437.7 - avg_words_per_second: 5357.9 - ETA: >2025-11-14 20:30:51
+2025-11-14 17:10:01 (IST) - 0:09:24 - train - INFO - [DocStream] step=88 microbatch=0 samples=2 unique_docs=2 runs=4247.wav[segment=11], 4248.wav[segment=0]
+2025-11-14 17:10:01 (IST) - 0:09:24 - train - INFO - [TTT RESET] Document switch detected: /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4247.wav -> /sise/eliyanac-group/ron_al/talkbank_callhome_english/wav/4248.wav
+2025-11-14 17:10:01 (IST) - 0:09:24 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.951172; w_down is frozen during training so its norm stays constant
+2025-11-14 17:10:01 (IST) - 0:09:24 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.955078; w_down is frozen during training so its norm stays constant
+2025-11-14 17:10:01 (IST) - 0:09:24 - moshi.modules.ttt_module - INFO - [TTT RESET][train] target_generator total norm 0.964844; w_down is frozen during training so its norm stays constant
+2025-11-14 17:10:07 (IST) - 0:09:30 - train - INFO - [TTT] Step 88: grad_norm=1.000e+00, param_norm=675.1536, delta_norm=3.160e+01, relative_change=4.6801% (9 params)
+2025-11-14 17:10:07 (IST) - 0:09:30 - train - INFO - step: 000088 - done (%): 4.4 - loss: 4.109 - lr: 9.7e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5426.0 - avg_words_per_second: 5358.6 - ETA: >2025-11-14 20:30:49
+2025-11-14 17:10:07 (IST) - 0:09:30 - train - INFO - [DocStream] step=89 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=1-2]
+2025-11-14 17:10:13 (IST) - 0:09:36 - train - INFO - [TTT] Step 89: grad_norm=4.788e-01, param_norm=693.8538, delta_norm=2.851e+01, relative_change=4.1092% (9 params)
+2025-11-14 17:10:13 (IST) - 0:09:36 - train - INFO - step: 000089 - done (%): 4.5 - loss: 8.820 - lr: 9.7e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5439.5 - avg_words_per_second: 5359.5 - ETA: >2025-11-14 20:30:47
+2025-11-14 17:10:14 (IST) - 0:09:36 - train - INFO - [DocStream] step=90 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=3-4]
+2025-11-14 17:10:19 (IST) - 0:09:42 - train - INFO - [TTT] Step 90: grad_norm=2.022e-01, param_norm=710.7263, delta_norm=2.548e+01, relative_change=3.5850% (9 params)
+2025-11-14 17:10:19 (IST) - 0:09:42 - train - INFO - step: 000090 - done (%): 4.5 - loss: 7.192 - lr: 9.8e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5435.8 - avg_words_per_second: 5360.4 - ETA: >2025-11-14 20:30:45
+2025-11-14 17:10:20 (IST) - 0:09:42 - train - INFO - [DocStream] step=91 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=5-6]
+2025-11-14 17:10:26 (IST) - 0:09:48 - train - INFO - [TTT] Step 91: grad_norm=1.997e-01, param_norm=725.8419, delta_norm=2.268e+01, relative_change=3.1244% (9 params)
+2025-11-14 17:10:26 (IST) - 0:09:48 - train - INFO - step: 000091 - done (%): 4.5 - loss: 4.414 - lr: 9.8e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5446.0 - avg_words_per_second: 5361.3 - ETA: >2025-11-14 20:30:43
+2025-11-14 17:10:26 (IST) - 0:09:49 - train - INFO - [DocStream] step=92 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=7-8]
+2025-11-14 17:10:32 (IST) - 0:09:54 - train - INFO - [TTT] Step 92: grad_norm=1.722e-01, param_norm=739.3476, delta_norm=2.019e+01, relative_change=2.7302% (9 params)
+2025-11-14 17:10:32 (IST) - 0:09:54 - train - INFO - step: 000092 - done (%): 4.6 - loss: 3.779 - lr: 9.8e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5447.2 - avg_words_per_second: 5362.2 - ETA: >2025-11-14 20:30:41
+2025-11-14 17:10:32 (IST) - 0:09:55 - train - INFO - [DocStream] step=93 microbatch=0 samples=2 unique_docs=1 runs=4248.wav[segments=9-10]
+2025-11-14 17:10:38 (IST) - 0:10:01 - train - INFO - [TTT] Step 93: grad_norm=1.390e-01, param_norm=751.3444, delta_norm=1.787e+01, relative_change=2.3790% (9 params)
+2025-11-14 17:10:38 (IST) - 0:10:01 - train - INFO - step: 000093 - done (%): 4.7 - loss: 4.363 - lr: 9.9e-03 - peak_alloc_mem (GB): 39.3 - alloc_mem (GB): 21.0 - words_per_second: 5447.8 - avg_words_per_second: 5363.1 - ETA: >2025-11-14 20:30:39
+2025-11-14 17:10:38 (IST) - 0:10:01 - utils - INFO - Closing: eval_logger
+2025-11-14 17:10:39 (IST) - 0:10:02 - utils - ERROR - Error while closing eval_logger!
+2025-11-14 17:10:39 (IST) - 0:10:02 - utils - INFO - Closing: metrics_logger
+2025-11-14 17:10:39 (IST) - 0:10:02 - utils - ERROR - Error while closing metrics_logger!
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mrun2[0m at: [34mhttps://wandb.ai/alufr-ben-gurion-university-of-the-negev/moshi_in_place/runs/y1jt5bmr[0m
+[1;34mwandb[0m: Find logs at: [1;35m../../../../../sise/eliyanac-group/ron_al/ttt_training_run2/wandb/run-20251114_170043-y1jt5bmr/logs[0m
+==================================================
+Job finished at: Fri 14 Nov 2025 17:10:42 IST
+==================================================
